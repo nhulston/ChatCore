@@ -1,0 +1,474 @@
+# _____                 _            _  _____
+# / ____|               | |          | |/ ____|
+# | |     _ __ __ _ _ __ | | _____  __| | |     ___  _ __ ___
+# | |    | '__/ _` | '_ \| |/ / _ \/ _` | |    / _ \| '__/ _ \
+# | |____| | | (_| | | | |   <  __/ (_| | |___| (_) | | |  __/
+# \_____|_|  \__,_|_| |_|_|\_\___|\__,_|\_____\___/|_|  \___|
+#
+#
+#   A plugin created by Cranked
+#   Mc-Market: https://www.mc-market.org/resources/13998/
+#   Spigot:
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                  General Settings                    | #
+## +------------------------------------------------------+ #
+#############################################################
+
+reload-msg: '&aCrankedCore has been reloaded.'
+no-permission-msg: '&cNo permission.'
+help-msg:
+  - '&8&m                                                                                '
+  - ''
+  - '&d&l                 CRANKED CORE'
+  - ''
+  - '&d        MC-Market Page &8>> &fwww.spigotmc.org/'
+  - ''
+  - '&d/chat &f- Bring up this help page'
+  - '&d/chat clear &7<-s/-a> &f- Clears the chat'
+  - '&d/chat slow &7<time> <-s/-a> &f- Slow the chat'
+  - '&d/chat lock &7<-s/-a> &f- Lock the chat'
+  - '&d/chat staff <message> &f- Toggle or send a message to staff chat'
+  - '&d/chat spy &f- Enable command spy'
+  - '&d/chat announce &f- Announce a message to the server'
+  - '&d/chat warn &f- Warn a message to the server'
+  - '&d/chat staffannounce &f- Announce a message to the online staff'
+  - ''
+  - '&8&m                                                                                '
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                  Clear Chat Settings                 | #
+## +------------------------------------------------------+ #
+#############################################################
+
+clear-chat-enabled: true
+clear-msg: '&aThe chat was cleared by %player%.'
+clear-msg-anon: '&aThe chat was cleared.'
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                  Lock Chat Settings                  | #
+## +------------------------------------------------------+ #
+#############################################################
+
+lock-enabled: true
+lock-msg: '&aThe chat has been locked by %player%.'
+lock-msg-anon: '&aThe chat has been locked.'
+unlock-msg: '&aThe chat has been unlocked by %player%.'
+unlock-msg-anon: '&aThe chat has been unlocked.'
+locked-msg: '&cThe chat is currently disabled.'
+lock-silent-msg: '&aYou silently locked the chat.'
+unlock-silent-msg: '&aYou silently unlocked the chat.'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                  Slow Chat Settings                  | #
+## +------------------------------------------------------+ #
+#############################################################
+
+slow-enabled: true
+slow-msg: '&aThe chat was slowed to a %time% second delay by %player%.'
+slow-msg-anon: '&aThe chat was slowed to a %time% second delay.'
+slow-usage-msg: '&cUsage: /chat slow <time in sec OR 0 to end>'
+slow-silent-msg: '&aYou silently slowed the chat to a %time% second delay.'
+slow-delay-msg: '&cThe chat is slowed, so you cannot talk for another %time% seconds.'
+slow-msg-0: '&aThe chat is no longer slowed.'
+slow-silent-msg-0: '&aYou silently removed the slow delay in chat.'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                  Chat Delay Settings                 | #
+## +------------------------------------------------------+ #
+#############################################################
+
+# Set to 0 to disable
+delay-in-millis: 500
+delay-msg: '&cYou cannot talk for another %time% seconds.'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                Command Delay Settings                | #
+## +------------------------------------------------------+ #
+#############################################################
+
+# Set to 0 to disable
+command-delay-in-millis: 250
+command-delay-msg: '&cYou cannot run a command for another %time% seconds.'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                 Staff Chat Settings                  | #
+## +------------------------------------------------------+ #
+#############################################################
+
+staff-chat-enabled: true
+staff-chat-format: '&8[&b&lSTAFF&8] &c%player%&f: %message%'
+staff-chat-on-msg: '&aStaff chat has been enabled.'
+staff-chat-off-msg: '&cStaff chat has been disabled.'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                  Anti Caps Settings                  | #
+## +------------------------------------------------------+ #
+#############################################################
+
+anti-caps-enabled: true
+
+# What % of the msg should be caps before we edit the message?
+anti-caps-percentage: 50
+
+# How many characters must the message be before we edit the message? (so chats like "LOL" wont be affected)
+anti-caps-min-length: 10
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                 Add Period Settings                  | #
+## +------------------------------------------------------+ #
+#############################################################
+
+add-period-enabled: true
+add-period-min-length: 10
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                Blocked Words Settings                | #
+## +------------------------------------------------------+ #
+#############################################################
+
+blocked-words-replace-word: '*****'
+blocked-words-replace-char: '*'
+
+# to disable, do:   blocked-words: []
+blocked-words:
+  - 'wtf'                 # Will not run a punishment
+  - 'shit, minor'         # Will run commands from punishment 'minor'
+  - 'kys, severe'         # Will run commands from punishment 'severe'
+
+# "Ass" will be detected but "compass" will not
+# (Don't put the same word in both categories, just choose one)
+blocked-words-ignore-in-bigger-words:
+  - 'ass, minor'
+
+# Add as many categories and name them whatever you would like
+blocked-words-punishments:
+  minor:
+    - 'mute %player% -s 1m &fSwearing (&c%word%&f)'        # Or use %message% as a placeholder
+  severe:
+    - 'chat staffannounce &e%player% &fswore (&e%word%&f)'
+    - 'mute %player% -s 3m &fSwearing (&c%word%&f)'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |              Blocked Commands Settings               | #
+## +------------------------------------------------------+ #
+#############################################################
+
+blocked-commands-msg: '&cThat command is disabled.'
+blocked-commands-warn-staff: true
+blocked-commands-warn-staff-msg: '&c&lWARNING&f: &c%player% &ftried to use the command ''&c%command%&f'''
+
+# If you want to block suggestions with colon, set 'send-namespaced' in spigot.yml to false
+block-all-commands-containing-colon: true
+
+# Set to '' to disable
+block-all-commands-containing-colon-message: '&cYou cannot use colons in commands.'
+# IMPORTANT TIP: if you want to block players from using '/ver ' or '/about ' (which shows all plugins!), negate the permission 'bukkit.command.version'
+# This removes the need for external plugins that will only slow down your server!
+blocked-commands:      # to disable, do:   blocked-commands: []
+  - '//calc, crash'
+  - '//calculate, crash'
+  - '/?'
+  - '/help'
+  - '/ehelp'
+  - '/about'
+  - '/eabout'
+  - '/info'
+  - '/bukkit:?'
+  - '/bukkit:about'
+  - '/bukkit:help'
+  - '/bukkit:pl'
+  - '/bukkit:plugins'
+  - '/bukkit:ver'
+  - '/bukkit:version'
+  - '/icanhasbukkit'
+  - '/minecraft:help'
+  - '/pl'
+  - '/plugin'
+  - '/plugins'
+  - '/ver'
+  - '/version'
+
+
+blocked-commands-punishments:
+  crash:
+    - 'kick %player% -s Don''t try to crash our server.'        # Or use %command% as a placeholder
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                 Command Spy Settings                 | #
+## +------------------------------------------------------+ #
+#############################################################
+
+command-spy-enabled: true
+command-spy-format: '&d%player%&f %command%'
+command-spy-on-msg: '&aYou have enabled command spy.'
+command-spy-off-msg: '&cYou have disabled command spy.'
+command-spy-enabled-on-join: false
+command-spy-ignored-commands:     # to disable, do:   command-spy-ignored-commands: []
+  - '/example'
+  - '/test2'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                  Auto Caps Settings                  | #
+## +------------------------------------------------------+ #
+#############################################################
+
+auto-caps-enabled: true
+auto-caps-min-length: 3
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                   Announce Settings                  | #
+## +------------------------------------------------------+ #
+#############################################################
+
+announce-enabled: true
+announce-format: '&a&lAnnouncement&f: %message%'
+announce-usage: '&cUsage: /chat announce <message>'
+
+# set to NONE or something from this list:
+# 1.7: https://pastebin.com/9jbmgjHb
+# 1.8: https://pastebin.com/chgFQ6Qe
+# 1.9: https://pastebin.com/gPVc30AX
+# 1.10: https://pastebin.com/rzrMVG2W
+# 1.11: https://pastebin.com/1LqmZmec
+# 1.12: https://pastebin.com/fpjUVppS
+# 1.13: https://pastebin.com/CkQ1WZuw
+# 1.14: https://pastebin.com/Z3eh7SP5
+# 1.15: https://pastebin.com/BZeQSYMN
+announce-sound: 'NONE'
+
+warning-enabled: true
+warning-format: '&c&lWarning&f: %message%'
+warning-usage: '&cUsage: /chat warn <message>'
+warning-sound: 'NONE'
+staff-announce-enabled: true
+staff-announce-format: '&d&lStaff Announcement&f: %message%'
+staff-announce-usage: '&cUsage: /chat staffannounce <message>'
+staff-announce-sound: 'NONE'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                 Colored Text Settings                | #
+## +------------------------------------------------------+ #
+#############################################################
+
+# Players with permission 'crankedcore.coloredtext' can use & to send colored text in chat
+# If using essentials, set to false and use the permissions 'essentials.chat.color' and 'essentials.msg.color' instead
+colored-chat-enabled: true
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |           Disable Chat Until Move Settings           | #
+## +------------------------------------------------------+ #
+#############################################################
+
+disable-chat-until-move: true
+disable-chat-until-move-message: '&cYou cannot talk in chat until you move.'
+disable-command-until-move: '&cYou cannot use that command until you move.'
+
+# to disable, do:   disable-commands-until-move: []
+disable-commands-until-move:
+  - '/me'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |             Anti Advertisement Settings              | #
+## +------------------------------------------------------+ #
+#############################################################
+
+anti-ad-enabled: true
+anti-ad-msg: '&cAdvertising is not allowed.'
+anti-ad-inform-msg: '&c&lWARNING: &f%player% tried to advertise: %message%'
+
+# Setting 1 will cancel the message, setting 2 will modify the message to remove periods from the link
+anti-ad-setting: 1
+
+anti-ad-whitelist:
+  - 'minecraft.net'
+  - 'mojang.com'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                  Join Quit Messages                  | #
+## +------------------------------------------------------+ #
+#############################################################
+
+custom-join-quit-messages-enabled: true
+
+# Set to '' to disable join and quit messages (custom-join-quit-messages-enabled must be true then)
+join-message: '&8[&a&l+&8] &f%player%'
+quit-message: '&8[&c&l-&8] &f%player%'
+vip-join-message: '&8[&a&l+&8] &b%player%'
+vip-quit-message: '&8[&c&l-&8] &b%player%'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                Chat Format Settings                  | #
+## +------------------------------------------------------+ #
+#############################################################
+
+custom-chat-format-enabled: true
+
+# If name-hover-enabled is true and you have factions, use the following format instead:
+#default-format: '%rel_factionsuuid_relation_color%%factionsuuid_player_role%%factionsuuid_faction_name% %prefix%%name%%suffix% &8>> &f%message%'
+default-format: '%prefix%%name%%suffix% &8>> &f%message%'
+
+# Make sure the name of the rank matches your permissions plugin. Vault is required for rank-formats to work.
+rank-formats:
+  group1: '%prefix%%name%%suffix% &8>> &f%message%'
+  group2: '%prefix%%name%%suffix% &8>> &b%message%'
+
+name-hover-enabled: true
+
+# This example uses PlaceholderAPI placeholders. You may need to use /papi ecloud download (expansion name).
+# List of placeholders here: https://github.com/PlaceholderAPI/PlaceholderAPI/wiki/Placeholders
+hover-format:
+  - '%prefix%%name%'
+  - '&7Balance: &e$%vault_eco_balance_formatted%'
+  - '&7Time played: &e%statistic_time_played%'
+  - '&7Faction: %rel_factionsuuid_relation_color%%factionsuuid_faction_name%'
+  - ''
+  - '&eClick to send %name% &ea message!'
+
+# 'none' to disable, 'url', 'command', 'suggestcommand'
+click-action-mode: 'suggestcommand'
+# 'https://google.com', '/give %name% stone', '/msg %name% '
+click-action: '/msg %name% '
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                   Mention Settings                   | #
+## +------------------------------------------------------+ #
+#############################################################
+
+mention-enabled: true
+mention-color: '&a&l'
+
+# set to NONE or something from this list:
+# 1.7: https://pastebin.com/9jbmgjHb
+# 1.8: https://pastebin.com/chgFQ6Qe
+# 1.9: https://pastebin.com/gPVc30AX
+# 1.10: https://pastebin.com/rzrMVG2W
+# 1.11: https://pastebin.com/1LqmZmec
+# 1.12: https://pastebin.com/fpjUVppS
+# 1.13: https://pastebin.com/CkQ1WZuw
+# 1.14: https://pastebin.com/Z3eh7SP5
+# 1.15: https://pastebin.com/BZeQSYMN
+mention-sound: 'NONE'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                    MOTD Settings                     | #
+## +------------------------------------------------------+ #
+#############################################################
+
+motd-enabled: true
+motd:
+  - '&8&m                                                                                '
+  - ''
+  - '&d&l                 SERVER NAME'
+  - ''
+  - '&d&l        HELP &8>> &7Type &d/help &7for a list of commands.'
+  - '&d&l        WEBSITE &8>> &fwebsite.com'
+  - '&d&l        STORE &8>> &fshop.website.com'
+  - ''
+  - '&8&m                                                                                '
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                Auto Broadcast Settings               | #
+## +------------------------------------------------------+ #
+#############################################################
+
+# Auto broadcaster CANNOT be updated with /chat reload.
+# You must restart the server or use a plugin like plugman.
+
+auto-broadcast-enabled: true
+auto-broadcast-delay: 30
+# True = random message, false = in order
+auto-broadcast-random: true
+
+# Separate lines with \n
+auto-broadcast-messages:
+  - '&8&m                                                                                \n\n&d&l                 Announcement\n\n&e    Insiding is a bannable offense!\n\n&8&m                                                                                '
+  - '&eHelp&f: Use &e/auction &fto access the auction house!'
+  - '&eHelp&f: Visit our website for updates at &ewebsite.com'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |              Command/Chat Log Settings               | #
+## +------------------------------------------------------+ #
+#############################################################
+
+chat-logger-enabled: true
+chat-logger-staff-chat-enabled: true
+chat-logger-included-commands:
+  - '/m'
+  - '/em'
+  - '/msg'
+  - '/emsg'
+  - '/whisper'
+  - '/ewhisper'
+  - '/tell'
+  - '/etell'
+  - '/t'
+  - '/et'
+  - '/me'
+  - '/eme'
+  - '/r'
+  - '/er'
+  - '/reply'
+  - '/ereply'
+command-logger-enabled: true
+command-logger-ignored-commands:
+  - '/help'
+logger-format: '[%time%] %player%: %message% '
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                  Anti-ASCII Settings                 | #
+## +------------------------------------------------------+ #
+#############################################################
+
+# This disables all characters with an ASCII code >= 128 (pretty much anything not on the standard keyboard)
+# Recommended to stop bypassing swear and anti-advertising filter
+disable-ascii: true
+ascii-cancel: true          # If true, cancels the message. If false, replaces the ASCII symbol with the replace character
+ascii-cancel-message: '&cYou cannot use ASCII characters.'
+ascii-replace-character: '*'
