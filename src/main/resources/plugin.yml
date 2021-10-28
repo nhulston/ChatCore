@@ -1,0 +1,7 @@
+name: CrankedCore
+version: '${project.version}'
+main: me.cranked.crankedcore.CrankedCore
+api-version: 1.17
+authors: [ Cranked ]
+description: Free core plugin as a hobby project
+website: https://google.com
