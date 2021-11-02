@@ -54,14 +54,13 @@ public class ConfigManager {
     }
 
     private static void initConfig() {
-        // TODO try, throw invalid config
         messages = new HashMap<>();
         multiLineMessages = new HashMap<>();
 
         // General
         messages.put("reload", getConfig("reload-msg"));
         messages.put("no-permission", getConfig("no-permission-msg"));
-        //TODO multiLineMessages.put("help-msg", getConfig("no-permission-msg"))));
+        multiLineMessages.put("help-msg", getListConfig("help-msg"));
 
         // Clear chat
         messages.put("clear", getConfig("clear-msg"));
@@ -99,22 +98,22 @@ public class ConfigManager {
         // Blocked words
         messages.put("blocked-words-replace-word", getConfig("blocked-words-replace-word"));
         messages.put("blocked-words-replace-char", getConfig("blocked-words-replace-char"));
-        // TODO blocked words
-        // TODO blocked ignore in bigger words
+        multiLineMessages.put("blocked-words", getListConfig("blocked-words"));
+        multiLineMessages.put("blocked-words-ignore-in-bigger-words", getListConfig("blocked-words-ignore-in-bigger-words"));
         // TODO blocked-words-punishments
 
         // Blocked commands
         messages.put("blocked-commands", getConfig("blocked-commands-msg"));
         messages.put("blocked-commands-warn-staff", getConfig("blocked-commands-warn-staff-msg"));
         messages.put("block-all-commands-containing-colon", getConfig("block-all-commands-containing-colon-msg"));
-        // TODO blocked commands
+        multiLineMessages.put("blocked-commands", getListConfig("blocked-commands"));
         // TODO blocked-commands-punishments
 
         // Command spy
         messages.put("command-spy-format", getConfig("command-spy-format"));
         messages.put("command-spy-on", getConfig("command-spy-on-msg"));
         messages.put("command-spy-off", getConfig("command-spy-off-msg"));
-        // TODO command spy ignored commands
+        multiLineMessages.put("command-spy-ignored-commands", getListConfig("command-spy-ignored-commands"));
 
         // Announce
         messages.put("announce-format", getConfig("announce-format"));
@@ -134,12 +133,12 @@ public class ConfigManager {
         // Disable until move
         messages.put("disable-chat-until-move", getConfig("disable-chat-until-move-msg"));
         messages.put("disable-command-until-move", getConfig("disable-command-until-move-msg"));
-        // TODO disable-commands-until-move
+        multiLineMessages.put("disable-commands-until-move", getListConfig("disable-commands-until-move"));
 
         // Anti ad
         messages.put("anti-ad", getConfig("anti-ad-msg"));
         messages.put("anti-ad-inform", getConfig("anti-ad-inform-msg"));
-        // TODO anti-ad-whitelist
+        multiLineMessages.put("anti-ad-whitelist", getListConfig("anti-ad-whitelist"));
 
         // Join quit
         messages.put("join", getConfig("join-msg"));
@@ -150,7 +149,7 @@ public class ConfigManager {
         // Chat format
         messages.put("default-format", getConfig("default-format"));
         // TODO rank-formats
-        // TODO hover-format
+        multiLineMessages.put("hover-format", getListConfig("hover-format"));
         messages.put("click-action-mode", getConfig("click-action-mode"));
         messages.put("click-action", getConfig("click-action"));
 
@@ -159,23 +158,34 @@ public class ConfigManager {
         messages.put("mention-sound", getConfig("mention-sound"));
 
         // MOTD
-        // TODO motd
+        multiLineMessages.put("motd", getListConfig("motd"));
 
         // Log
-        // TODO chat-logger-included-commands
-        // TODO command-logger-ignored-commands
+        multiLineMessages.put("chat-logger-included-commands", getListConfig("chat-logger-included-commands"));
+        multiLineMessages.put("command-logger-ignored-commands", getListConfig("command-logger-ignored-commands"));
         messages.put("logger-format", getConfig("logger-format"));
 
         // Anti ASCII
         messages.put("ascii-cancel", getConfig("ascii-cancel-msg"));
         messages.put("ascii-replace-character", getConfig("ascii-replace-character"));
+
+        // Autobroadcast
+        multiLineMessages.put("auto-broadcast-messages", getListConfig("auto-broadcast-messages"));
     }
 
     public static String get(String s) {
         return messages.get(s);
     }
 
+    public static List<String> getList(String s) {
+        return multiLineMessages.get(s);
+    }
+
     private static String getConfig(String s) {
         return colorize(Objects.requireNonNull(plugin.getConfig().getString(s)));
+    }
+
+    private static List<String> getListConfig(String s) {
+        return plugin.getConfig().getStringList(s);
     }
 }

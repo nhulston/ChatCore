@@ -39,7 +39,7 @@ public class Mention implements Listener {
             int loc = messageLower.indexOf(playerNameLower);
             // TODO why is this big if statement necessary
             if ((loc != -1 && (loc + playerName.length() == message.length() || (loc == 0 && messageLower.contains(playerNameLower + " ")) || messageLower.contains(" " + playerNameLower + " ") || messageLower.contains(" " + playerNameLower + ".") || messageLower.contains(" " + playerNameLower + "?") || messageLower.contains(" " + playerNameLower + "!"))) || (message.length() == playerName.length() + 1 && (messageLower.contains(playerNameLower + ".") || messageLower.contains(playerNameLower + "!") || messageLower.contains(playerNameLower + "?")))) {
-                e.setMessage(ChatColor.translateAlternateColorCodes('&', message.substring(0, loc) + this.plugin.getConfig().getString("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
+                e.setMessage(ChatColor.translateAlternateColorCodes('&', message.substring(0, loc) + ConfigManager.get("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
                 if (!sound.equalsIgnoreCase("none"))
                     onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
             }
@@ -51,7 +51,7 @@ public class Mention implements Listener {
         try {
             format = Objects.requireNonNull(this.plugin.getConfig().getString("rank-formats." + CrankedCore.vaultChat.getPrimaryGroup(player))).replace("%message%", "");
         } catch (NullPointerException e2) {
-            format = Objects.requireNonNull(this.plugin.getConfig().getString("default-format")).replace("%message%", "");
+            format = Objects.requireNonNull(ConfigManager.get("default-format")).replace("%message%", "");
         }
         if (format.length() > 3 && format.charAt(format.length() - 4) == '&')
             return format.substring(format.length() - 4);

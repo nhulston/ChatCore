@@ -21,7 +21,7 @@ public class BlockedWords implements Listener {
     @EventHandler
     public void onChat(final AsyncPlayerChatEvent e) {
         // Config check
-        if (plugin.getConfig().getStringList("blocked-words").size() == 0)
+        if (ConfigManager.getList("blocked-words").size() == 0)
             return;
         
         // Bypass check
@@ -31,8 +31,8 @@ public class BlockedWords implements Listener {
         
         String msg = e.getMessage();
         final String originalMsg = msg;
-        List<String> blockedWordsNotIgnore = plugin.getConfig().getStringList("blocked-words");
-        List<String> blockedWords = plugin.getConfig().getStringList("blocked-words-ignore-in-bigger-words");
+        List<String> blockedWordsNotIgnore = ConfigManager.getList("blocked-words");
+        List<String> blockedWords = ConfigManager.getList("blocked-words-ignore-in-bigger-words");
         blockedWords.addAll(blockedWordsNotIgnore);
         for (String word : blockedWords) {
             // Calculate word based on punishment or not
@@ -52,7 +52,7 @@ public class BlockedWords implements Listener {
             Pattern pattern = Pattern.compile(stringPattern.toString());
             Matcher matcher = pattern.matcher(msg);
             String msgBefore = msg;
-            msg = matcher.replaceAll(plugin.getConfig().getString("blocked-words-replace-word"));
+            msg = matcher.replaceAll(ConfigManager.get("blocked-words-replace-word"));
 
             // Punish
             if (!msg.equals(msgBefore) && word.contains(",")) {

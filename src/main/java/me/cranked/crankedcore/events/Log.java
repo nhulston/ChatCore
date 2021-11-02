@@ -41,14 +41,14 @@ public class Log implements Listener {
         formattedMessage = PlaceholderAPI.setPlaceholders(e.getPlayer(), formattedMessage);
         String command = e.getMessage();
         if (this.plugin.getConfig().getBoolean("chat-logger-enabled")) {
-            List<String> chatLoggerIncludedCommands = this.plugin.getConfig().getStringList("chat-logger-included-commands");
+            List<String> chatLoggerIncludedCommands = ConfigManager.getList("chat-logger-included-commands");
             for (String includedCommand : chatLoggerIncludedCommands) {
                 if (includedCommand.equalsIgnoreCase(command) || (command.length() > includedCommand.length() && (includedCommand + " ").equalsIgnoreCase(command.substring(0, includedCommand.length() + 1))))
                     log(formattedMessage, LocalDate.now().toString(), "Chat Logs");
             }
         }
         if (this.plugin.getConfig().getBoolean("command-logger-enabled")) {
-            List<String> commandLoggerIncludedCommands = this.plugin.getConfig().getStringList("command-logger-ignored-commands");
+            List<String> commandLoggerIncludedCommands = ConfigManager.getList("command-logger-ignored-commands");
             for (String ignoredCommand : commandLoggerIncludedCommands) {
                 if (ignoredCommand.equalsIgnoreCase(command) || (command.length() > ignoredCommand.length() && (ignoredCommand + " ").equalsIgnoreCase(command.substring(0, ignoredCommand.length() + 1))))
                     return;

@@ -29,7 +29,7 @@ public class AntiAd implements Listener {
             return;
 
         // Check if contains whitelist (TODO this could be improved)
-        for (String allowed : plugin.getConfig().getStringList("anti-ad-whitelist")) {
+        for (String allowed : ConfigManager.getList("anti-ad-whitelist")) {
             if (e.getMessage().toLowerCase().contains(allowed.toLowerCase()))
                 return;
         }

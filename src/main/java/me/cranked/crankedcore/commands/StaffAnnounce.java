@@ -29,7 +29,7 @@ public class StaffAnnounce implements CommandExecutor {
 
         // Permission check
         if (sender instanceof Player && !sender.hasPermission("crankedcore.staffannounce")) {
-            sender.sendMessage(CrankedCore.placeholderColor(plugin.getConfig().getString("no-permission"), (Player)sender));
+            sender.sendMessage(CrankedCore.placeholderColor(ConfigManager.get("no-permission"), (Player)sender));
             return false;
         }
 

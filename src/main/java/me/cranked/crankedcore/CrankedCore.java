@@ -46,12 +46,12 @@ public final class CrankedCore extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new AntiCaps(this), this);
         if (getConfig().getBoolean("add-period-enabled"))
             getServer().getPluginManager().registerEvents(new AddPeriod(this), this);
-        if (getConfig().getStringList("blocked-words").size() != 0)
+        if (ConfigManager.getList("blocked-words").size() != 0)
             getServer().getPluginManager().registerEvents(new BlockedWords(this), this);
         getServer().getPluginManager().registerEvents(new me.cranked.crankedcore.events.CommandSpy(this), this);
         if (getConfig().getBoolean("staff-chat-enabled"))
             getServer().getPluginManager().registerEvents(new me.cranked.crankedcore.events.StaffChat(this), this);
-        if (getConfig().getStringList("blocked-commands").size() != 0)
+        if (ConfigManager.getList("blocked-commands").size() != 0)
             getServer().getPluginManager().registerEvents(new BlockedCommands(this), this);
         if (getConfig().getBoolean("auto-caps-enabled"))
             getServer().getPluginManager().registerEvents(new AutoCaps(this), this);
@@ -86,7 +86,7 @@ public final class CrankedCore extends JavaPlugin {
         }
         if (getConfig().getBoolean("disable-ascii"))
             getServer().getPluginManager().registerEvents(new AntiAscii(this), this);
-        List<String> messages = getConfig().getStringList("auto-broadcast-messages");
+        List<String> messages = ConfigManager.getList("auto-broadcast-messages");
         if (getConfig().getBoolean("auto-broadcast-enabled") && messages.size() != 0)
             Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
                 // TODO auto broadcasting

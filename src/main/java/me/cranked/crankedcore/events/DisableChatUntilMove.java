@@ -65,7 +65,7 @@ public class DisableChatUntilMove implements Listener {
             return;
 
         // Only cancel disabled commands
-        List<String> blockedCommands = this.plugin.getConfig().getStringList("disable-commands-until-move");
+        List<String> blockedCommands = ConfigManager.getList("disable-commands-until-move");
         String msg = e.getMessage();
         for (String blockedCommand : blockedCommands) {
             if ((msg.length() == blockedCommand.length() && msg.equalsIgnoreCase(blockedCommand)) || (msg.length() > blockedCommand.length() && msg.substring(0, blockedCommand.length() + 1).equalsIgnoreCase(blockedCommand + " "))) {

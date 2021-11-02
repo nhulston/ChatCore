@@ -23,7 +23,7 @@ public class BlockedCommands implements Listener {
     @EventHandler
     public void onCommand(final PlayerCommandPreprocessEvent e) {
         // Config check
-        if (plugin.getConfig().getStringList("blocked-commands").size() == 0)
+        if (ConfigManager.getList("blocked-commands").size() == 0)
             return;
 
         // Bypass check
@@ -38,7 +38,7 @@ public class BlockedCommands implements Listener {
         }
         
         // Check if contains blocked commands
-        List<String> blockedCommands = plugin.getConfig().getStringList("blocked-commands");
+        List<String> blockedCommands = ConfigManager.getList("blocked-commands");
         String msg = e.getMessage();
         for (String blockedCommand : blockedCommands) {
             String originalCommand = blockedCommand;

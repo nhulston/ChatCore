@@ -1,5 +1,4 @@
 package me.cranked.crankedcore.events;
-
 import java.util.List;
 import java.util.Objects;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -13,25 +12,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
 public class ChatFormat implements Listener {
     private final CrankedCore plugin;
-
     public ChatFormat(CrankedCore plugin) {
         this.plugin = plugin;
     }
-
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        // Config check
+        // Config check	
         if (!plugin.getConfig().getBoolean("custom-chat-format-enabled"))
             return;
-
-        // Cancel check
+        // Cancel check	
         if (e.isCancelled())
             return;
-
-        // Vault chat
+        // Vault chat	
         if (CrankedCore.vaultChat != null) {
             Player player = e.getPlayer();
             String format;
@@ -41,12 +35,11 @@ public class ChatFormat implements Listener {
                 format = Objects.requireNonNull(plugin.getConfig().getString("default-format")).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", CrankedCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
             }
             format = CrankedCore.placeholderColor(format, player);
-
-            // Hover TODO optimize
+            // Hover TODO optimize	
             if (plugin.getConfig().getBoolean("name-hover-enabled")) {
                 for (Player onlinePlayer : e.getRecipients()) {
+                    List<String> list = plugin.getConfig().getStringList("hover-format"); // TODO for some reason ConfigManager doesn't work here?
                     TextComponent formatComponent = new TextComponent(PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, format));
-                    List<String> list = plugin.getConfig().getStringList("hover-format");
                     for (int i = 0; i < list.size(); i++) {
                         String line = list.get(i).replace("%name%", player.getDisplayName()).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player));
                         line = PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, line);

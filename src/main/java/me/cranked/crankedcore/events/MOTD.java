@@ -2,6 +2,7 @@ package me.cranked.crankedcore.events;
 
 import java.util.List;
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,7 +23,7 @@ public class MOTD implements Listener {
             return;
 
         // Print list of MOTD
-        List<String> motd = plugin.getConfig().getStringList("motd");
+        List<String> motd = ConfigManager.getList("motd");
         Player player = e.getPlayer();
         for (String msg : motd)
             player.sendMessage(CrankedCore.placeholderColor(PlaceholderAPI.setPlaceholders(player, msg), player));

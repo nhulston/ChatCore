@@ -31,7 +31,7 @@ public class CommandSpy implements Listener {
             return;
 
         // Check ignored
-        List<String> ignoredCommands = plugin.getConfig().getStringList("command-spy-ignored-commands");
+        List<String> ignoredCommands = ConfigManager.getList("command-spy-ignored-commands");
         for (String ignoredCommand : ignoredCommands) {
             if (e.getMessage().length() >= ignoredCommand.length() && e.getMessage().substring(0, ignoredCommand.length()).equalsIgnoreCase(ignoredCommand))
                 return;

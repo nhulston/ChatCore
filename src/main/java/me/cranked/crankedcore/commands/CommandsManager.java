@@ -20,7 +20,7 @@ public class CommandsManager implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             if (sender.hasPermission("crankedcore.help")) {
-                List<String> messages = plugin.getConfig().getStringList("help-msg");
+                List<String> messages = ConfigManager.getList("help-msg");
                 for (String msg : messages)
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
             } else {

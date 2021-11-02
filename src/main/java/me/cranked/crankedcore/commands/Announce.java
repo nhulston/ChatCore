@@ -27,12 +27,10 @@ public class Announce implements CommandExecutor {
         if (!plugin.getConfig().getBoolean("announce-enabled"))
             return false;
 
-        // TODO check if translate alternate necessary? or just use §
-        // TODO initialize plugin.getConfig strings, store as static variables, reference them here
         // TODO sounds for more things
         // Return if player doesn't have permission
         if (sender instanceof Player && !sender.hasPermission("crankedcore.announce")) {
-            sender.sendMessage();
+            sender.sendMessage(ConfigManager.get("no-permission"));
             return false;
         }
 
