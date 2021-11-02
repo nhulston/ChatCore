@@ -1,11 +1,10 @@
 package me.cranked.crankedcore.events;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -53,12 +52,12 @@ public class AntiAd implements Listener {
             }
 
             // Send warning message
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("anti-ad-msg"))));
+            player.sendMessage(ConfigManager.get("anti-ad"));
 
             // Broadcast to staff
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (onlinePlayer.hasPermission("crankedcore.antiad.alert"))
-                    onlinePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("anti-ad-inform-msg")).replace("%player%", player.getName()).replace("%message%", e.getMessage())));
+                    onlinePlayer.sendMessage(ConfigManager.colorize(ConfigManager.get("anti-ad-inform").replace("%player%", player.getName()).replace("%message%", e.getMessage())));
             }
         }
     }

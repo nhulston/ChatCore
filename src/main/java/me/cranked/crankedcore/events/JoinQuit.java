@@ -1,8 +1,7 @@
 package me.cranked.crankedcore.events;
 
-import java.util.Objects;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,9 +21,9 @@ public class JoinQuit implements Listener {
             return;
         Player player = e.getPlayer();
         if (player.hasPermission("crankedcore.vipjoin")) {
-            e.setJoinMessage(CrankedCore.placeholderColor(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(this.plugin.getConfig().getString("vip-join-message")).replace("%player%", player.getDisplayName())), player));
+            e.setJoinMessage(ConfigManager.colorize(ConfigManager.get("vip-join").replace("%player%", player.getDisplayName())));
         } else {
-            e.setJoinMessage(CrankedCore.placeholderColor(Objects.requireNonNull(this.plugin.getConfig().getString("join-message")).replace("%player%", player.getDisplayName()), player));
+            e.setJoinMessage(ConfigManager.colorize(ConfigManager.get("join").replace("%player%", player.getDisplayName())));
         }
     }
 
@@ -34,9 +33,9 @@ public class JoinQuit implements Listener {
             return;
         Player player = e.getPlayer();
         if (player.hasPermission("crankedcore.vipquit")) {
-            e.setQuitMessage(CrankedCore.placeholderColor(Objects.requireNonNull(this.plugin.getConfig().getString("vip-quit-message")).replace("%player%", player.getDisplayName()), player));
+            e.setQuitMessage(ConfigManager.colorize(ConfigManager.get("vip-quit").replace("%player%", player.getDisplayName())));
         } else {
-            e.setQuitMessage(CrankedCore.placeholderColor(Objects.requireNonNull(this.plugin.getConfig().getString("quit-message")).replace("%player%", player.getDisplayName()), player));
+            e.setQuitMessage(ConfigManager.colorize(ConfigManager.get("quit").replace("%player%", player.getDisplayName())));
         }
     }
 }

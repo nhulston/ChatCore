@@ -1,10 +1,9 @@
 package me.cranked.crankedcore.events;
 
 import java.util.List;
-import java.util.Objects;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +34,7 @@ public class BlockedCommands implements Listener {
         // Colon check
         if (plugin.getConfig().getBoolean("block-all-commands-containing-colon") && e.getMessage().contains(":")) {
             e.setCancelled(true);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("block-all-commands-containing-colon-message"))));
+            player.sendMessage(ConfigManager.get("block-all-commands-containing-colon"));
         }
         
         // Check if contains blocked commands
@@ -70,13 +69,13 @@ public class BlockedCommands implements Listener {
                 e.setCancelled(true);
 
                 // Send message
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("blocked-commands-msg"))));
+                player.sendMessage(ConfigManager.get("blocked-commands"));
 
                 // Warn staff
                 if (plugin.getConfig().getBoolean("blocked-commands-warn-staff"))
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                         if (onlinePlayer.hasPermission("crankedcore.blockedcommands.warn"))
-                            onlinePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("blocked-commands-warn-staff-msg")).replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage())));
+                            onlinePlayer.sendMessage(ConfigManager.colorize(ConfigManager.get("blocked-commands-warn-staff-msg").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage())));
                     }
                 return;
             }

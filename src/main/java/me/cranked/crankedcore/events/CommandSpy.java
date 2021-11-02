@@ -1,8 +1,8 @@
 package me.cranked.crankedcore.events;
 
 import java.util.List;
-import java.util.Objects;
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,7 +40,7 @@ public class CommandSpy implements Listener {
         // Broadcast to staff with enabled
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (me.cranked.crankedcore.commands.CommandSpy.commandSpyList.contains(onlinePlayer))
-                onlinePlayer.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("command-spy-format")).replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage()))));
+                onlinePlayer.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', ConfigManager.get("command-spy-format").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage()))));
         }
     }
 

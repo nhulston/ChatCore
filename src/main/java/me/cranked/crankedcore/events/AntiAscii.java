@@ -1,8 +1,7 @@
 package me.cranked.crankedcore.events;
 
-import java.util.Objects;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,7 +24,7 @@ public class AntiAscii implements Listener {
         if (!e.getPlayer().hasPermission("crankedcore.ascii.bypass") && containsAscii(e.getMessage().toCharArray()))
             // Cancel message
             if (plugin.getConfig().getBoolean("ascii-cancel")) {
-                e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("ascii-cancel-message"))));
+                e.getPlayer().sendMessage(ConfigManager.get("ascii-cancel"));
                 e.setCancelled(true);
             }
 
@@ -33,8 +32,8 @@ public class AntiAscii implements Listener {
             else {
                 char[] message = e.getMessage().toCharArray();
                 for (int i = 0; i < message.length; i++) {
-                    if (message[i] >= 256)
-                        message[i] = Objects.requireNonNull(plugin.getConfig().getString("ascii-replace-character")).charAt(0);
+                    if (message[i] >= 128)
+                        message[i] = ConfigManager.get("ascii-replace-character").charAt(0);
                 }
                 e.setMessage(new String(message));
             }

@@ -1,6 +1,8 @@
 package me.cranked.crankedcore.events;
 
 import java.util.Objects;
+
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,7 +32,7 @@ public class Mention implements Listener {
 
         String message = e.getMessage();
         String messageLower = message.toLowerCase();
-        boolean playSound = !Objects.requireNonNull(this.plugin.getConfig().getString("mention-sound")).equalsIgnoreCase("none");
+        String sound = ConfigManager.get("mention-sound");
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             String playerName = onlinePlayer.getName();
             String playerNameLower = playerName.toLowerCase();
@@ -38,8 +40,8 @@ public class Mention implements Listener {
             // TODO why is this big if statement necessary
             if ((loc != -1 && (loc + playerName.length() == message.length() || (loc == 0 && messageLower.contains(playerNameLower + " ")) || messageLower.contains(" " + playerNameLower + " ") || messageLower.contains(" " + playerNameLower + ".") || messageLower.contains(" " + playerNameLower + "?") || messageLower.contains(" " + playerNameLower + "!"))) || (message.length() == playerName.length() + 1 && (messageLower.contains(playerNameLower + ".") || messageLower.contains(playerNameLower + "!") || messageLower.contains(playerNameLower + "?")))) {
                 e.setMessage(ChatColor.translateAlternateColorCodes('&', message.substring(0, loc) + this.plugin.getConfig().getString("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
-                if (playSound)
-                    onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(this.plugin.getConfig().getString("mention-sound")), 1.0F, 1.0F);
+                if (!sound.equalsIgnoreCase("none"))
+                    onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
             }
         }
     }

@@ -2,10 +2,10 @@ package me.cranked.crankedcore.events;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
+
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +35,7 @@ public class DelayChat implements Listener {
         if (this.cooldown.containsKey(player.getUniqueId()) && this.cooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
             e.setCancelled(true);
             double remainingTime = Math.round((this.cooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000.0D * 10.0D) / 10.0D;
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(this.plugin.getConfig().getString("delay-msg")).replace("%time%", Double.toString(remainingTime))));
+            player.sendMessage(ConfigManager.colorize(ConfigManager.get("delay").replace("%time%", Double.toString(remainingTime))));
         }
 
         // Set cooldown

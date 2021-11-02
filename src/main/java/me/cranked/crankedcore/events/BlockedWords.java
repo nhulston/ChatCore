@@ -1,9 +1,9 @@
 package me.cranked.crankedcore.events;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -74,7 +74,7 @@ public class BlockedWords implements Listener {
                 int loc = msg.toLowerCase().indexOf(blockedWord);
                 StringBuilder replaceWord = new StringBuilder();
                 for (int i = 0; i < blockedWord.length(); i++)
-                    replaceWord.append(Objects.requireNonNull(plugin.getConfig().getString("blocked-words-replace-char")));
+                    replaceWord.append(ConfigManager.get("blocked-words-replace-char"));
                 msg = msg.substring(0, loc) + replaceWord + msg.substring(loc + blockedWord.length());
             }
             if (!msg.equals(msgBefore) && word.contains(",")) {

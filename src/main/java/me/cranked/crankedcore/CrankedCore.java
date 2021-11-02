@@ -21,6 +21,7 @@ public final class CrankedCore extends JavaPlugin {
 
     public void onEnable() {
         // Setup config
+        ConfigManager.plugin = this;
         getConfig().options().copyDefaults();
         saveDefaultConfig();
         setupConfigManager();

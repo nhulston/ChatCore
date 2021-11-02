@@ -3,6 +3,7 @@ package me.cranked.crankedcore.events;
 import java.util.List;
 import java.util.Objects;
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -35,9 +36,9 @@ public class ChatFormat implements Listener {
             Player player = e.getPlayer();
             String format;
             try {
-                format = ((String)Objects.requireNonNull(plugin.getConfig().getString("rank-formats." + CrankedCore.vaultChat.getPrimaryGroup(player)))).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", CrankedCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
+                format = Objects.requireNonNull(plugin.getConfig().getString("rank-formats." + CrankedCore.vaultChat.getPrimaryGroup(player))).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", CrankedCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
             } catch (NullPointerException e2) {
-                format = ((String)Objects.requireNonNull(plugin.getConfig().getString("default-format"))).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", CrankedCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
+                format = Objects.requireNonNull(plugin.getConfig().getString("default-format")).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", CrankedCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
             }
             format = CrankedCore.placeholderColor(format, player);
 
@@ -52,14 +53,15 @@ public class ChatFormat implements Listener {
                         list.set(i, CrankedCore.placeholderColor(line, player));
                     }
                     formatComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder(String.join("\n", list))).create()));
-                    String clickAction = plugin.getConfig().getString("click-action-mode");
-                    assert clickAction != null;
-                    if (clickAction.equalsIgnoreCase("suggestcommand")) {
-                        formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, Objects.requireNonNull(plugin.getConfig().getString("click-action")).replace("%name%", player.getName())));
-                    } else if (clickAction.equalsIgnoreCase("runcommand")) {
-                        formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, Objects.requireNonNull(plugin.getConfig().getString("click-action")).replace("%name%", player.getName())));
-                    } else if (clickAction.equalsIgnoreCase("url")) {
-                        formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Objects.requireNonNull(plugin.getConfig().getString("click-action")).replace("%name%", player.getName())));
+                    String clickActionMode = ConfigManager.get("click-action-mode");
+                    assert clickActionMode != null;
+                    String action = ConfigManager.colorize(ConfigManager.get("click-action").replace("%name%", player.getName()));
+                    if (clickActionMode.equalsIgnoreCase("suggestcommand")) {
+                        formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, action));
+                    } else if (clickActionMode.equalsIgnoreCase("runcommand")) {
+                        formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, action));
+                    } else if (clickActionMode.equalsIgnoreCase("url")) {
+                        formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, action));
                     }
                     onlinePlayer.spigot().sendMessage(formatComponent, new TextComponent(format.substring(format.length() - 2) + e.getMessage()));
                 }

@@ -1,9 +1,7 @@
 package me.cranked.crankedcore.events;
 
-import java.util.Objects;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,9 +22,9 @@ public class StaffChat implements Listener {
             Player player = e.getPlayer();
             String msg = e.getMessage();
             e.setCancelled(true);
-            System.out.println(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(this.plugin.getConfig().getString("staff-chat-format")).replace("%message%", msg).replace("%player%", player.getDisplayName())));
+            System.out.println(ConfigManager.colorize(ConfigManager.get("staff-chat-format").replace("%message%", msg).replace("%player%", player.getDisplayName())));
             me.cranked.crankedcore.commands.StaffChat sendMessage = new me.cranked.crankedcore.commands.StaffChat(this.plugin);
-            sendMessage.sendMessage(msg, (CommandSender)player);
+            sendMessage.sendMessage(msg, player);
         }
     }
 }

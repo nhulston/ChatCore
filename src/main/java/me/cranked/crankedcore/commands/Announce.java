@@ -1,15 +1,15 @@
 package me.cranked.crankedcore.commands;
 
 import java.util.Arrays;
-import java.util.Objects;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class Announce implements CommandExecutor {
     private final CrankedCore plugin;
@@ -18,7 +18,7 @@ public class Announce implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
          return command(sender, args);
     }
 
@@ -29,15 +29,16 @@ public class Announce implements CommandExecutor {
 
         // TODO check if translate alternate necessary? or just use §
         // TODO initialize plugin.getConfig strings, store as static variables, reference them here
+        // TODO sounds for more things
         // Return if player doesn't have permission
         if (sender instanceof Player && !sender.hasPermission("crankedcore.announce")) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("no-permission-msg"))));
+            sender.sendMessage();
             return false;
         }
 
         // Return if incorrect usage
         if (args.length <= 1) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("announce-usage"))));
+            sender.sendMessage(ConfigManager.get("announce-usage"));
             return false;
         }
 
@@ -46,12 +47,13 @@ public class Announce implements CommandExecutor {
         String msg = String.join(" ", args);
 
         // Broadcast message
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("announce-format")).replace("%message%", msg)));
+        Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get("announce-format").replace("%message%", msg)));
 
         // Play sound to all players
-        if (!Objects.requireNonNull(plugin.getConfig().getString("announce-sound")).equalsIgnoreCase("none")) {
+        String sound = ConfigManager.get("announce-sound");
+        if (!sound.equalsIgnoreCase("none")) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(plugin.getConfig().getString("announce-sound")), 1.0F, 1.0F);
+                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
             }
         }
         return true;

@@ -1,16 +1,14 @@
 package me.cranked.crankedcore.commands;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
-
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class CommandSpy implements CommandExecutor {
     private final CrankedCore plugin;
@@ -20,7 +18,7 @@ public class CommandSpy implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender);
     }
 
@@ -37,7 +35,7 @@ public class CommandSpy implements CommandExecutor {
         
         // Permission check
         if (!sender.hasPermission("chat.commandspy")) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("no-permission-msg"))));
+            sender.sendMessage(ConfigManager.get("no-permission"));
             return false;
         }
         
@@ -45,10 +43,10 @@ public class CommandSpy implements CommandExecutor {
         // TODO check this command spy enabled on join logic
         if (commandSpyList.contains(player)) {
             commandSpyList.remove(player);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("command-spy-off-msg"))));
+            sender.sendMessage(ConfigManager.get("command-spy-off"));
         } else {
             commandSpyList.add(player);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("command-spy-on-msg"))));
+            sender.sendMessage(ConfigManager.get("command-spy-on"));
         }
         
         return true;

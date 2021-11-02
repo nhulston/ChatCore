@@ -5,14 +5,15 @@ import java.time.LocalTime;
 import java.util.*;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import me.cranked.crankedcore.events.Log;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class StaffChat implements CommandExecutor {
     private final CrankedCore plugin;
@@ -22,7 +23,7 @@ public class StaffChat implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
     }
 
@@ -33,7 +34,7 @@ public class StaffChat implements CommandExecutor {
 
         // Permission check
         if (!sender.hasPermission("crankedcore.staffchat.send")) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("no-permission-msg"))));
+            sender.sendMessage(ConfigManager.get("no-permission"));
             return false;
         }
 
@@ -49,10 +50,10 @@ public class StaffChat implements CommandExecutor {
             Player player = (Player) sender;
             if (staffChatList.contains(player)) {
                 staffChatList.remove(player);
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("staff-chat-off-msg"))));
+                sender.sendMessage(ConfigManager.get("staff-chat-off"));
             } else {
                 staffChatList.add(player);
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("staff-chat-on-msg"))));
+                sender.sendMessage(ConfigManager.get("staff-chat-on"));
             }
         } else {
             // Calculate message
@@ -65,7 +66,7 @@ public class StaffChat implements CommandExecutor {
             // Log in chat logger
             if (plugin.getConfig().getBoolean("chat-logger-enabled") && plugin.getConfig().getBoolean("chat-logger-staff-chat-enabled")) {
                 Player player = (Player) sender;
-                String formattedMessage = Objects.requireNonNull(plugin.getConfig().getString("logger-format")).replace("%time%", LocalTime.now().toString()).replace("%player%", player.getName()).replace("%message%", msg);
+                String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", player.getName()).replace("%message%", msg));
                 formattedMessage = PlaceholderAPI.setPlaceholders(player, formattedMessage);
                 Log logger = new Log(plugin);
                 logger.log(formattedMessage, LocalDate.now().toString(), "Chat Logs");
@@ -78,7 +79,7 @@ public class StaffChat implements CommandExecutor {
     public void sendMessage(String msg, CommandSender sender) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission("crankedcore.staffchat.see")) // TODO what is this placeholder color
-                onlinePlayer.sendMessage(CrankedCore.placeholderColor(Objects.requireNonNull(plugin.getConfig().getString("staff-chat-format")).replace("%message%", msg).replace("%player%", sender.getName()), (Player) sender));
+                onlinePlayer.sendMessage(CrankedCore.placeholderColor(ConfigManager.get("staff-chat-format").replace("%message%", msg).replace("%player%", sender.getName()), (Player) sender));
         }
     }
 }

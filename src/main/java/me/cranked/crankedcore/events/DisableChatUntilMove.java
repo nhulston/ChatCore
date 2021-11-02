@@ -1,8 +1,9 @@
 package me.cranked.crankedcore.events;
 
 import java.util.*;
+
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,7 +49,7 @@ public class DisableChatUntilMove implements Listener {
         Player player = e.getPlayer();
         if (this.notMoved.contains(player)) {
             e.setCancelled(true);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(this.plugin.getConfig().getString("disable-chat-until-move-message"))));
+            player.sendMessage(ConfigManager.get("disable-chat-until-move"));
         }
     }
 
@@ -69,7 +70,7 @@ public class DisableChatUntilMove implements Listener {
         for (String blockedCommand : blockedCommands) {
             if ((msg.length() == blockedCommand.length() && msg.equalsIgnoreCase(blockedCommand)) || (msg.length() > blockedCommand.length() && msg.substring(0, blockedCommand.length() + 1).equalsIgnoreCase(blockedCommand + " "))) {
                 e.setCancelled(true);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(this.plugin.getConfig().getString("disable-command-until-move"))));
+                player.sendMessage(ConfigManager.get("disable-command-until-move"));
             }
         }
     }

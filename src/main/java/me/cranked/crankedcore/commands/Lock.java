@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class Lock implements CommandExecutor {
     private final CrankedCore plugin;
@@ -20,7 +22,7 @@ public class Lock implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
     }
 
@@ -31,7 +33,7 @@ public class Lock implements CommandExecutor {
         
         // Permission check
         if (sender instanceof Player && !sender.hasPermission("crankedcore.lock")) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("no-permission-msg"))));
+            sender.sendMessage(ConfigManager.get("no-permission"));
             return false;
         }
         
@@ -43,18 +45,18 @@ public class Lock implements CommandExecutor {
         // TODO bring silent messages to clear chat, etc.
         if (plugin.getChatLocked()) {
             if (arguments.contains("-s") && sender.hasPermission("crankedcore.lock.silent")) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("lock-silent-msg"))));
+                sender.sendMessage(ConfigManager.get("lock-silent"));
             } else if (arguments.contains("-a") && sender.hasPermission("crankedcore.lock.anonymous")) {
-                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("lock-msg-anon"))));
+                Bukkit.broadcastMessage(ConfigManager.get("lock-anon"));
             } else {
-                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("lock-msg")).replace("%player%", sender.getName())));
+                Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get("lock").replace("%player%", sender.getName())));
             }
         } else if (arguments.contains("-s") && sender.hasPermission("crankedcore.lock.silent")) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("unlock-silent-msg"))));
+            sender.sendMessage(ConfigManager.get("unlock-silent"));
         } else if (arguments.contains("-a") && sender.hasPermission("crankedcore.lock.anonymous")) {
-            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("unlock-msg-anon"))));
+            Bukkit.broadcastMessage(ConfigManager.get("unlock-anon"));
         } else {
-            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("unlock-msg")).replace("%player%", sender.getName())));
+            Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get("unlock").replace("%player%", sender.getName())));
         }
 
         return true;

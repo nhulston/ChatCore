@@ -1,7 +1,6 @@
 package me.cranked.crankedcore.commands;
 
 import java.util.List;
-import java.util.Objects;
 import me.cranked.crankedcore.CrankedCore;
 import me.cranked.crankedcore.ConfigManager;
 import org.bukkit.ChatColor;
@@ -9,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class CommandsManager implements CommandExecutor {
     private final CrankedCore plugin;
@@ -17,7 +17,7 @@ public class CommandsManager implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             if (sender.hasPermission("crankedcore.help")) {
                 List<String> messages = plugin.getConfig().getStringList("help-msg");
@@ -31,9 +31,9 @@ public class CommandsManager implements CommandExecutor {
             if (sender.hasPermission("crankedcore.reload") || !(sender instanceof Player)) {
                 plugin.reloadConfig();
                 ConfigManager.reload();
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("reload-msg"))));
+                sender.sendMessage(ConfigManager.get("reload"));
             } else {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("no-permission-msg"))));
+                sender.sendMessage(ConfigManager.get("no-permission"));
             }
         } else if (args[0].equalsIgnoreCase("clear")) {
             Clear clear = new Clear(plugin);

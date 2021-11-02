@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,7 +28,7 @@ public class Log implements Listener {
         // Config check
         if (!this.plugin.getConfig().getBoolean("chat-logger-enabled"))
             return;
-        String formattedMessage = Objects.requireNonNull(this.plugin.getConfig().getString("logger-format")).replace("%time%", LocalTime.now().toString()).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage());
+        String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage()));
         formattedMessage = PlaceholderAPI.setPlaceholders(e.getPlayer(), formattedMessage);
         log(formattedMessage, LocalDate.now().toString(), "Chat Logs");
     }
@@ -37,7 +37,7 @@ public class Log implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent e) {
         if (!this.plugin.getConfig().getBoolean("command-logger-enabled"))
             return;
-        String formattedMessage = Objects.requireNonNull(this.plugin.getConfig().getString("logger-format")).replace("%time%", LocalTime.now().toString()).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage());
+        String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage()));
         formattedMessage = PlaceholderAPI.setPlaceholders(e.getPlayer(), formattedMessage);
         String command = e.getMessage();
         if (this.plugin.getConfig().getBoolean("chat-logger-enabled")) {

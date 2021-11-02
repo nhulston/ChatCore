@@ -1,15 +1,15 @@
 package me.cranked.crankedcore.commands;
 
 import java.util.Arrays;
-import java.util.Objects;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class StaffAnnounce implements CommandExecutor {
     private final CrankedCore plugin;
@@ -18,7 +18,7 @@ public class StaffAnnounce implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
     }
 
@@ -29,13 +29,13 @@ public class StaffAnnounce implements CommandExecutor {
 
         // Permission check
         if (sender instanceof Player && !sender.hasPermission("crankedcore.staffannounce")) {
-            sender.sendMessage(CrankedCore.placeholderColor(plugin.getConfig().getString("no-permission-msg"), (Player)sender));
+            sender.sendMessage(CrankedCore.placeholderColor(plugin.getConfig().getString("no-permission"), (Player)sender));
             return false;
         }
 
         // Usage check
         if (args.length <= 1) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("staff-announce-usage"))));
+            sender.sendMessage(ConfigManager.get("staff-announce-usage"));
             return false;
         }
 
@@ -44,12 +44,13 @@ public class StaffAnnounce implements CommandExecutor {
         String msg = String.join(" ", args);
 
         // Announce to staff
-        boolean playSound = !Objects.requireNonNull(plugin.getConfig().getString("staff-announce-sound")).equalsIgnoreCase("none");
+        String sound = ConfigManager.get("staff-announce-sound");
+        String parsedMsg = ConfigManager.colorize(ConfigManager.get("staff-announce-format").replace("%message%", msg));
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission("crankedcore.staffannounce.see")) {
-                onlinePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(plugin.getConfig().getString("staff-announce-format")).replace("%message%", msg)));
-                if (playSound)
-                    onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(plugin.getConfig().getString("staff-announce-sound")), 1.0F, 1.0F);
+                onlinePlayer.sendMessage(parsedMsg);
+                if (!sound.equalsIgnoreCase("none"))
+                    onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
             }
         }
 

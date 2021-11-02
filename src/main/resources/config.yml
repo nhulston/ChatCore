@@ -76,8 +76,8 @@ slow-msg-anon: '&aThe chat was slowed to a %time% second delay.'
 slow-usage-msg: '&cUsage: /chat slow <time in sec OR 0 to end>'
 slow-silent-msg: '&aYou silently slowed the chat to a %time% second delay.'
 slow-delay-msg: '&cThe chat is slowed, so you cannot talk for another %time% seconds.'
-slow-msg-0: '&aThe chat is no longer slowed.'
-slow-silent-msg-0: '&aYou silently removed the slow delay in chat.'
+unslow-msg: '&aThe chat is no longer slowed.'
+unslow-silent-msg: '&aYou silently removed the slow delay in chat.'
 
 
 #############################################################
@@ -182,7 +182,7 @@ blocked-commands-warn-staff-msg: '&c&lWARNING&f: &c%player% &ftried to use the c
 block-all-commands-containing-colon: true
 
 # Set to '' to disable
-block-all-commands-containing-colon-message: '&cYou cannot use colons in commands.'
+block-all-commands-containing-colon-msg: '&cYou cannot use colons in commands.'
 # IMPORTANT TIP: if you want to block players from using '/ver ' or '/about ' (which shows all plugins!), negate the permission 'bukkit.command.version'
 # This removes the need for external plugins that will only slow down your server!
 blocked-commands:      # to disable, do:   blocked-commands: []
@@ -261,6 +261,8 @@ announce-usage: '&cUsage: /chat announce <message>'
 # 1.13: https://pastebin.com/CkQ1WZuw
 # 1.14: https://pastebin.com/Z3eh7SP5
 # 1.15: https://pastebin.com/BZeQSYMN
+# 1.16:https://pastebin.com/KeaGT8Gi
+# 1.17L https://pastebin.com/X0US4f7D
 announce-sound: 'NONE'
 
 warning-enabled: true
@@ -291,8 +293,8 @@ colored-chat-enabled: true
 #############################################################
 
 disable-chat-until-move: true
-disable-chat-until-move-message: '&cYou cannot talk in chat until you move.'
-disable-command-until-move: '&cYou cannot use that command until you move.'
+disable-chat-until-move-msg: '&cYou cannot talk in chat until you move.'
+disable-command-until-move-msg: '&cYou cannot use that command until you move.'
 
 # to disable, do:   disable-commands-until-move: []
 disable-commands-until-move:
@@ -326,10 +328,10 @@ anti-ad-whitelist:
 custom-join-quit-messages-enabled: true
 
 # Set to '' to disable join and quit messages (custom-join-quit-messages-enabled must be true then)
-join-message: '&8[&a&l+&8] &f%player%'
-quit-message: '&8[&c&l-&8] &f%player%'
-vip-join-message: '&8[&a&l+&8] &b%player%'
-vip-quit-message: '&8[&c&l-&8] &b%player%'
+join-msg: '&8[&a&l+&8] &f%player%'
+quit-msg: '&8[&c&l-&8] &f%player%'
+vip-join-msg: '&8[&a&l+&8] &b%player%'
+vip-quit-msg: '&8[&c&l-&8] &b%player%'
 
 
 #############################################################
@@ -470,5 +472,5 @@ logger-format: '[%time%] %player%: %message% '
 # Recommended to stop bypassing swear and anti-advertising filter
 disable-ascii: true
 ascii-cancel: true          # If true, cancels the message. If false, replaces the ASCII symbol with the replace character
-ascii-cancel-message: '&cYou cannot use ASCII characters.'
+ascii-cancel-msg: '&cYou cannot use ASCII characters.'
 ascii-replace-character: '*'
