@@ -13,16 +13,10 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class CommandSpy implements Listener {
-    private final CrankedCore plugin;
-
-    public CommandSpy(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         // Config check
-        if (!plugin.getConfig().getBoolean("command-spy-enabled"))
+        if (!ConfigManager.getEnabled("command-spy"))
             return;
 
         // Permission check
@@ -46,7 +40,7 @@ public class CommandSpy implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        if (plugin.getConfig().getBoolean("command-spy-enabled-on-join") && e.getPlayer().hasPermission("chat.commandspy"))
+        if (ConfigManager.getEnabled("command-spy-enabled-on-join") && e.getPlayer().hasPermission("chat.commandspy"))
             me.cranked.crankedcore.commands.CommandSpy.commandSpyList.add(e.getPlayer());
     }
 }

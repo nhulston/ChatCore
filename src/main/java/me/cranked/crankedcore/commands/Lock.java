@@ -1,14 +1,9 @@
 package me.cranked.crankedcore.commands;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
-
 import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +23,7 @@ public class Lock implements CommandExecutor {
 
     public boolean command(CommandSender sender, String[] args) {
         // Config check
-        if (!plugin.getConfig().getBoolean("lock-enabled"))
+        if (!ConfigManager.getEnabled("lock-chat"))
             return false;
         
         // Permission check

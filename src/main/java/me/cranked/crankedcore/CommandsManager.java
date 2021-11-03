@@ -1,8 +1,7 @@
-package me.cranked.crankedcore.commands;
+package me.cranked.crankedcore;
 
 import java.util.List;
-import me.cranked.crankedcore.CrankedCore;
-import me.cranked.crankedcore.ConfigManager;
+import me.cranked.crankedcore.commands.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,14 +28,14 @@ public class CommandsManager implements CommandExecutor {
             }
         } else if (args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("crankedcore.reload") || !(sender instanceof Player)) {
-                plugin.reloadConfig();
                 ConfigManager.reload();
+                DeathMessagesConfigManager.reload();
                 sender.sendMessage(ConfigManager.get("reload"));
             } else {
                 sender.sendMessage(ConfigManager.get("no-permission"));
             }
         } else if (args[0].equalsIgnoreCase("clear")) {
-            Clear clear = new Clear(plugin);
+            Clear clear = new Clear();
             clear.command(sender, args);
         } else if (args[0].equalsIgnoreCase("slow")) {
             Slow slow = new Slow(plugin);
@@ -44,20 +43,20 @@ public class CommandsManager implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("lock") || args[0].equalsIgnoreCase("mute")) {
             Lock lock = new Lock(plugin);
             lock.command(sender, args);
-        } else if (plugin.getConfig().getBoolean("staff-chat-enabled") && args[0].equalsIgnoreCase("staff")) {
+        } else if (ConfigManager.getEnabled("staff-chat") && args[0].equalsIgnoreCase("staff")) {
             StaffChat staffchat = new StaffChat(plugin);
             staffchat.command(sender, args);
         } else if (args[0].equalsIgnoreCase("spy")) {
-            CommandSpy spy = new CommandSpy(plugin);
+            CommandSpy spy = new CommandSpy();
             spy.command(sender);
         } else if (args[0].equalsIgnoreCase("announce") || args[0].equalsIgnoreCase("shout") || args[0].equalsIgnoreCase("broadcast")) {
-            Announce announce = new Announce(plugin);
+            Announce announce = new Announce();
             announce.command(sender, args);
         } else if (args[0].equalsIgnoreCase("warning") || args[0].equalsIgnoreCase("warn")) {
-            Warning warn = new Warning(plugin);
+            Warning warn = new Warning();
             warn.command(sender, args);
         } else if (args[0].equalsIgnoreCase("staffannounce")) {
-            StaffAnnounce staff = new StaffAnnounce(plugin);
+            StaffAnnounce staff = new StaffAnnounce();
             staff.command(sender, args);
         }
         return true;

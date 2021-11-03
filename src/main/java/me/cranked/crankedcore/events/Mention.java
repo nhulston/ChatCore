@@ -23,7 +23,7 @@ public class Mention implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check
-        if (!this.plugin.getConfig().getBoolean("mention-enabled"))
+        if (!ConfigManager.getEnabled("mention"))
             return;
 
         // Permission check

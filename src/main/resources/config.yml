@@ -54,7 +54,7 @@ clear-msg-anon: '&aThe chat was cleared.'
 ## +------------------------------------------------------+ #
 #############################################################
 
-lock-enabled: true
+lock-chat-enabled: true
 lock-msg: '&aThe chat has been locked by %player%.'
 lock-msg-anon: '&aThe chat has been locked.'
 unlock-msg: '&aThe chat has been unlocked by %player%.'
@@ -70,7 +70,7 @@ unlock-silent-msg: '&aYou silently unlocked the chat.'
 ## +------------------------------------------------------+ #
 #############################################################
 
-slow-enabled: true
+slow-chat-enabled: true
 slow-msg: '&aThe chat was slowed to a %time% second delay by %player%.'
 slow-msg-anon: '&aThe chat was slowed to a %time% second delay.'
 slow-usage-msg: '&cUsage: /chat slow <time in sec OR 0 to end>'

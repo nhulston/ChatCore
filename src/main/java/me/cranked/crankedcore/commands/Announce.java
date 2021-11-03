@@ -2,7 +2,6 @@ package me.cranked.crankedcore.commands;
 
 import java.util.Arrays;
 import me.cranked.crankedcore.ConfigManager;
-import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -12,11 +11,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Announce implements CommandExecutor {
-    private final CrankedCore plugin;
-
-    public Announce(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
          return command(sender, args);
@@ -24,7 +18,7 @@ public class Announce implements CommandExecutor {
 
     public boolean command(CommandSender sender, String[] args) {
         // Return if announcing isn't enabled
-        if (!plugin.getConfig().getBoolean("announce-enabled"))
+        if (!ConfigManager.getEnabled("announce"))
             return false;
 
         // TODO sounds for more things

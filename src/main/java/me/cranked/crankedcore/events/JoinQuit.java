@@ -1,7 +1,6 @@
 package me.cranked.crankedcore.events;
 
 import me.cranked.crankedcore.ConfigManager;
-import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,15 +8,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class JoinQuit implements Listener {
-    private final CrankedCore plugin;
-
-    public JoinQuit(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        if (!this.plugin.getConfig().getBoolean("custom-join-quit-messages-enabled"))
+        if (!ConfigManager.getEnabled("custom-join-quit-messages"))
             return;
         Player player = e.getPlayer();
         if (player.hasPermission("crankedcore.vipjoin")) {
@@ -29,7 +22,7 @@ public class JoinQuit implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        if (!this.plugin.getConfig().getBoolean("custom-join-quit-messages-enabled"))
+        if (!ConfigManager.getEnabled("custom-join-quit-messages"))
             return;
         Player player = e.getPlayer();
         if (player.hasPermission("crankedcore.vipquit")) {

@@ -26,28 +26,28 @@ public class Log implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check
-        if (!this.plugin.getConfig().getBoolean("chat-logger-enabled"))
+        if (!ConfigManager.getEnabled("chat-logger"))
             return;
-        String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage()));
+        String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString().substring(0, 8)).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage()));
         formattedMessage = PlaceholderAPI.setPlaceholders(e.getPlayer(), formattedMessage);
         log(formattedMessage, LocalDate.now().toString(), "Chat Logs");
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
-        if (!this.plugin.getConfig().getBoolean("command-logger-enabled"))
+        if (!ConfigManager.getEnabled("command-logger"))
             return;
-        String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage()));
+        String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString().substring(0, 8)).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage()));
         formattedMessage = PlaceholderAPI.setPlaceholders(e.getPlayer(), formattedMessage);
         String command = e.getMessage();
-        if (this.plugin.getConfig().getBoolean("chat-logger-enabled")) {
+        if (ConfigManager.getEnabled("chat-logger")) {
             List<String> chatLoggerIncludedCommands = ConfigManager.getList("chat-logger-included-commands");
             for (String includedCommand : chatLoggerIncludedCommands) {
                 if (includedCommand.equalsIgnoreCase(command) || (command.length() > includedCommand.length() && (includedCommand + " ").equalsIgnoreCase(command.substring(0, includedCommand.length() + 1))))
                     log(formattedMessage, LocalDate.now().toString(), "Chat Logs");
             }
         }
-        if (this.plugin.getConfig().getBoolean("command-logger-enabled")) {
+        if (ConfigManager.getEnabled("command-logger")) {
             List<String> commandLoggerIncludedCommands = ConfigManager.getList("command-logger-ignored-commands");
             for (String ignoredCommand : commandLoggerIncludedCommands) {
                 if (ignoredCommand.equalsIgnoreCase(command) || (command.length() > ignoredCommand.length() && (ignoredCommand + " ").equalsIgnoreCase(command.substring(0, ignoredCommand.length() + 1))))

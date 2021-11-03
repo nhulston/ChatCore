@@ -11,12 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandSpy implements CommandExecutor {
-    private final CrankedCore plugin;
     public static Set<Player> commandSpyList = new HashSet<>();
-
-    public CommandSpy(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender);
@@ -30,7 +25,7 @@ public class CommandSpy implements CommandExecutor {
         }
         
         // Config enabled check
-        if (!plugin.getConfig().getBoolean("command-spy-enabled"))
+        if (!ConfigManager.getEnabled("command-spy"))
             return false;
         
         // Permission check

@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 import me.cranked.crankedcore.CrankedCore;
-import me.cranked.crankedcore.ConfigManager;
+import me.cranked.crankedcore.DeathMessagesConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Creeper;
@@ -27,18 +27,18 @@ import org.bukkit.inventory.ItemStack;
 // TODO fix this entire class for 1.16 & 1.17
 public class Death implements Listener {
     public String getMsg(String path) {
-        int x = ThreadLocalRandom.current().nextInt(0, ConfigManager.get().getStringList(path).size());
-        return ConfigManager.get().getStringList(path).get(x);
+        int x = ThreadLocalRandom.current().nextInt(0, DeathMessagesConfigManager.get().getStringList(path).size());
+        return DeathMessagesConfigManager.get().getStringList(path).get(x);
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         // Config check
-        if (!ConfigManager.get().getBoolean("enable-custom-death-messages"))
+        if (!DeathMessagesConfigManager.get().getBoolean("enable-custom-death-messages"))
             return;
 
         // Disable death messages check
-        if (ConfigManager.get().getBoolean("disable-all-death-messages")) {
+        if (DeathMessagesConfigManager.get().getBoolean("disable-all-death-messages")) {
             e.setDeathMessage("");
             return;
         }
@@ -63,11 +63,11 @@ public class Death implements Listener {
                 } catch (ClassCastException e2) {
                     EntityDamageEvent.DamageCause damageCause = lastDamageCause.getCause();
                     if (damageCause.equals(EntityDamageEvent.DamageCause.MAGIC)) {
-                        int x = (int)(Math.random() * ConfigManager.get().getStringList("dispenser-magic").size());
-                        e.setDeathMessage(CrankedCore.placeholderColor(ConfigManager.get().getStringList("dispenser-magic").get(x), player).replaceAll("%player%", playerName));
+                        int x = (int)(Math.random() * DeathMessagesConfigManager.get().getStringList("dispenser-magic").size());
+                        e.setDeathMessage(CrankedCore.placeholderColor(DeathMessagesConfigManager.get().getStringList("dispenser-magic").get(x), player).replaceAll("%player%", playerName));
                     } else {
-                        int x = (int)(Math.random() * ConfigManager.get().getStringList("dispenser").size());
-                        e.setDeathMessage(CrankedCore.placeholderColor(ConfigManager.get().getStringList("dispenser").get(x), player).replaceAll("%player%", playerName));
+                        int x = (int)(Math.random() * DeathMessagesConfigManager.get().getStringList("dispenser").size());
+                        e.setDeathMessage(CrankedCore.placeholderColor(DeathMessagesConfigManager.get().getStringList("dispenser").get(x), player).replaceAll("%player%", playerName));
                     }
                     return;
                 }
@@ -84,8 +84,8 @@ public class Death implements Listener {
                     killerName = killer.getDisplayName();
                 }
             }
-            int x = (int)(Math.random() * ConfigManager.get().getStringList("pvp-thorns").size());
-            msg = ConfigManager.get().getStringList("pvp-thorns").get(x).replaceAll("%killer%", killerName);
+            int x = (int)(Math.random() * DeathMessagesConfigManager.get().getStringList("pvp-thorns").size());
+            msg = DeathMessagesConfigManager.get().getStringList("pvp-thorns").get(x).replaceAll("%killer%", killerName);
         } else {
             boolean fireDeath = (lastCause.equals(EntityDamageEvent.DamageCause.FIRE) || lastCause.equals(EntityDamageEvent.DamageCause.FIRE_TICK));
             if (killer != null && killer != player) {

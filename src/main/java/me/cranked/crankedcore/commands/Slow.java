@@ -23,7 +23,7 @@ public class Slow implements CommandExecutor {
 
     public boolean command(CommandSender sender, String[] args) {
         // Config check
-        if (!plugin.getConfig().getBoolean("slow-enabled"))
+        if (!ConfigManager.getEnabled("slow-chat"))
             return false;
 
         // Permission check

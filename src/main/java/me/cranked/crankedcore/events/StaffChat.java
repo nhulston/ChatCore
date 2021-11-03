@@ -16,7 +16,7 @@ public class StaffChat implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if (!this.plugin.getConfig().getBoolean("staff-chat-enabled"))
+        if (!ConfigManager.getEnabled("staff-chat"))
             return;
         if (me.cranked.crankedcore.commands.StaffChat.staffChatList.contains(e.getPlayer())) {
             Player player = e.getPlayer();

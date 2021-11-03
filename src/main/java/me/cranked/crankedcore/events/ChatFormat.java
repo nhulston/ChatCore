@@ -20,7 +20,7 @@ public class ChatFormat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check	
-        if (!plugin.getConfig().getBoolean("custom-chat-format-enabled"))
+        if (!ConfigManager.getEnabled("custom-chat-format"))
             return;
         // Cancel check	
         if (e.isCancelled())
@@ -36,7 +36,7 @@ public class ChatFormat implements Listener {
             }
             format = CrankedCore.placeholderColor(format, player);
             // Hover TODO optimize	
-            if (plugin.getConfig().getBoolean("name-hover-enabled")) {
+            if (ConfigManager.getEnabled("name-hover")) {
                 for (Player onlinePlayer : e.getRecipients()) {
                     List<String> list = plugin.getConfig().getStringList("hover-format"); // TODO for some reason ConfigManager doesn't work here?
                     TextComponent formatComponent = new TextComponent(PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, format));

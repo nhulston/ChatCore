@@ -10,16 +10,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class MOTD implements Listener {
-    private final CrankedCore plugin;
-
-    public MOTD(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         // Config check
-        if (!this.plugin.getConfig().getBoolean("motd-enabled"))
+        if (!ConfigManager.getEnabled("motd"))
             return;
 
         // Print list of MOTD

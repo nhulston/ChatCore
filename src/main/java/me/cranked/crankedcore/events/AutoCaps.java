@@ -1,5 +1,6 @@
 package me.cranked.crankedcore.events;
 
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +16,7 @@ public class AutoCaps implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check
-        if (!plugin.getConfig().getBoolean("auto-caps-enabled"))
+        if (!ConfigManager.getEnabled("auto-caps"))
             return;
 
         // Set first char

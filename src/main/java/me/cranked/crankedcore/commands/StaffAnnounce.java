@@ -12,19 +12,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class StaffAnnounce implements CommandExecutor {
-    private final CrankedCore plugin;
-    
-    public StaffAnnounce(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
     }
 
     public boolean command(CommandSender sender, String[] args) {
         // Config check
-        if (!plugin.getConfig().getBoolean("staff-announce-enabled"))
+        if (!ConfigManager.getEnabled("staff-announce"))
             return false;
 
         // Permission check

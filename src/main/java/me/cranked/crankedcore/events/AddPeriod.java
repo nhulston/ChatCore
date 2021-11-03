@@ -1,5 +1,6 @@
 package me.cranked.crankedcore.events;
 
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,7 +15,7 @@ public class AddPeriod implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if (!plugin.getConfig().getBoolean("add-period-enabled"))
+        if (!ConfigManager.getEnabled("add-period"))
             return;
         char lastChar = e.getMessage().charAt(e.getMessage().length() - 1);
         if (!e.getPlayer().hasPermission("crankedcore.addperiod.bypass") &&

@@ -16,7 +16,7 @@ public class LockChat implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if (!plugin.getConfig().getBoolean("lock-enabled"))
+        if (!ConfigManager.getEnabled("lock-chat"))
             return;
         Player player = e.getPlayer();
         if (plugin.getChatLocked() && !player.hasPermission("crankedcore.lock.bypass")) {

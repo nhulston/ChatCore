@@ -3,7 +3,6 @@ package me.cranked.crankedcore.events;
 import java.util.*;
 
 import me.cranked.crankedcore.ConfigManager;
-import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,17 +13,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class DisableChatUntilMove implements Listener {
-    private final CrankedCore plugin;
     private final Set<Player> notMoved = new HashSet<>();
-
-    public DisableChatUntilMove(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onJoin(PlayerLoginEvent e) {
         // Config check
-        if (!this.plugin.getConfig().getBoolean("disable-chat-until-move"))
+        if (!ConfigManager.getEnabled("disable-chat-until-move"))
             return;
 
         // Bypass check
@@ -44,7 +38,7 @@ public class DisableChatUntilMove implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if (!this.plugin.getConfig().getBoolean("disable-chat-until-move"))
+        if (!ConfigManager.getEnabled("disable-chat-until-move"))
             return;
         Player player = e.getPlayer();
         if (this.notMoved.contains(player)) {
@@ -56,7 +50,7 @@ public class DisableChatUntilMove implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         // Config check
-        if (!this.plugin.getConfig().getBoolean("disable-chat-until-move"))
+        if (!ConfigManager.getEnabled("disable-chat-until-move"))
             return;
 
         // Bypass / moved check

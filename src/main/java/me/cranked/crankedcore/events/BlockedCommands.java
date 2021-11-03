@@ -14,6 +14,7 @@ public class BlockedCommands implements Listener {
     // TODO config tips section. Like how to change unknown command message
     // TODO better plugin hiding see https://www.spigotmc.org/resources/pluginhider-pluginhiderplus-hide-your-plugins-anti-tab-complete-all-message-replace.51583/
     // TODO auto respawn
+    // TODO console filtering
     private final CrankedCore plugin;
 
     public BlockedCommands(CrankedCore plugin) {
@@ -32,7 +33,7 @@ public class BlockedCommands implements Listener {
             return;
 
         // Colon check
-        if (plugin.getConfig().getBoolean("block-all-commands-containing-colon") && e.getMessage().contains(":")) {
+        if (ConfigManager.getEnabled("block-all-commands-containing-colon") && e.getMessage().contains(":")) {
             e.setCancelled(true);
             player.sendMessage(ConfigManager.get("block-all-commands-containing-colon"));
         }
@@ -72,7 +73,7 @@ public class BlockedCommands implements Listener {
                 player.sendMessage(ConfigManager.get("blocked-commands"));
 
                 // Warn staff
-                if (plugin.getConfig().getBoolean("blocked-commands-warn-staff"))
+                if (ConfigManager.getEnabled("blocked-commands-warn-staff"))
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                         if (onlinePlayer.hasPermission("crankedcore.blockedcommands.warn"))
                             onlinePlayer.sendMessage(ConfigManager.colorize(ConfigManager.get("blocked-commands-warn-staff-msg").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage())));

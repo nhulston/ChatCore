@@ -1,5 +1,6 @@
 package me.cranked.crankedcore.events;
 
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +17,7 @@ public class AntiCaps implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check
-        if (!plugin.getConfig().getBoolean("anti-caps-enabled"))
+        if (!ConfigManager.getEnabled("anti-caps"))
             return;
 
         // No bypass

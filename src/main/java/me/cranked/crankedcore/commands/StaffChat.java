@@ -29,7 +29,7 @@ public class StaffChat implements CommandExecutor {
 
     public boolean command(CommandSender sender, String[] args) {
         // Config check
-        if (!plugin.getConfig().getBoolean("staff-chat-enabled"))
+        if (!ConfigManager.getEnabled("staff-chat"))
             return false;
 
         // Permission check
@@ -64,7 +64,7 @@ public class StaffChat implements CommandExecutor {
             sendMessage(msg, sender);
             
             // Log in chat logger
-            if (plugin.getConfig().getBoolean("chat-logger-enabled") && plugin.getConfig().getBoolean("chat-logger-staff-chat-enabled")) {
+            if (ConfigManager.getEnabled("chat-logger") && ConfigManager.getEnabled("chat-logger-staff-chat")) {
                 Player player = (Player) sender;
                 String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", player.getName()).replace("%message%", msg));
                 formattedMessage = PlaceholderAPI.setPlaceholders(player, formattedMessage);

@@ -22,7 +22,7 @@ public class SlowChat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check
-        if (!this.plugin.getConfig().getBoolean("slow-enabled"))
+        if (!ConfigManager.getEnabled("slow-chat"))
             return;
 
         // Bypass check

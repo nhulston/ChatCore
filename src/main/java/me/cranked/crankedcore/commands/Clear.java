@@ -11,11 +11,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Clear implements CommandExecutor {
-    private final CrankedCore plugin;
-
-    public Clear(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
@@ -23,7 +18,7 @@ public class Clear implements CommandExecutor {
 
     public boolean command(CommandSender sender, String[] args) {
         // Return if clear chat isn't enabled
-        if (!plugin.getConfig().getBoolean("clear-chat-enabled"))
+        if (!ConfigManager.getEnabled("clear-chat"))
             return false;
 
         // Return if player doesn't have permission

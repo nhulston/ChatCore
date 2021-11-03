@@ -12,19 +12,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Warning implements CommandExecutor {
-    private final CrankedCore plugin;
-
-    public Warning(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
     }
 
     public boolean command(CommandSender sender, String[] args) {
         // Config check
-        if (!this.plugin.getConfig().getBoolean("warning-enabled"))
+        if (!ConfigManager.getEnabled("warning"))
             return false;
 
         // Permission check TODO fix duplicate code

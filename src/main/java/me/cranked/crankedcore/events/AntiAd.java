@@ -20,7 +20,7 @@ public class AntiAd implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check
-        if (!plugin.getConfig().getBoolean("anti-ad-enabled"))
+        if (!ConfigManager.getEnabled("anti-ad"))
             return;
 
         // Permission check
