@@ -1,8 +1,6 @@
 package me.cranked.crankedcore.events;
 
 import me.cranked.crankedcore.ConfigManager;
-import me.cranked.crankedcore.CrankedCore;
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -16,6 +14,6 @@ public class ColoredChat implements Listener {
 
         // Permission check
         if (e.getPlayer().hasPermission("crankedcore.coloredtext"))
-            e.setMessage(ChatColor.translateAlternateColorCodes('&', e.getMessage()));
+            e.setMessage(ConfigManager.colorize(e.getMessage()));
     }
 }

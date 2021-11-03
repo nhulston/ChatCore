@@ -9,6 +9,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
+/**
+ * Manages deathmessages.yml
+ * @author Nick
+ * @since 1.0
+ */
 public class DeathMessagesConfigManager {
     private static File file;
     private static FileConfiguration customFile;

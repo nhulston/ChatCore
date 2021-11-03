@@ -11,16 +11,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BlockedCommands implements Listener {
-    // TODO config tips section. Like how to change unknown command message
-    // TODO better plugin hiding see https://www.spigotmc.org/resources/pluginhider-pluginhiderplus-hide-your-plugins-anti-tab-complete-all-message-replace.51583/
-    // TODO auto respawn
-    // TODO console filtering
-    private final CrankedCore plugin;
-
-    public BlockedCommands(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onCommand(final PlayerCommandPreprocessEvent e) {
         // Config check
@@ -52,14 +42,14 @@ public class BlockedCommands implements Listener {
                 if (commaLoc != -1) {
                     // Find punishment
                     String punishmentCategory = originalCommand.substring(commaLoc + 2);
-                    List<String> punishments = plugin.getConfig().getStringList("blocked-commands-punishments." + punishmentCategory);
+                    List<String> punishments = CrankedCore.plugin.getConfig().getStringList("blocked-commands-punishments." + punishmentCategory);
                     for (String punishment : punishments) {
                         if (e.isAsynchronous()) {
                             (new BukkitRunnable() {
                                 public void run() {
                                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%command%", e.getMessage()));
                                 }
-                            }).runTask(plugin);
+                            }).runTask(CrankedCore.plugin);
                             continue;
                         }
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%command%", e.getMessage()));

@@ -1,6 +1,7 @@
 package me.cranked.crankedcore.events;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
@@ -10,14 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class SlowChat implements Listener {
-    private final CrankedCore plugin;
-
-    private final HashMap<UUID, Long> cooldown;
-
-    public SlowChat(CrankedCore plugin) {
-        this.plugin = plugin;
-        this.cooldown = new HashMap<>();
-    }
+    private final Map<UUID, Long> cooldown = new HashMap<>();
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
@@ -38,7 +32,7 @@ public class SlowChat implements Listener {
         }
         // Set cooldown
         else {
-            this.cooldown.put(player.getUniqueId(), System.currentTimeMillis() + (this.plugin.getDelay() * 1000L));
+            this.cooldown.put(player.getUniqueId(), System.currentTimeMillis() + (CrankedCore.getDelay() * 1000L));
         }
     }
 }

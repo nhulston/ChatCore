@@ -2,6 +2,7 @@ package me.cranked.crankedcore.commands;
 
 import java.util.Arrays;
 import me.cranked.crankedcore.ConfigManager;
+import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -13,24 +14,34 @@ import org.jetbrains.annotations.NotNull;
 public class Announce implements CommandExecutor {
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-         return command(sender, args);
+        return false;
+        //return command(sender, args); TODO shortcuts
     }
 
-    public boolean command(CommandSender sender, String[] args) {
+    // Type: warning, announce, staff-announce
+    public static boolean command(CommandSender sender, String[] args, String type) {
         // Return if announcing isn't enabled
-        if (!ConfigManager.getEnabled("announce"))
+        if (!ConfigManager.getEnabled(type))
             return false;
 
-        // TODO sounds for more things
-        // Return if player doesn't have permission
-        if (sender instanceof Player && !sender.hasPermission("crankedcore.announce")) {
-            sender.sendMessage(ConfigManager.get("no-permission"));
-            return false;
+        // Permission check
+        if (type.equals("warning")) {
+            if (CrankedCore.noPermission("crankedcore.announce.warning", sender)) {
+                return false;
+            }
+        } else if (type.equals("announce")) {
+            if (CrankedCore.noPermission("crankedcore.announce", sender)) {
+                return false;
+            }
+        } else {
+            if (CrankedCore.noPermission("crankedcore.staffannounce", sender)) {
+                return false;
+            }
         }
 
         // Return if incorrect usage
         if (args.length <= 1) {
-            sender.sendMessage(ConfigManager.get("announce-usage"));
+            sender.sendMessage(ConfigManager.get(type + "-usage"));
             return false;
         }
 
@@ -39,13 +50,24 @@ public class Announce implements CommandExecutor {
         String msg = String.join(" ", args);
 
         // Broadcast message
-        Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get("announce-format").replace("%message%", msg)));
-
-        // Play sound to all players
-        String sound = ConfigManager.get("announce-sound");
-        if (!sound.equalsIgnoreCase("none")) {
+        if (type.equals("staff-announce")) {
+            String sound = ConfigManager.get("staff-announce-sound");
+            String parsedMsg = ConfigManager.colorize(ConfigManager.get("staff-announce-format").replace("%message%", msg));
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
+                if (onlinePlayer.hasPermission("crankedcore.staffannounce.see")) {
+                    onlinePlayer.sendMessage(parsedMsg);
+                    if (!sound.equalsIgnoreCase("none"))
+                        onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
+                }
+            }
+        } else {
+            Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get(type + "-format").replace("%message%", msg)));
+
+            String sound = ConfigManager.get(type + "-sound");
+            if (!sound.equalsIgnoreCase("none")) {
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
+                }
             }
         }
         return true;

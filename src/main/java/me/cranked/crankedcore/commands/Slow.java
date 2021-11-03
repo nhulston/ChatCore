@@ -7,28 +7,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Slow implements CommandExecutor {
-    private final CrankedCore plugin;
-
-    public Slow(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
     }
 
-    public boolean command(CommandSender sender, String[] args) {
+    public static boolean command(CommandSender sender, String[] args) {
         // Config check
         if (!ConfigManager.getEnabled("slow-chat"))
             return false;
 
         // Permission check
-        if (sender instanceof Player && !sender.hasPermission("crankedcore.slow")) {
-            sender.sendMessage(ConfigManager.get("no-permission"));
+        if (CrankedCore.noPermission("crankedcore.slow", sender)) {
             return false;
         }
 
@@ -48,7 +40,7 @@ public class Slow implements CommandExecutor {
         }
 
         // Set the delay
-        plugin.setDelay(delay);
+        CrankedCore.setDelay(delay);
 
         // Args
         Set<String> arguments = Set.of(args);

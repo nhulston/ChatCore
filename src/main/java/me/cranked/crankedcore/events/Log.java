@@ -17,12 +17,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class Log implements Listener {
-    private final CrankedCore plugin;
-
-    public Log(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check
@@ -57,9 +51,8 @@ public class Log implements Listener {
         }
     }
 
-    // TODO don't create this writer every time?
-    public void log(String msg, String path, String folder) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.plugin.getDataFolder().getAbsolutePath() + File.separator + folder + File.separator + path + ".txt", true))) {
+    public static void log(String msg, String path, String folder) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CrankedCore.plugin.getDataFolder().getAbsolutePath() + File.separator + folder + File.separator + path + ".txt", true))) {
             writer.write(msg);
             writer.newLine();
         } catch (IOException ignored) {}

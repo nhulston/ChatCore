@@ -16,14 +16,13 @@ public class Clear implements CommandExecutor {
         return command(sender, args);
     }
 
-    public boolean command(CommandSender sender, String[] args) {
+    public static boolean command(CommandSender sender, String[] args) {
         // Return if clear chat isn't enabled
         if (!ConfigManager.getEnabled("clear-chat"))
             return false;
 
-        // Return if player doesn't have permission
-        if (sender instanceof Player && !sender.hasPermission("crankedcore.clear")) {
-            sender.sendMessage(ConfigManager.get("no-permission"));
+        // Permission check
+        if (CrankedCore.noPermission("crankedcore.clear", sender)) {
             return false;
         }
 

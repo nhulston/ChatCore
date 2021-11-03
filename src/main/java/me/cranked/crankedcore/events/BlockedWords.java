@@ -12,12 +12,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BlockedWords implements Listener {
-    private final CrankedCore plugin;
-
-    public BlockedWords(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onChat(final AsyncPlayerChatEvent e) {
         // Config check
@@ -86,17 +80,17 @@ public class BlockedWords implements Listener {
 
     private void punish(String word, int commaLoc, final AsyncPlayerChatEvent e, String blockedWord, String originalMsg) {
         String punishmentCategory = word.substring(commaLoc + 2);
-        List<String> punishments = plugin.getConfig().getStringList("blocked-words-punishments." + punishmentCategory);
+        List<String> punishments = CrankedCore.plugin.getConfig().getStringList("blocked-words-punishments." + punishmentCategory);
         for (String punishment : punishments) {
             if (e.isAsynchronous()) {
                 (new BukkitRunnable() {
                     public void run() {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), CrankedCore.placeholderColor(punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%word%", blockedWord).replaceAll("%message%", originalMsg), e.getPlayer()));
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ConfigManager.placeholderize(punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%word%", blockedWord).replaceAll("%message%", originalMsg), e.getPlayer()));
                     }
-                }).runTask(plugin);
+                }).runTask(CrankedCore.plugin);
                 continue;
             }
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), CrankedCore.placeholderColor(punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%word%", blockedWord).replaceAll("%message%", originalMsg), e.getPlayer()));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ConfigManager.placeholderize(punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%word%", blockedWord).replaceAll("%message%", originalMsg), e.getPlayer()));
         }
     }
 }

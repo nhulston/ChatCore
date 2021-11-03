@@ -12,23 +12,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class DelayChat implements Listener {
-    private final CrankedCore plugin;
-
     private final Map<UUID, Long> cooldown = new HashMap<>();
-
-    public DelayChat(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         // Delay check
-        if (this.plugin.getConfig().getInt("delay-in-millis") <= 0)
+        if (ConfigManager.getInt("delay-in-millis") <= 0)
             return;
 
         // Bypass check
         Player player = e.getPlayer();
-        if (player.hasPermission("crankedcore.delay.bypass") || this.plugin.getDelay() != 0)
+        if (player.hasPermission("crankedcore.delay.bypass") || CrankedCore.getDelay() != 0)
             return;
 
         // Cancel, send message
@@ -40,7 +34,7 @@ public class DelayChat implements Listener {
 
         // Set cooldown
         else {
-            this.cooldown.put(player.getUniqueId(), System.currentTimeMillis() + this.plugin.getConfig().getInt("delay-in-millis"));
+            this.cooldown.put(player.getUniqueId(), System.currentTimeMillis() + ConfigManager.getInt("delay-in-millis"));
         }
     }
 }

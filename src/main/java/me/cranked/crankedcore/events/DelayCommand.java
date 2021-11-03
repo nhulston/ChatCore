@@ -3,26 +3,18 @@ package me.cranked.crankedcore.events;
 import java.util.HashMap;
 import java.util.UUID;
 import me.cranked.crankedcore.ConfigManager;
-import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class DelayCommand implements Listener {
-    private final CrankedCore plugin;
-
-    private final HashMap<UUID, Long> cooldown;
-
-    public DelayCommand(CrankedCore plugin) {
-        this.plugin = plugin;
-        this.cooldown = new HashMap<>();
-    }
+    private final HashMap<UUID, Long> cooldown = new HashMap<>();
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         // Config check
-        if (this.plugin.getConfig().getInt("command-delay-in-millis") <= 0)
+        if (ConfigManager.getInt("command-delay-in-millis") <= 0)
             return;
 
         // Bypass check
@@ -39,7 +31,7 @@ public class DelayCommand implements Listener {
 
         // Set cooldown
         else {
-            this.cooldown.put(player.getUniqueId(), System.currentTimeMillis() + this.plugin.getConfig().getInt("command-delay-in-millis"));
+            this.cooldown.put(player.getUniqueId(), System.currentTimeMillis() + ConfigManager.getInt("command-delay-in-millis"));
         }
     }
 }

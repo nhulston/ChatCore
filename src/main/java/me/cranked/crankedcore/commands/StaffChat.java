@@ -16,25 +16,19 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class StaffChat implements CommandExecutor {
-    private final CrankedCore plugin;
     public static Set<Player> staffChatList = new HashSet<>();
-
-    public StaffChat(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
     }
 
-    public boolean command(CommandSender sender, String[] args) {
+    public static boolean command(CommandSender sender, String[] args) {
         // Config check
         if (!ConfigManager.getEnabled("staff-chat"))
             return false;
 
         // Permission check
-        if (!sender.hasPermission("crankedcore.staffchat.send")) {
-            sender.sendMessage(ConfigManager.get("no-permission"));
+        if (CrankedCore.noPermission("crankedcore.staffchat.send", sender)) {
             return false;
         }
 
@@ -42,7 +36,7 @@ public class StaffChat implements CommandExecutor {
         if (args.length <= 1) {
             // Console usage
             if (!(sender instanceof Player)) {
-                System.out.println("Usage: /sc [message]]");
+                Bukkit.getLogger().warning("[CrankedCore] Usage: /chat staff [message]]");
                 return false;
             }
 
@@ -65,21 +59,25 @@ public class StaffChat implements CommandExecutor {
             
             // Log in chat logger
             if (ConfigManager.getEnabled("chat-logger") && ConfigManager.getEnabled("chat-logger-staff-chat")) {
-                Player player = (Player) sender;
-                String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", player.getName()).replace("%message%", msg));
-                formattedMessage = PlaceholderAPI.setPlaceholders(player, formattedMessage);
-                Log logger = new Log(plugin);
-                logger.log(formattedMessage, LocalDate.now().toString(), "Chat Logs");
+                String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", sender.getName()).replace("%message%", msg));
+                if (sender instanceof Player) {
+                    formattedMessage = PlaceholderAPI.setPlaceholders((Player) sender, formattedMessage);
+                }
+                Log.log(formattedMessage, LocalDate.now().toString(), "Chat Logs");
             }
         }
 
         return true;
     }
 
-    public void sendMessage(String msg, CommandSender sender) {
+    public static void sendMessage(String msg, CommandSender sender) {
+        msg = ConfigManager.get("staff-chat-format").replace("%message%", msg).replace("%player%", sender.getName());
+        if (sender instanceof Player) {
+            msg = ConfigManager.placeholderize(msg, (Player) sender);
+        }
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission("crankedcore.staffchat.see")) // TODO what is this placeholder color
-                onlinePlayer.sendMessage(CrankedCore.placeholderColor(ConfigManager.get("staff-chat-format").replace("%message%", msg).replace("%player%", sender.getName()), (Player) sender));
+            if (onlinePlayer.hasPermission("crankedcore.staffchat.see"))
+                onlinePlayer.sendMessage(msg);
         }
     }
 }

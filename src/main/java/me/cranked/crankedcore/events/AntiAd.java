@@ -3,7 +3,6 @@ package me.cranked.crankedcore.events;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.cranked.crankedcore.ConfigManager;
-import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,12 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class AntiAd implements Listener {
-    private final CrankedCore plugin;
-
-    public AntiAd(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check
@@ -44,10 +37,9 @@ public class AntiAd implements Listener {
         Matcher matcher3 = pattern3.matcher(msg);
         Matcher matcher4 = pattern4.matcher(msg);
         if (matcher.find() || matcher2.find() || matcher3.find() || matcher4.find()) {
-            if (plugin.getConfig().getInt("anti-ad-setting") == 1) {
+            if (ConfigManager.getInt("anti-ad-setting") == 1) {
                 e.setCancelled(true);
             } else {
-                // TODO check this logic
                 e.setMessage(msg.replaceAll("\\.", " "));
             }
 

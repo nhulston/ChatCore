@@ -13,10 +13,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class ChatFormat implements Listener {
-    private final CrankedCore plugin;
-    public ChatFormat(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check	
@@ -30,20 +26,20 @@ public class ChatFormat implements Listener {
             Player player = e.getPlayer();
             String format;
             try {
-                format = Objects.requireNonNull(plugin.getConfig().getString("rank-formats." + CrankedCore.vaultChat.getPrimaryGroup(player))).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", CrankedCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
+                format = Objects.requireNonNull(CrankedCore.plugin.getConfig().getString("rank-formats." + CrankedCore.vaultChat.getPrimaryGroup(player))).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", CrankedCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
             } catch (NullPointerException e2) {
-                format = Objects.requireNonNull(plugin.getConfig().getString("default-format")).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", CrankedCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
+                format = Objects.requireNonNull(CrankedCore.plugin.getConfig().getString("default-format")).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", CrankedCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
             }
-            format = CrankedCore.placeholderColor(format, player);
-            // Hover TODO optimize	
+            format = ConfigManager.placeholderize(format, player);
+            // Hover
             if (ConfigManager.getEnabled("name-hover")) {
                 for (Player onlinePlayer : e.getRecipients()) {
-                    List<String> list = plugin.getConfig().getStringList("hover-format"); // TODO for some reason ConfigManager doesn't work here?
+                    List<String> list = CrankedCore.plugin.getConfig().getStringList("hover-format"); // TODO for some reason ConfigManager doesn't work here?
                     TextComponent formatComponent = new TextComponent(PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, format));
                     for (int i = 0; i < list.size(); i++) {
                         String line = list.get(i).replace("%name%", player.getDisplayName()).replace("%prefix%", CrankedCore.vaultChat.getPlayerPrefix(player));
                         line = PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, line);
-                        list.set(i, CrankedCore.placeholderColor(line, player));
+                        list.set(i, ConfigManager.placeholderize(line, player));
                     }
                     formatComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder(String.join("\n", list))).create()));
                     String clickActionMode = ConfigManager.get("click-action-mode");

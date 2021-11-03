@@ -21,24 +21,22 @@ public class Lock implements CommandExecutor {
         return command(sender, args);
     }
 
-    public boolean command(CommandSender sender, String[] args) {
+    public static boolean command(CommandSender sender, String[] args) {
         // Config check
         if (!ConfigManager.getEnabled("lock-chat"))
             return false;
-        
+
         // Permission check
-        if (sender instanceof Player && !sender.hasPermission("crankedcore.lock")) {
-            sender.sendMessage(ConfigManager.get("no-permission"));
+        if (CrankedCore.noPermission("crankedcore.lock", sender)) {
             return false;
         }
         
         // Lock chat
-        plugin.toggleChatLocked();
+        CrankedCore.toggleChatLocked();
 
         // Broadcasting
         Set<String> arguments = Set.of(args);
-        // TODO bring silent messages to clear chat, etc.
-        if (plugin.getChatLocked()) {
+        if (CrankedCore.getChatLocked()) {
             if (arguments.contains("-s") && sender.hasPermission("crankedcore.lock.silent")) {
                 sender.sendMessage(ConfigManager.get("lock-silent"));
             } else if (arguments.contains("-a") && sender.hasPermission("crankedcore.lock.anonymous")) {

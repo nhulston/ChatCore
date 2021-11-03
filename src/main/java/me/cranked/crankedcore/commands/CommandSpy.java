@@ -3,7 +3,7 @@ package me.cranked.crankedcore.commands;
 import java.util.HashSet;
 import java.util.Set;
 import me.cranked.crankedcore.ConfigManager;
-import me.cranked.crankedcore.CrankedCore;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,10 +17,10 @@ public class CommandSpy implements CommandExecutor {
         return command(sender);
     }
 
-    public boolean command(CommandSender sender) {
+    public static boolean command(CommandSender sender) {
         // Console check
         if (!(sender instanceof Player)) {
-            System.out.println("[CrankedCore] This command is only for players."); // TODO improve logging to not sout
+            Bukkit.getLogger().warning("[CrankedCore] This command is only for players.");
             return false;
         }
         
@@ -35,7 +35,6 @@ public class CommandSpy implements CommandExecutor {
         }
         
         Player player = (Player) sender;
-        // TODO check this command spy enabled on join logic
         if (commandSpyList.contains(player)) {
             commandSpyList.remove(player);
             sender.sendMessage(ConfigManager.get("command-spy-off"));

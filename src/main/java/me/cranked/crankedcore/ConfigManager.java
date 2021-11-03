@@ -1,5 +1,8 @@
 package me.cranked.crankedcore;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.entity.Player;
+
 import java.util.*;
 
 /**
@@ -11,8 +14,8 @@ public class ConfigManager {
     private static CrankedCore plugin;
     private static Map<String, String> messages;
     private static Map<String, List<String>> multiLineMessages;
-    private static Map<String, Boolean> enabled; //TODO
-    // TODO integers
+    private static Map<String, Boolean> enabled;
+    private static Map<String, Integer> ints;
 
     /**
      * Setter method for plugin
@@ -30,6 +33,7 @@ public class ConfigManager {
         messages = new HashMap<>();
         multiLineMessages = new HashMap<>();
         enabled = new HashMap<>();
+        ints = new HashMap<>();
 
         // General
         messages.put("reload", getHelper("reload-msg"));
@@ -62,9 +66,11 @@ public class ConfigManager {
         messages.put("unslow-silent", getHelper("unslow-silent-msg"));
         
         // Chat delay
+        ints.put("delay-in-millis", getIntHelper("delay-in-millis"));
         messages.put("delay", getHelper("delay-msg"));
         
         // Command delay
+        ints.put("command-delay-in-millis", getIntHelper("command-delay-in-millis"));
         messages.put("command-delay", getHelper("command-delay-msg"));
 
         // Staff chat
@@ -74,9 +80,12 @@ public class ConfigManager {
         messages.put("staff-chat-off", getHelper("staff-chat-off-msg"));
 
         // Anti caps
+        ints.put("anti-caps-percentage", getIntHelper("anti-caps-percentage"));
+        ints.put("anti-caps-min-length", getIntHelper("anti-caps-min-length"));
         enabled.put("anti-caps", getEnabledHelper("anti-caps-enabled"));
 
         // Add period
+        ints.put("add-period-min-length", getIntHelper("add-period-min-length"));
         enabled.put("add-period", getEnabledHelper("add-period-enabled"));
         
         // Blocked words
@@ -104,6 +113,7 @@ public class ConfigManager {
         multiLineMessages.put("command-spy-ignored-commands", getListHelper("command-spy-ignored-commands"));
 
         // Auto caps
+        ints.put("auto-caps-min-length", getIntHelper("auto-caps-min-length"));
         enabled.put("auto-caps", getEnabledHelper("auto-caps-enabled"));
 
         // Announce
@@ -134,6 +144,7 @@ public class ConfigManager {
         multiLineMessages.put("disable-commands-until-move", getListHelper("disable-commands-until-move"));
 
         // Anti ad
+        ints.put("anti-ad-setting", getIntHelper("anti-ad-setting"));
         enabled.put("anti-ad", getEnabledHelper("anti-ad-enabled"));
         messages.put("anti-ad", getHelper("anti-ad-msg"));
         messages.put("anti-ad-inform", getHelper("anti-ad-inform-msg"));
@@ -165,6 +176,7 @@ public class ConfigManager {
         multiLineMessages.put("motd", getListHelper("motd"));
 
         // Autobroadcast
+        ints.put("auto-broadcast-delay", getIntHelper("auto-broadcast-delay"));
         enabled.put("auto-broadcast", getEnabledHelper("auto-broadcast-enabled"));
         enabled.put("auto-broadcast-random", getEnabledHelper("auto-broadcast-random"));
         multiLineMessages.put("auto-broadcast-messages", getListHelper("auto-broadcast-messages"));
@@ -195,10 +207,19 @@ public class ConfigManager {
     /**
      * Colorizes messages
      * @param s The original message we want to colorize
-     * @return A colorized string
+     * @return A colorized String
      */
     public static String colorize(String s) {
         return s.replaceAll("&", "§");
+    }
+
+    /**
+     * Colorizes messages and replaces placeholders
+     * @param s The original message we want to update
+     * @return A colorizes String with placeholders replaced
+     */
+    public static String placeholderize(String s, Player p) {
+        return PlaceholderAPI.setPlaceholders(p, colorize(s));
     }
 
     /**
@@ -229,6 +250,15 @@ public class ConfigManager {
     }
 
     /**
+     * Gets any int from config.yml
+     * @param s The key to get from the map
+     * @return An int from the map, which is from the config
+     */
+    public static int getInt(String s) {
+        return ints.get(s);
+    }
+
+    /**
      * Helper method for initConfig()
      * @param s The name of the entry in config.yml we want to get from
      * @return The String, the value of that entry in config.yml
@@ -253,5 +283,14 @@ public class ConfigManager {
      */
     private static boolean getEnabledHelper(String s) {
         return plugin.getConfig().getBoolean(s);
+    }
+
+    /**
+     * Helper method for initConfig()
+     * @param s The name of the entry in config.yml we want to get from
+     * @return The int, the value of that entry in config.yml
+     */
+    private static int getIntHelper(String s) {
+        return plugin.getConfig().getInt(s);
     }
 }

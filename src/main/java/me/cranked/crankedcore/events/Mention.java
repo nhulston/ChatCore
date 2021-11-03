@@ -1,11 +1,9 @@
 package me.cranked.crankedcore.events;
 
 import java.util.Objects;
-
 import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.CrankedCore;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,12 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class Mention implements Listener {
-    private final CrankedCore plugin;
-
-    public Mention(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e) {
         // Config check
@@ -37,9 +29,8 @@ public class Mention implements Listener {
             String playerName = onlinePlayer.getName();
             String playerNameLower = playerName.toLowerCase();
             int loc = messageLower.indexOf(playerNameLower);
-            // TODO why is this big if statement necessary
             if ((loc != -1 && (loc + playerName.length() == message.length() || (loc == 0 && messageLower.contains(playerNameLower + " ")) || messageLower.contains(" " + playerNameLower + " ") || messageLower.contains(" " + playerNameLower + ".") || messageLower.contains(" " + playerNameLower + "?") || messageLower.contains(" " + playerNameLower + "!"))) || (message.length() == playerName.length() + 1 && (messageLower.contains(playerNameLower + ".") || messageLower.contains(playerNameLower + "!") || messageLower.contains(playerNameLower + "?")))) {
-                e.setMessage(ChatColor.translateAlternateColorCodes('&', message.substring(0, loc) + ConfigManager.get("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
+                e.setMessage(ConfigManager.colorize(message.substring(0, loc) + ConfigManager.get("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
                 if (!sound.equalsIgnoreCase("none"))
                     onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
             }
@@ -49,7 +40,7 @@ public class Mention implements Listener {
     private String getChatColor(Player player) {
         String format;
         try {
-            format = Objects.requireNonNull(this.plugin.getConfig().getString("rank-formats." + CrankedCore.vaultChat.getPrimaryGroup(player))).replace("%message%", "");
+            format = Objects.requireNonNull(CrankedCore.plugin.getConfig().getString("rank-formats." + CrankedCore.vaultChat.getPrimaryGroup(player))).replace("%message%", "");
         } catch (NullPointerException e2) {
             format = Objects.requireNonNull(ConfigManager.get("default-format")).replace("%message%", "");
         }

@@ -8,18 +8,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class LockChat implements Listener {
-    private final CrankedCore plugin;
-
-    public LockChat(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         if (!ConfigManager.getEnabled("lock-chat"))
             return;
         Player player = e.getPlayer();
-        if (plugin.getChatLocked() && !player.hasPermission("crankedcore.lock.bypass")) {
+        if (CrankedCore.getChatLocked() && !player.hasPermission("crankedcore.lock.bypass")) {
             e.setCancelled(true);
             player.sendMessage(ConfigManager.get("locked"));
         }

@@ -3,7 +3,7 @@ package me.cranked.crankedcore.events;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-import me.cranked.crankedcore.CrankedCore;
+import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.DeathMessagesConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -64,10 +64,10 @@ public class Death implements Listener {
                     EntityDamageEvent.DamageCause damageCause = lastDamageCause.getCause();
                     if (damageCause.equals(EntityDamageEvent.DamageCause.MAGIC)) {
                         int x = (int)(Math.random() * DeathMessagesConfigManager.get().getStringList("dispenser-magic").size());
-                        e.setDeathMessage(CrankedCore.placeholderColor(DeathMessagesConfigManager.get().getStringList("dispenser-magic").get(x), player).replaceAll("%player%", playerName));
+                        e.setDeathMessage(ConfigManager.placeholderize(DeathMessagesConfigManager.get().getStringList("dispenser-magic").get(x), player).replaceAll("%player%", playerName));
                     } else {
                         int x = (int)(Math.random() * DeathMessagesConfigManager.get().getStringList("dispenser").size());
-                        e.setDeathMessage(CrankedCore.placeholderColor(DeathMessagesConfigManager.get().getStringList("dispenser").get(x), player).replaceAll("%player%", playerName));
+                        e.setDeathMessage(ConfigManager.placeholderize(DeathMessagesConfigManager.get().getStringList("dispenser").get(x), player).replaceAll("%player%", playerName));
                     }
                     return;
                 }
@@ -450,6 +450,6 @@ public class Death implements Listener {
                 msg = getMsg("unknown");
             }
         }
-        e.setDeathMessage(CrankedCore.placeholderColor(msg.replaceAll("%player%", playerName), player));
+        e.setDeathMessage(ConfigManager.placeholderize(msg.replaceAll("%player%", playerName), player));
     }
 }
