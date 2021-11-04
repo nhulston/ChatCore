@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class CrankedCore extends JavaPlugin {
 
+    // TODO Bukkit.broadcast(msg, permission); - staffAnnounce, staffChat, etc.
     // TODO sounds for more things
     // TODO bring silent messages to clear chat, etc.
     // TODO config tips section. Like how to change unknown command message
@@ -38,6 +39,9 @@ public final class CrankedCore extends JavaPlugin {
     public void onEnable() {
         // Make reference to plugin
         plugin = this;
+
+        // Setup versions
+        VersionManager.initVersions();
 
         // Setup config.yml
         ConfigManager.setPlugin(this);
@@ -102,12 +106,12 @@ public final class CrankedCore extends JavaPlugin {
         if (ConfigManager.getEnabled("chat-logger") || ConfigManager.getEnabled("command-logger")) {
             if (ConfigManager.getEnabled("chat-logger")) {
                 if (!((new File(getDataFolder().getAbsolutePath() + File.separator + "Chat Logs")).mkdir())) {
-                    Bukkit.getLogger().severe("[CrankedCore] Couldn't make chat log directory");
+                    Bukkit.getLogger().info("[CrankedCore] Chat log directory already exists");
                 }
             }
             if (ConfigManager.getEnabled("command-logger")) {
                 if (!(new File(getDataFolder().getAbsolutePath() + File.separator + "Command Logs")).mkdir()) {
-                    Bukkit.getLogger().severe("[CrankedCore] Couldn't make command log directory");
+                    Bukkit.getLogger().info("[CrankedCore] Command log directory already exists");
                 }
             }
             getServer().getPluginManager().registerEvents(new Log(), this);

@@ -1,455 +1,357 @@
 package me.cranked.crankedcore.events;
 
-import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 import me.cranked.crankedcore.ConfigManager;
 import me.cranked.crankedcore.DeathMessagesConfigManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Drowned;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Pillager;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Stray;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.projectiles.ProjectileSource;
 
-// TODO fix this entire class for 1.16 & 1.17
+import static me.cranked.crankedcore.VersionManager.*;
+import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
+
 public class Death implements Listener {
+    // TODO killed with named item, hover to see
+
+    /**
+     * Helper method for onDeath that picks a random death message
+     * @param path The location in deathmessages.yml we want to get from
+     * @return The new death message
+     */
     public String getMsg(String path) {
         int x = ThreadLocalRandom.current().nextInt(0, DeathMessagesConfigManager.get().getStringList(path).size());
         return DeathMessagesConfigManager.get().getStringList(path).get(x);
     }
 
+    /**
+     * Changes the death message to whatever is from deathmessages.yml
+     * Works on versions 1.7-1.17
+     * @param e PlayerDeathEvent, used to calculate what death message to use
+     */
     @EventHandler
+    @SuppressWarnings("deprecation")
     public void onDeath(PlayerDeathEvent e) {
-        // Config check
-        if (!DeathMessagesConfigManager.get().getBoolean("enable-custom-death-messages"))
-            return;
-
         // Disable death messages check
         if (DeathMessagesConfigManager.get().getBoolean("disable-all-death-messages")) {
             e.setDeathMessage("");
             return;
         }
 
+        // Config check
+        if (!DeathMessagesConfigManager.get().getBoolean("enable-custom-death-messages"))
+            return;
+
         // Useful variables
         Player player = e.getEntity();
-        Player killer = e.getEntity().getKiller();
-        String playerName = player.getDisplayName();
-        Entity mobKiller;
-        EntityDamageEvent lastDamageCause = player.getLastDamageCause();
-        LivingEntity livingEntity = null;
-        String msg;
+        String originalMsg = e.getDeathMessage();
+        if (originalMsg == null) {
+            originalMsg = "";
+        }
+        String msgPath = "unknown";
+        boolean pvp = player.getKiller() != null ||
+                originalMsg.contains("whilst") ||
+                originalMsg.contains("to escape");
 
-        // Killed by mob, set killer/shooter
-        if (killer == null && lastDamageCause instanceof EntityDamageByEntityEvent) {
-            mobKiller = ((EntityDamageByEntityEvent)lastDamageCause).getDamager();
-            if (mobKiller instanceof Projectile) {
-                try {
-                    LivingEntity shooter = (LivingEntity) ((Projectile) mobKiller).getShooter();
-                    if (shooter != null)
-                        livingEntity = shooter;
-                } catch (ClassCastException e2) {
-                    EntityDamageEvent.DamageCause damageCause = lastDamageCause.getCause();
-                    if (damageCause.equals(EntityDamageEvent.DamageCause.MAGIC)) {
-                        int x = (int)(Math.random() * DeathMessagesConfigManager.get().getStringList("dispenser-magic").size());
-                        e.setDeathMessage(ConfigManager.placeholderize(DeathMessagesConfigManager.get().getStringList("dispenser-magic").get(x), player).replaceAll("%player%", playerName));
+        EntityDamageEvent cause = player.getLastDamageCause();
+        if (cause != null) {
+            EntityDamageEvent.DamageCause lastCause = cause.getCause();
+
+            if (lastCause == CONTACT) {
+                msgPath = "pricked";
+            } else if (lastCause == ENTITY_ATTACK || (isV9() && lastCause == ENTITY_SWEEP_ATTACK)) {
+                if (player.getKiller() != null) {
+                    ItemStack item;
+                    if (isV9()) {
+                        item = player.getKiller().getInventory().getItemInMainHand();
                     } else {
-                        int x = (int)(Math.random() * DeathMessagesConfigManager.get().getStringList("dispenser").size());
-                        e.setDeathMessage(ConfigManager.placeholderize(DeathMessagesConfigManager.get().getStringList("dispenser").get(x), player).replaceAll("%player%", playerName));
+                        item = player.getKiller().getItemInHand();
                     }
-                    return;
+                    String itemName = item.getType().toString();
+                    if (itemName.contains("SWORD")) {
+                        msgPath = "sword";
+                    } else if (itemName.contains("AXE")) {
+                        msgPath = "axe";
+                    } else if (itemName.contains("TRIDENT")) {
+                        msgPath = "trident";
+                    } else if (itemName.contains("AIR")) {
+                        msgPath = "fists";
+                    } else {
+                        msgPath = "other";
+                    }
+
+                    if (item.getItemMeta() != null && item.getItemMeta().hasDisplayName()) {
+                        msgPath = "custom-" + msgPath;
+                    }
+                } else {
+                    Entity killer = ((EntityDamageByEntityEvent) cause).getDamager();
+                    if (isV15() && killer instanceof Bee) {
+                        msgPath = "bee";
+                    } else if (killer instanceof Blaze) {
+                        msgPath = "blaze-melee";
+                    } else if (isV13() && killer instanceof Drowned) {
+                        msgPath = "drowned-melee";
+                    } else if (isV13() && killer instanceof ElderGuardian) {
+                        msgPath = "elderguardian";
+                    } else if (killer instanceof EnderDragon) {
+                        msgPath = "enderdragon";
+                    } else if (isV9() && killer instanceof DragonFireball) {
+                        msgPath = "enderdragon-fireball";
+                    } else if (isV9() && killer instanceof AreaEffectCloud) {
+                        msgPath = "enderdragon-magic";
+                    } else if (killer instanceof Enderman) {
+                        msgPath = "enderman";
+                    } else if (isV8() && killer instanceof Endermite) {
+                        msgPath = "endermite";
+                    } else if (isV11() && (killer instanceof Evoker || killer instanceof EvokerFangs)) {
+                        msgPath = "evoker";
+                    } else if (isV8() && killer instanceof Guardian) {
+                        msgPath = "guardian";
+                    } else if (killer instanceof IronGolem) {
+                        msgPath = "irongolem";
+                    } else if (killer instanceof MagmaCube) {
+                        msgPath = "magmacube";
+                    } else if (isV14() && killer instanceof Panda) {
+                        msgPath = "panda";
+                    } else if (isV13() && killer instanceof Phantom) {
+                        msgPath = "phantom";
+                    } else if (isV14() && killer instanceof Pillager) {
+                        msgPath = "pillager-melee";
+                    } else if (isV10() && killer instanceof PolarBear) {
+                        msgPath = "polarbear";
+                    } else if (isV13() && killer instanceof PufferFish) {
+                        msgPath = "pufferfish";
+                    } else if (isV14() && killer instanceof Ravager) {
+                        msgPath = "ravager";
+                    } else if (killer instanceof Silverfish) {
+                        msgPath = "silverfish";
+                    } else if (isV10() && killer instanceof Stray) {
+                        msgPath = "stray-melee";
+                    } else if (isV11() && killer instanceof WitherSkeleton) {
+                        msgPath = "witherskeleton";
+                    } else if (killer instanceof Skeleton) {
+                        msgPath = "skeleton-melee";
+                    } else if (killer instanceof Slime) {
+                        msgPath = "slime";
+                    } else if (killer instanceof Spider) {
+                        msgPath = "spider";
+                    } else if (isV11() && killer instanceof Vex) {
+                        msgPath = "vex";
+                    } else if (isV11() && killer instanceof Vindicator) {
+                        msgPath = "vindicator";
+                    } else if (killer instanceof Wolf) {
+                        msgPath = "wolf";
+                    } else if (killer instanceof PigZombie) {
+                        msgPath = "zombiepigman";
+                    } else if (isV11() && killer instanceof ZombieVillager) {
+                        msgPath = "zombievillager";
+                    } else if (isV10() && killer instanceof Husk) {
+                        msgPath = "husk";
+                    } else if (killer instanceof Zombie) {
+                        msgPath = "zombie";
+                    } else if (isV16() && killer instanceof Hoglin) {
+                        msgPath = "hoglin";
+                    } else if (isV16() && killer instanceof Zoglin) {
+                        msgPath = "zoglin";
+                    } else if (isV16() && killer instanceof Piglin) {
+                        msgPath = "piglin";
+                    } else if (isV16() && killer instanceof PiglinBrute) {
+                        msgPath = "piglin-brute";
+                    } else {
+                        msgPath = "melee-unknown";
+                    }
+
+                    if (killer.getCustomName() != null) {
+                        msgPath = "named-" + msgPath;
+                    }
                 }
+            } else if (lastCause == PROJECTILE) {
+                ProjectileSource shooter = ((Projectile) ((EntityDamageByEntityEvent) cause).getDamager()).getShooter();
+                msgPath = "projectile-unknown";
+                if (shooter != null) {
+                    if (shooter instanceof Player) {
+                        ItemStack item;
+                        if (isV9()) {
+                            item = player.getKiller().getInventory().getItemInMainHand();
+                        } else {
+                            item = player.getKiller().getItemInHand();
+                        }
+                        String itemName = item.getType().toString();
+                        if (itemName.contains("CROSSBOW")) {
+                            msgPath = "crossbow";
+                        } else if (itemName.contains("BOW")) {
+                            msgPath = "bow";
+                        } else if (itemName.contains("TRIDENT")) {
+                            msgPath = "trident";
+                        }
+
+                        if (item.getItemMeta() != null && item.getItemMeta().hasDisplayName()) {
+                            msgPath = "custom-" + msgPath;
+                        }
+                    }
+                    else if (shooter instanceof Blaze)
+                        msgPath = "blaze-fireball";
+                    else if (shooter.toString().equals("CraftDrowned"))
+                        msgPath = "drowned-trident";
+                    else if (shooter.toString().equals("CraftGhast"))
+                        msgPath = "ghast-fireball";
+                    else if (isV12() && shooter instanceof Illusioner)
+                        msgPath = "illusioner";
+                    else if (isV11() && shooter instanceof Llama)
+                        msgPath = "llama";
+                    else if (isV14() && shooter instanceof Pillager)
+                        msgPath = "pillager-crossbow";
+                    else if (isV9() && shooter instanceof Shulker)
+                        msgPath = "shulker";
+                    else if (isV10() && shooter instanceof Stray)
+                        msgPath = "stray-arrow";
+                    else if (shooter instanceof Skeleton)
+                        msgPath = "skeleton-arrow";
+                    else if (shooter instanceof Wither)
+                        msgPath = "wither-skull";
+                }
+            } else if (lastCause == SUFFOCATION) {
+                msgPath = "suffocation";
+            } else if (lastCause == FALL) {
+                if (player.getKiller() != null) {
+                    pvp = true;
+                }
+
+                if (originalMsg.contains("high place")) {
+                    msgPath = "fall-far";
+                } else if (cause.getFinalDamage() == 5.0) {
+                    msgPath = "enderpearl";
+                } else {
+                    msgPath = "fall-short";
+                }
+            } else if (lastCause == FIRE) {
+                msgPath = "burn";
+            } else if (lastCause == FIRE_TICK) {
+                msgPath = "fire-tick";
+            } else if (lastCause == LAVA) {
+                msgPath = "lava";
+            } else if (lastCause == DROWNING) {
+                msgPath = "drown";
+            } else if (lastCause == BLOCK_EXPLOSION) {
+                msgPath = "block-explosion";
+            } else if (lastCause == ENTITY_EXPLOSION) {
+                Entity damager = ((EntityDamageByEntityEvent) cause).getDamager();
+                if (damager instanceof TNTPrimed)
+                    msgPath = "tnt";
+                else if (damager instanceof Creeper) {
+                    if (((Creeper) damager).isPowered()) {
+                        msgPath = "creeper-charged";
+                    } else {
+                        msgPath = "creeper";
+                    }
+                } else if (damager instanceof Wither) {
+                    msgPath = "wither-explosion";
+                }
+            } else if (lastCause == VOID) {
+                msgPath = "void";
+                if (originalMsg.contains("in the same world")) {
+                    pvp = true;
+                }
+            } else if (lastCause == LIGHTNING) {
+                msgPath = "lightning";
+            } else if (lastCause == SUICIDE) {
+                msgPath = "suicide";
+            } else if (lastCause == STARVATION) {
+                msgPath = "starvation";
+            } else if (lastCause == POISON) {
+                msgPath = "POISON";
+            } else if (lastCause == MAGIC) {
+                if (player.getKiller() != null) {
+                    if (player.getKiller().equals(player)) {
+                        msgPath = "suicide-magic";
+                        pvp = false;
+                    } else {
+                        msgPath = "magic";
+                    }
+                } else {
+                    if (originalMsg.contains("Witch"))
+                        msgPath = "witch";
+                    else
+                        msgPath = "magic-unknown"; // dispenser
+                }
+            } else if (lastCause == WITHER) {
+                msgPath = "wither-potion";
+            } else if (lastCause == FALLING_BLOCK) {
+                msgPath = "anvil";
+                pvp = false;
+            } else if (lastCause == THORNS) {
+                msgPath = "pvp-thorns";
+            } else if (isV9() && lastCause == DRAGON_BREATH) {
+                msgPath = "enderdragon-breath";
+            } else if (lastCause == CUSTOM) {
+                msgPath = "unknown";
+            } else if (isV9() && lastCause == FLY_INTO_WALL) {
+                msgPath = "fly-into-wall";
+            } else if (isV10() && lastCause == HOT_FLOOR) {
+                msgPath = "magma";
+                if (originalMsg.contains("walked into danger zone"))
+                    pvp = true;
+            } else if (lastCause == CRAMMING) {
+                msgPath = "cramming";
+                if (originalMsg.contains("squashed"))
+                    pvp = true;
+            } else if (isV17() && lastCause == FREEZE) {
+                msgPath = "freeze";
             }
+        } else if (originalMsg.contains("fireballed by")) {
+            msgPath = "fireball-unknown";
+        } else if (originalMsg.contains("blown up")) {
+            msgPath = "explosion-unknown"; // fireball
+        } else if (originalMsg.contains("blew up")) {
+            msgPath = "explosion-unknown"; //end crystal
         }
-        assert lastDamageCause != null;
-        EntityDamageEvent.DamageCause lastCause = lastDamageCause.getCause();
-        if (Objects.requireNonNull(e.getDeathMessage()).contains("was killed trying to hurt")) {
-            int killerLoc = e.getDeathMessage().indexOf("hurt");
-            String killerName = e.getDeathMessage().substring(killerLoc + 5);
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (onlinePlayer.getDisplayName().contains(killerName)) {
-                    assert killer != null;
-                    killerName = killer.getDisplayName();
-                }
-            }
-            int x = (int)(Math.random() * DeathMessagesConfigManager.get().getStringList("pvp-thorns").size());
-            msg = DeathMessagesConfigManager.get().getStringList("pvp-thorns").get(x).replaceAll("%killer%", killerName);
-        } else {
-            boolean fireDeath = (lastCause.equals(EntityDamageEvent.DamageCause.FIRE) || lastCause.equals(EntityDamageEvent.DamageCause.FIRE_TICK));
-            if (killer != null && killer != player) {
-                ItemStack item;
-                if (Bukkit.getVersion().contains("1.8")) {
-                    item = killer.getItemInHand();
-                } else {
-                    item = killer.getInventory().getItemInMainHand();
-                }
-                String killerName = killer.getDisplayName();
-                if (lastCause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
-                    msg = getMsg("pvp-explosion");
-                } else if (lastCause.equals(EntityDamageEvent.DamageCause.MAGIC)) {
-                    msg = getMsg("pvp-magic");
-                } else if (lastCause.equals(EntityDamageEvent.DamageCause.DROWNING)) {
-                    msg = getMsg("pvp-drown");
-                } else if (fireDeath) {
-                    msg = getMsg("pvp-burn");
-                } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && lastCause.equals(EntityDamageEvent.DamageCause.HOT_FLOOR)) {
-                    msg = getMsg("pvp-magma");
-                } else if (lastCause.equals(EntityDamageEvent.DamageCause.LAVA)) {
-                    msg = getMsg("pvp-lava");
-                } else if (lastCause.equals(EntityDamageEvent.DamageCause.STARVATION)) {
-                    msg = getMsg("pvp-starvation");
-                } else if (lastCause.equals(EntityDamageEvent.DamageCause.SUFFOCATION)) {
-                    msg = getMsg("pvp-suffocation");
-                } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && lastCause.equals(EntityDamageEvent.DamageCause.CRAMMING)) {
-                    msg = getMsg("pvp-cramming");
-                } else if (lastCause.equals(EntityDamageEvent.DamageCause.VOID)) {
-                    msg = getMsg("pvp-void");
-                } else if (lastCause.equals(EntityDamageEvent.DamageCause.FALL)) {
-                    msg = getMsg("pvp-fall");
-                } else if (!Bukkit.getVersion().contains("1.8") && lastCause.equals(EntityDamageEvent.DamageCause.FLY_INTO_WALL)) {
-                    msg = getMsg("pvp-fly-into-wall");
-                } else if (lastCause.equals(EntityDamageEvent.DamageCause.CONTACT)) {
-                    msg = getMsg("pvp-cactus");
-                } else if (item.getType() != Material.AIR && Objects.requireNonNull(item.getItemMeta()).hasDisplayName()) {
-                    Material material = item.getType();
-                    String itemName = item.getItemMeta().getDisplayName();
-                    if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && (material == Material.DIAMOND_SWORD || material == Material.IRON_SWORD || material == Material.GOLDEN_SWORD || material == Material.STONE_SWORD || material == Material.WOODEN_SWORD)) {
-                        msg = getMsg("pvp-custom-sword");
-                    } else if ((Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.10") || Bukkit.getVersion().contains("1.11") || Bukkit.getVersion().contains("1.12")) && (material == Material.DIAMOND_SWORD || material == Material.IRON_SWORD || material == Material.STONE_SWORD)) {
-                        msg = getMsg("pvp-custom-sword");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && (material == Material.DIAMOND_AXE || material == Material.IRON_AXE || material == Material.GOLDEN_AXE || material == Material.STONE_AXE || material == Material.WOODEN_AXE)) {
-                        msg = getMsg("pvp-custom-axe");
-                    } else if ((Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.10") || Bukkit.getVersion().contains("1.11") || Bukkit.getVersion().contains("1.12")) && (material == Material.DIAMOND_AXE || material == Material.IRON_AXE || material == Material.STONE_AXE)) {
-                        msg = getMsg("pvp-custom-axe");
-                    } else if (material == Material.BOW) {
-                        msg = getMsg("pvp-custom-bow");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && material == Material.CROSSBOW) {
-                        msg = getMsg("pvp-custom-crossbow");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && material == Material.TRIDENT) {
-                        msg = getMsg("pvp-custom-trident");
-                    } else {
-                        msg = getMsg("pvp-custom-other");
-                    }
-                    msg = msg.replaceAll("%item%", itemName);
-                } else if (item.getType() != Material.AIR && !Objects.requireNonNull(item.getItemMeta()).hasDisplayName()) {
-                    Material material = item.getType();
-                    if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && (material == Material.DIAMOND_SWORD || material == Material.IRON_SWORD || material == Material.GOLDEN_SWORD || material == Material.STONE_SWORD || material == Material.WOODEN_SWORD)) {
-                        msg = getMsg("pvp-sword");
-                    } else if ((Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.10") || Bukkit.getVersion().contains("1.11") || Bukkit.getVersion().contains("1.12")) && (material == Material.DIAMOND_SWORD || material == Material.IRON_SWORD || material == Material.STONE_SWORD)) {
-                        msg = getMsg("pvp-sword");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && (material == Material.DIAMOND_AXE || material == Material.IRON_AXE || material == Material.GOLDEN_AXE || material == Material.STONE_AXE || material == Material.WOODEN_AXE)) {
-                        msg = getMsg("pvp-axe");
-                    } else if ((Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.10") || Bukkit.getVersion().contains("1.11") || Bukkit.getVersion().contains("1.12")) && (material == Material.DIAMOND_AXE || material == Material.IRON_AXE || material == Material.STONE_AXE)) {
-                        msg = getMsg("pvp-axe");
-                    } else if (material == Material.BOW) {
-                        msg = getMsg("pvp-bow");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && material == Material.CROSSBOW) {
-                        msg = getMsg("pvp-crossbow");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && material == Material.TRIDENT) {
-                        msg = getMsg("pvp-trident");
-                    } else {
-                        msg = getMsg("pvp-other");
-                    }
-                } else if (item.getType() == Material.AIR) {
-                    msg = getMsg("pvp-fists");
-                } else {
-                    msg = getMsg("pvp-unknown");
-                }
-                msg = msg.replaceAll("%killer%", killerName);
-            } else if (livingEntity != null) {
-                if (livingEntity.getCustomName() == null) {
-                    if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && !Bukkit.getVersion().contains("1.14") && livingEntity instanceof org.bukkit.entity.Bee) {
-                        msg = getMsg("bee");
-                    } else if (livingEntity instanceof org.bukkit.entity.Blaze) {
-                        if (lastCause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
-                            msg = getMsg("blaze-melee");
-                        } else {
-                            msg = getMsg("blaze-fireball");
-                        }
-                    } else if (livingEntity instanceof org.bukkit.entity.CaveSpider) {
-                        msg = getMsg("cavespider");
-                    } else if (livingEntity instanceof Creeper) {
-                        if (((Creeper)livingEntity).isPowered()) {
-                            msg = getMsg("creeper-charged");
-                        } else {
-                            msg = getMsg("creeper");
-                        }
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && livingEntity instanceof Drowned) {
-                        if (Objects.requireNonNull(livingEntity.getEquipment()).getItemInMainHand().getType() == Material.TRIDENT) {
-                            msg = getMsg("drowned-trident");
-                        } else {
-                            msg = getMsg("drowned-melee");
-                        }
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.ElderGuardian) {
-                        msg = getMsg("elderguardian");
-                    } else if (livingEntity instanceof org.bukkit.entity.EnderDragon) {
-                        if (lastCause.equals(EntityDamageEvent.DamageCause.DRAGON_BREATH)) {
-                            msg = getMsg("enderdragon-breath");
-                        } else {
-                            msg = getMsg("enderdragon");
-                        }
-                    } else if (livingEntity instanceof org.bukkit.entity.Enderman) {
-                        msg = getMsg("enderman");
-                    } else if (livingEntity instanceof org.bukkit.entity.Endermite) {
-                        msg = getMsg("endermite");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.Evoker) {
-                        msg = getMsg("evoker");
-                    } else if (livingEntity instanceof org.bukkit.entity.Ghast) {
-                        msg = getMsg("ghast");
-                    } else if (livingEntity instanceof org.bukkit.entity.Giant) {
-                        msg = getMsg("giant");
-                    } else if (livingEntity instanceof org.bukkit.entity.Guardian) {
-                        msg = getMsg("guardian");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && livingEntity instanceof org.bukkit.entity.Illusioner) {
-                        msg = getMsg("illusioner");
-                    } else if (livingEntity instanceof org.bukkit.entity.IronGolem) {
-                        msg = getMsg("irongolem");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.Llama) {
-                        msg = getMsg("llama");
-                    } else if (livingEntity instanceof org.bukkit.entity.MagmaCube) {
-                        msg = getMsg("magmacube");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && livingEntity instanceof org.bukkit.entity.Panda) {
-                        msg = getMsg("panda");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && livingEntity instanceof org.bukkit.entity.Phantom) {
-                        msg = getMsg("phantom");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && livingEntity instanceof Pillager) {
-                        if (((EntityEquipment)Objects.<EntityEquipment>requireNonNull(((Pillager)livingEntity).getEquipment())).getItemInMainHand().getType() == Material.CROSSBOW) {
-                            msg = getMsg("pillager-crossbow");
-                        } else {
-                            msg = getMsg("pillager-melee");
-                        }
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && livingEntity instanceof org.bukkit.entity.PolarBear) {
-                        msg = getMsg("polarbear");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && livingEntity instanceof org.bukkit.entity.PufferFish) {
-                        msg = getMsg("pufferfish");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && livingEntity instanceof org.bukkit.entity.Ravager) {
-                        msg = getMsg("ravager");
-                    } else if (!Bukkit.getVersion().contains("1.8") && livingEntity instanceof org.bukkit.entity.Shulker) {
-                        msg = getMsg("shulker");
-                    } else if (livingEntity instanceof org.bukkit.entity.Silverfish) {
-                        msg = getMsg("silverfish");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof Stray) {
-                        if (Objects.requireNonNull(livingEntity.getEquipment()).getItemInMainHand().getType() == Material.BOW) {
-                            msg = getMsg("stray-arrow");
-                        } else {
-                            msg = getMsg("stray-melee");
-                        }
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.WitherSkeleton) {
-                        msg = getMsg("witherskeleton");
-                    } else if (livingEntity instanceof Skeleton) {
-                        if ((Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.9")) && ((Skeleton)livingEntity).getSkeletonType() == Skeleton.SkeletonType.WITHER) {
-                            msg = getMsg("witherskeleton");
-                        } else if (Objects.requireNonNull(livingEntity.getEquipment()).getItemInMainHand().getType() == Material.BOW) {
-                            msg = getMsg("skeleton-arrow");
-                        } else {
-                            msg = getMsg("skeleton-melee");
-                        }
-                    } else if (livingEntity instanceof org.bukkit.entity.Slime) {
-                        msg = getMsg("slime");
-                    } else if (livingEntity instanceof org.bukkit.entity.Spider) {
-                        msg = getMsg("spider");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.Vex) {
-                        msg = getMsg("vex");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.Vindicator) {
-                        msg = getMsg("vindicator");
-                    } else if (livingEntity instanceof org.bukkit.entity.Witch) {
-                        msg = getMsg("witch");
-                    } else if (livingEntity instanceof org.bukkit.entity.Wither) {
-                        if (lastCause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
-                            msg = getMsg("wither-explosion");
-                        } else {
-                            msg = getMsg("wither");
-                        }
-                    } else if (livingEntity instanceof org.bukkit.entity.Wolf) {
-                        msg = getMsg("wolf");
-                    } else if (livingEntity instanceof org.bukkit.entity.PigZombie) {
-                        msg = getMsg("zombiepigman");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.ZombieVillager) {
-                        msg = getMsg("zombievillager");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.Husk) {
-                        msg = getMsg("husk");
-                    } else if (livingEntity instanceof org.bukkit.entity.Zombie) {
-                        msg = getMsg("zombie");
-                    } else if (livingEntity instanceof org.bukkit.entity.EnderCrystal) {
-                        msg = getMsg("endercrystal");
-                    } else if (lastCause.equals(EntityDamageEvent.DamageCause.FALLING_BLOCK)) {
-                        msg = getMsg("anvil");
-                    } else if (lastCause.equals(EntityDamageEvent.DamageCause.LIGHTNING)) {
-                        msg = getMsg("lightning");
-                    } else if (lastCause.equals(EntityDamageEvent.DamageCause.FALL)) {
-                        msg = getMsg("enderpearl");
-                    } else if (livingEntity.getName().equalsIgnoreCase("Area Effect Cloud")) {
-                        msg = getMsg("enderdragon-breath");
-                    } else if (lastCause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
-                        msg = getMsg("tnt");
-                    } else {
-                        msg = getMsg("unknown");
-                    }
-                } else {
-                    String mobName = livingEntity.getCustomName();
-                    if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && !Bukkit.getVersion().contains("1.14") && livingEntity instanceof org.bukkit.entity.Bee) {
-                        msg = getMsg("named-bee");
-                    } else if (livingEntity instanceof org.bukkit.entity.Blaze) {
-                        if (lastCause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
-                            msg = getMsg("named-blaze-melee");
-                        } else {
-                            msg = getMsg("named-blaze-fireball");
-                        }
-                    } else if (livingEntity instanceof org.bukkit.entity.CaveSpider) {
-                        msg = getMsg("named-cavespider");
-                    } else if (livingEntity instanceof Creeper) {
-                        if (((Creeper)livingEntity).isPowered()) {
-                            msg = getMsg("named-creeper-charged");
-                        } else {
-                            msg = getMsg("named-creeper");
-                        }
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && livingEntity instanceof Drowned) {
-                        if (Objects.requireNonNull(livingEntity.getEquipment()).getItemInMainHand().getType() == Material.TRIDENT) {
-                            msg = getMsg("named-drowned-trident");
-                        } else {
-                            msg = getMsg("named-drowned-melee");
-                        }
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.ElderGuardian) {
-                        msg = getMsg("named-elderguardian");
-                    } else if (livingEntity instanceof org.bukkit.entity.EnderDragon) {
-                        msg = getMsg("named-enderdragon");
-                    } else if (livingEntity instanceof org.bukkit.entity.Enderman) {
-                        msg = getMsg("named-enderman");
-                    } else if (livingEntity instanceof org.bukkit.entity.Endermite) {
-                        msg = getMsg("named-endermite");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.Evoker) {
-                        msg = getMsg("named-evoker");
-                    } else if (livingEntity instanceof org.bukkit.entity.Ghast) {
-                        msg = getMsg("named-ghast");
-                    } else if (livingEntity instanceof org.bukkit.entity.Giant) {
-                        msg = getMsg("named-giant");
-                    } else if (livingEntity instanceof org.bukkit.entity.Guardian) {
-                        msg = getMsg("named-guardian");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && livingEntity instanceof org.bukkit.entity.Illusioner) {
-                        msg = getMsg("named-illusioner");
-                    } else if (livingEntity instanceof org.bukkit.entity.IronGolem) {
-                        msg = getMsg("named-irongolem");
-                    } else if (livingEntity instanceof org.bukkit.entity.MagmaCube) {
-                        msg = getMsg("named-magmacube");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && livingEntity instanceof org.bukkit.entity.Panda) {
-                        msg = getMsg("named-panda");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && livingEntity instanceof org.bukkit.entity.Phantom) {
-                        msg = getMsg("named-phantom");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && livingEntity instanceof Pillager) {
-                        if (Objects.requireNonNull(livingEntity.getEquipment()).getItemInMainHand().getType() == Material.CROSSBOW) {
-                            msg = getMsg("named-pillager-crossbow");
-                        } else {
-                            msg = getMsg("named-pillager-melee");
-                        }
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && livingEntity instanceof org.bukkit.entity.PolarBear) {
-                        msg = getMsg("named-polarbear");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && livingEntity instanceof org.bukkit.entity.PufferFish) {
-                        msg = getMsg("pufferfish");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && !Bukkit.getVersion().contains("1.11") && !Bukkit.getVersion().contains("1.12") && !Bukkit.getVersion().contains("1.13") && livingEntity instanceof org.bukkit.entity.Ravager) {
-                        msg = getMsg("named-ravager");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && livingEntity instanceof org.bukkit.entity.Shulker) {
-                        msg = getMsg("named-shulker");
-                    } else if (livingEntity instanceof org.bukkit.entity.Silverfish) {
-                        msg = getMsg("named-silverfish");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof Stray) {
-                        if (Objects.requireNonNull(livingEntity.getEquipment()).getItemInMainHand().getType() == Material.BOW) {
-                            msg = getMsg("named-stray-arrow");
-                        } else {
-                            msg = getMsg("named-stray-melee");
-                        }
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.WitherSkeleton) {
-                        msg = getMsg("named-witherskeleton");
-                    } else if (livingEntity instanceof Skeleton) {
-                        if ((Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9") || Bukkit.getVersion().contains("1.10")) && ((Skeleton)livingEntity).getSkeletonType() == Skeleton.SkeletonType.WITHER) {
-                            msg = getMsg("named-witherskeleton");
-                        } else if (Objects.requireNonNull(livingEntity.getEquipment()).getItemInMainHand().getType() == Material.BOW) {
-                            msg = getMsg("named-skeleton-arrow");
-                        } else {
-                            msg = getMsg("named-skeleton-melee");
-                        }
-                    } else if (livingEntity instanceof org.bukkit.entity.Slime) {
-                        msg = getMsg("named-slime");
-                    } else if (livingEntity instanceof org.bukkit.entity.Spider) {
-                        msg = getMsg("named-spider");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.Vex) {
-                        msg = getMsg("named-vex");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.Vindicator) {
-                        msg = getMsg("named-vindicator");
-                    } else if (livingEntity instanceof org.bukkit.entity.Witch) {
-                        msg = getMsg("named-witch");
-                    } else if (livingEntity instanceof org.bukkit.entity.Wither) {
-                        if (lastCause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
-                            msg = getMsg("named-wither-explosion");
-                        } else {
-                            msg = getMsg("named-wither");
-                        }
-                    } else if (livingEntity instanceof org.bukkit.entity.Wolf) {
-                        msg = getMsg("named-wolf");
-                    } else if (livingEntity instanceof org.bukkit.entity.PigZombie) {
-                        msg = getMsg("named-zombiepigman");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.ZombieVillager) {
-                        msg = getMsg("named-zombievillager");
-                    } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && livingEntity instanceof org.bukkit.entity.Husk) {
-                        msg = getMsg("named-husk");
-                    } else if (livingEntity instanceof org.bukkit.entity.Zombie) {
-                        msg = getMsg("named-zombie");
-                    } else {
-                        msg = getMsg("unknown");
-                    }
-                    msg = msg.replaceAll("%mob%", mobName);
-                }
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)) {
-                msg = getMsg("bed-explosion");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.CONTACT)) {
-                msg = getMsg("cactus");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.FALLING_BLOCK)) {
-                msg = getMsg("anvil");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.DROWNING)) {
-                msg = getMsg("drown");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.WITHER)) {
-                msg = getMsg("wither-potion");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.MAGIC)) {
-                msg = getMsg("harming");
-            } else if (fireDeath) {
-                msg = getMsg("burn");
-            } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && lastCause.equals(EntityDamageEvent.DamageCause.HOT_FLOOR)) {
-                msg = getMsg("magma");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.LAVA)) {
-                msg = getMsg("lava");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.LIGHTNING)) {
-                msg = getMsg("lightning");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.STARVATION)) {
-                msg = getMsg("starvation");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.SUFFOCATION)) {
-                msg = getMsg("suffocation");
-            } else if (!Bukkit.getVersion().contains("1.8") && !Bukkit.getVersion().contains("1.9") && !Bukkit.getVersion().contains("1.10") && lastCause.equals(EntityDamageEvent.DamageCause.CRAMMING)) {
-                msg = getMsg("cramming");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.VOID)) {
-                msg = getMsg("void");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.FALL)) {
-                msg = getMsg("fall");
-            } else if (!Bukkit.getVersion().contains("1.8") && lastCause.equals(EntityDamageEvent.DamageCause.FLY_INTO_WALL)) {
-                msg = getMsg("fly-into-wall");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.SUICIDE)) {
-                msg = getMsg("suicide");
-            } else if (lastCause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
-                msg = getMsg("tnt");
+
+        if (player.getKiller() != null && player.getKiller().equals(player)) {
+            pvp = false;
+        }
+
+        if (pvp && !msgPath.contains("pvp-"))
+            msgPath = "pvp-" + msgPath;
+
+        String deathMessage = getMsg(msgPath);
+
+        // Replace player
+        deathMessage = deathMessage.replaceAll("%player%", player.getDisplayName());
+
+        // Replace killer name
+        Player killer = player.getKiller();
+        if (killer != null && msgPath.contains("pvp")) {
+            deathMessage = deathMessage.replaceAll("%killer%", killer.getDisplayName());
+        }
+
+        // Replace item name
+        if (killer != null && msgPath.contains("custom")) {
+            ItemMeta itemMeta;
+            if (isV9()) {
+                itemMeta = killer.getInventory().getItemInMainHand().getItemMeta();
             } else {
-                msg = getMsg("unknown");
+                itemMeta = killer.getItemInHand().getItemMeta();
+            }
+
+            if (itemMeta != null) {
+                deathMessage = deathMessage.replaceAll("%item%", itemMeta.getDisplayName());
             }
         }
-        e.setDeathMessage(ConfigManager.placeholderize(msg.replaceAll("%player%", playerName), player));
+
+        // Replace mob name
+        if (cause != null && msgPath.contains("named")) {
+            Entity mobKiller = ((EntityDamageByEntityEvent) cause).getDamager();
+            if (mobKiller.getCustomName() != null) {
+                deathMessage = deathMessage.replaceAll("%mob%", mobKiller.getCustomName());
+            }
+        }
+
+        e.setDeathMessage(ConfigManager.placeholderize(deathMessage, player));
     }
 }

@@ -1,7 +1,6 @@
 package me.cranked.crankedcore.events;
 
 import java.util.*;
-
 import me.cranked.crankedcore.ConfigManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

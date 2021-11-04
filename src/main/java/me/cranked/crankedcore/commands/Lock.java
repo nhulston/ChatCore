@@ -7,16 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Lock implements CommandExecutor {
-    private final CrankedCore plugin;
-
-    public Lock(CrankedCore plugin) {
-        this.plugin = plugin;
-    }
-
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
     }
