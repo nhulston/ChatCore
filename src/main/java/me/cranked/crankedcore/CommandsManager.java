@@ -20,6 +20,7 @@ public class CommandsManager implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0) {
             sendHelpMessage(sender);
+            return true;
         }
 
         switch (args[0].toLowerCase()) {

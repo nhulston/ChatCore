@@ -3,8 +3,8 @@ version: '${project.version}'
 main: me.cranked.crankedcore.CrankedCore
 api-version: 1.17
 authors: [ Cranked ]
-description: Free core plugin as a hobby project
-website: https://google.com
+description: Everything you'll ever need in a chat plugin
+website: https://www.mc-market.org/resources/13998/
 softdepend: [PlaceholderAPI, Vault]
 commands:
   chat:
