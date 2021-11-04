@@ -5,9 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Manages deathmessages.yml
@@ -17,6 +15,7 @@ import java.util.Objects;
 public class DeathMessagesConfigManager {
     private static File file;
     private static FileConfiguration customFile;
+    private static Map<String, List<String>> deathMessages;
 
     /**
      * Sets up deathmessages.yml
@@ -224,6 +223,202 @@ public class DeathMessagesConfigManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Initializes maps for deathmessages.yml, as to make reading
+     * configuration files much faster.
+     */
+    public static void initMap() {
+        deathMessages = new HashMap<>();
+
+        getListHelper("unknown");
+        getListHelper("projectile-unknown");
+        getListHelper("pvp-unknown");
+        getListHelper("explosion-unknown");
+        getListHelper("magic-unknown");
+        getListHelper("melee-unknown");
+        getListHelper("fireball-unknown");
+        getListHelper("pvp-thorns");
+        getListHelper("pvp-explosion");
+        getListHelper("pvp-magic");
+        getListHelper("pvp-drown");
+        getListHelper("pvp-burn");
+        getListHelper("pvp-fire-tick");
+        getListHelper("pvp-magma");
+        getListHelper("pvp-lava");
+        getListHelper("pvp-starvation");
+        getListHelper("pvp-suffocation");
+        getListHelper("pvp-cramming");
+        getListHelper("pvp-freeze");
+        getListHelper("pvp-void");
+        getListHelper("pvp-fall-far");
+        getListHelper("pvp-fall-short");
+        getListHelper("pvp-fly-into-wall");
+        getListHelper("pvp-pricked");
+        getListHelper("pvp-lightning");
+        getListHelper("pvp-tnt");
+        getListHelper("pvp-custom-sword");
+        getListHelper("pvp-custom-axe");
+        getListHelper("pvp-custom-bow");
+        getListHelper("pvp-custom-crossbow");
+        getListHelper("pvp-custom-trident");
+        getListHelper("pvp-custom-other");
+        getListHelper("pvp-sword");
+        getListHelper("pvp-axe");
+        getListHelper("pvp-bow");
+        getListHelper("pvp-crossbow");
+        getListHelper("pvp-trident");
+        getListHelper("pvp-fists");
+        getListHelper("pvp-suicide");
+        getListHelper("pvp-other");
+        getListHelper("bee");
+        getListHelper("blaze-melee");
+        getListHelper("blaze-fireball");
+        getListHelper("cavespider");
+        getListHelper("creeper");
+        getListHelper("creeper-charged");
+        getListHelper("drowned-trident");
+        getListHelper("drowned-melee");
+        getListHelper("elderguardian");
+        getListHelper("enderdragon-breath");
+        getListHelper("enderdragon-fireball");
+        getListHelper("enderdragon-magic");
+        getListHelper("enderdragon");
+        getListHelper("enderman");
+        getListHelper("endermite");
+        getListHelper("evoker");
+        getListHelper("ghast");
+        getListHelper("guardian");
+        getListHelper("illusioner");
+        getListHelper("irongolem");
+        getListHelper("llama");
+        getListHelper("magmacube");
+        getListHelper("panda");
+        getListHelper("phantom");
+        getListHelper("pillager-crossbow");
+        getListHelper("pillager-melee");
+        getListHelper("polarbear");
+        getListHelper("pufferfish");
+        getListHelper("ravager");
+        getListHelper("shulker");
+        getListHelper("silverfish");
+        getListHelper("stray-arrow");
+        getListHelper("stray-melee");
+        getListHelper("witherskeleton");
+        getListHelper("skeleton-arrow");
+        getListHelper("skeleton-melee");
+        getListHelper("slime");
+        getListHelper("spider");
+        getListHelper("vex");
+        getListHelper("vindicator");
+        getListHelper("witch");
+        getListHelper("wither");
+        getListHelper("wither-explosion");
+        getListHelper("wolf");
+        getListHelper("zombiepigman");
+        getListHelper("zombievillager");
+        getListHelper("hoglin");
+        getListHelper("zoglin");
+        getListHelper("piglin");
+        getListHelper("piglin-brute");
+        getListHelper("husk");
+        getListHelper("zombie");
+        getListHelper("named-hoglin");
+        getListHelper("named-zoglin");
+        getListHelper("named-piglin");
+        getListHelper("named-piglin-brute");
+        getListHelper("named-bee");
+        getListHelper("named-blaze-melee");
+        getListHelper("named-blaze-fireball");
+        getListHelper("named-cavespider");
+        getListHelper("named-creeper");
+        getListHelper("named-creeper-charged");
+        getListHelper("named-drowned-trident");
+        getListHelper("named-drowned-melee");
+        getListHelper("named-elderguardian");
+        getListHelper("named-enderdragon-breath");
+        getListHelper("named-enderdragon");
+        getListHelper("named-enderdragon-fireball");
+        getListHelper("named-enderdragon-magic");
+        getListHelper("named-melee-unknown");
+        getListHelper("named-enderman");
+        getListHelper("named-endermite");
+        getListHelper("named-evoker");
+        getListHelper("named-ghast");
+        getListHelper("named-guardian");
+        getListHelper("named-illusioner");
+        getListHelper("named-irongolem");
+        getListHelper("named-magmacube");
+        getListHelper("named-panda");
+        getListHelper("named-phantom");
+        getListHelper("named-pillager-crossbow");
+        getListHelper("named-pillager-melee");
+        getListHelper("named-polarbear");
+        getListHelper("named-pufferfish");
+        getListHelper("named-ravager");
+        getListHelper("named-shulker");
+        getListHelper("named-silverfish");
+        getListHelper("wither-skull");
+        getListHelper("named-wither-skull");
+        getListHelper("named-stray-arrow");
+        getListHelper("named-stray-melee");
+        getListHelper("named-witherskeleton");
+        getListHelper("named-skeleton-arrow");
+        getListHelper("named-skeleton-melee");
+        getListHelper("named-slime");
+        getListHelper("named-spider");
+        getListHelper("named-vex");
+        getListHelper("named-vindicator");
+        getListHelper("named-witch");
+        getListHelper("named-wither");
+        getListHelper("named-wither-explosion");
+        getListHelper("named-wolf");
+        getListHelper("named-pigzombie");
+        getListHelper("named-zombievillager");
+        getListHelper("named-husk");
+        getListHelper("named-zombie");
+        getListHelper("freeze");
+        getListHelper("endercrystal");
+        getListHelper("anvil");
+        getListHelper("lightning");
+        getListHelper("enderpearl");
+        getListHelper("pricked");
+        getListHelper("tnt");
+        getListHelper("drown");
+        getListHelper("wither-potion");
+        getListHelper("burn");
+        getListHelper("fire-tick");
+        getListHelper("magma");
+        getListHelper("lava");
+        getListHelper("starvation");
+        getListHelper("suffocation");
+        getListHelper("cramming");
+        getListHelper("void");
+        getListHelper("fall-far");
+        getListHelper("fall-short");
+        getListHelper("fly-into-wall");
+        getListHelper("suicide-magic");
+        getListHelper("block-explosion");
+        getListHelper("suicide");
+    }
+
+    /**
+     * Helper method for initMap()
+     * @param s The name of the entry in deathmessages.yml we want to get from
+     * @return A list of Strings, the value of that entry in deathmessages.yml
+     */
+    private static List<String> getListHelper(String s) {
+        return deathMessages.put(s, DeathMessagesConfigManager.get().getStringList(s));
+    }
+
+    /**
+     * Helper method for Death.java
+     * @param s The key of in the map
+     * @return The value in the map, which is the value in deathmessages.yml
+     */
+    public static List<String> getFromMap(String s) {
+        return deathMessages.get(s);
     }
 
     /**

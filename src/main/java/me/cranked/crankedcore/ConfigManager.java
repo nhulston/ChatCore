@@ -202,6 +202,7 @@ public class ConfigManager {
     public static void reload() {
         plugin.reloadConfig();
         initMaps();
+        DeathMessagesConfigManager.initMap();
     }
 
     /**
@@ -259,7 +260,7 @@ public class ConfigManager {
     }
 
     /**
-     * Helper method for initConfig()
+     * Helper method for initMaps()
      * @param s The name of the entry in config.yml we want to get from
      * @return The String, the value of that entry in config.yml
      */
@@ -268,7 +269,7 @@ public class ConfigManager {
     }
 
     /**
-     * Helper method for initConfig()
+     * Helper method for initMaps()
      * @param s The name of the entry in config.yml we want to get from
      * @return A list of Strings, the value of that entry in config.yml
      */
@@ -277,7 +278,7 @@ public class ConfigManager {
     }
 
     /**
-     * Helper method for initConfig()
+     * Helper method for initMaps()
      * @param s The name of the entry in config.yml we want to get from
      * @return True if that section is enabled, false if not
      */

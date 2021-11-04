@@ -51,6 +51,7 @@ public final class CrankedCore extends JavaPlugin {
 
         // Setup deathmessages.yml
         DeathMessagesConfigManager.setupDeathmessages();
+        DeathMessagesConfigManager.initMap();
 
         // Log PlaceHolderAPI integration
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)

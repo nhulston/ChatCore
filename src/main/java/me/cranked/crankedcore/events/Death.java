@@ -1,5 +1,6 @@
 package me.cranked.crankedcore.events;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import me.cranked.crankedcore.ConfigManager;
@@ -26,8 +27,9 @@ public class Death implements Listener {
      * @return The new death message
      */
     public String getMsg(String path) {
-        int x = ThreadLocalRandom.current().nextInt(0, DeathMessagesConfigManager.get().getStringList(path).size());
-        return DeathMessagesConfigManager.get().getStringList(path).get(x);
+        List<String> list = DeathMessagesConfigManager.getFromMap(path);
+        int x = ThreadLocalRandom.current().nextInt(0, list.size());
+        return list.get(x);
     }
 
     /**
