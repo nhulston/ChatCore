@@ -1,6 +1,6 @@
-name: CrankedCore
+name: ChatCore
 version: '${project.version}'
-main: me.cranked.crankedcore.CrankedCore
+main: me.cranked.chatcore.ChatCore
 api-version: 1.17
 authors: [ Cranked ]
 description: Everything you'll ever need in a chat plugin
