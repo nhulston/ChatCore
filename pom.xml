@@ -6,6 +6,13 @@
 
     <groupId>me.cranked</groupId>
     <artifactId>ChatCore</artifactId>
+    <developers>
+        <developer>
+            <id>Cranked</id>
+            <name>Nicholas Hulston</name>
+            <timezone>EST</timezone>
+        </developer>
+    </developers>
     <version>2.0</version>
     <packaging>jar</packaging>
 

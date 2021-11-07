@@ -28,9 +28,11 @@ public class Clear implements CommandExecutor {
 
         // Clear chat for all online players without bypass permission
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (!onlinePlayer.hasPermission("chatcore.clear.bypass"))
-                for (int i = 0; i < 100; i++)
+            if (!onlinePlayer.hasPermission("chatcore.clear.bypass")) {
+                for (int i = 0; i < 100; i++) {
                     onlinePlayer.sendMessage("");
+                }
+            }
         }
 
         Set<String> arguments = Set.of(args);

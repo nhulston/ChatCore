@@ -18,6 +18,10 @@
 
 reload-msg: '&aChatCore has been reloaded.'
 no-permission-msg: '&cNo permission.'
+# Useful tip: If you want to change the unknown command message, there is no need
+# to download a plugin to do this for you. Simply go to spigot.yml, change the
+# field 'unknown-command', and use § for color codes instead of &
+# Example: unknown-command: §8[§bServer§8] §7Unknown command.
 help-msg:
   - '&8&m                                                                                '
   - ''
@@ -174,11 +178,13 @@ blocked-words-punishments:
 ## +------------------------------------------------------+ #
 #############################################################
 
-blocked-commands-msg: '&cThat command is disabled.'
+blocked-commands-msg: '&cThat command is disabled.' #another fun option would be to make this message the same as your unknown command message
 blocked-commands-warn-staff: true
 blocked-commands-warn-staff-msg: '&c&lWARNING&f: &c%player% &ftried to use the command ''&c%command%&f'''
 
-# If you want to block suggestions with colon, set 'send-namespaced' in spigot.yml to false
+# In general, this is recommended to avoid players from seeing what plugins you have installed
+# If you want to block suggestions with colon, thus preventing them from seeing your plugins,
+# set 'send-namespaced' in spigot.yml to false
 block-all-commands-containing-colon: true
 
 # Set to '' to disable
@@ -208,7 +214,6 @@ blocked-commands:      # to disable, do:   blocked-commands: []
   - '/plugins'
   - '/ver'
   - '/version'
-
 
 blocked-commands-punishments:
   crash:
@@ -261,8 +266,8 @@ announce-usage: '&cUsage: /chat announce <message>'
 # 1.13: https://pastebin.com/CkQ1WZuw
 # 1.14: https://pastebin.com/Z3eh7SP5
 # 1.15: https://pastebin.com/BZeQSYMN
-# 1.16:https://pastebin.com/KeaGT8Gi
-# 1.17L https://pastebin.com/X0US4f7D
+# 1.16: https://pastebin.com/KeaGT8Gi
+# 1.17: https://pastebin.com/X0US4f7D
 announce-sound: 'NONE'
 
 warning-enabled: true
@@ -388,6 +393,8 @@ mention-color: '&a&l'
 # 1.13: https://pastebin.com/CkQ1WZuw
 # 1.14: https://pastebin.com/Z3eh7SP5
 # 1.15: https://pastebin.com/BZeQSYMN
+# 1.16: https://pastebin.com/KeaGT8Gi
+# 1.17: https://pastebin.com/X0US4f7D
 mention-sound: 'NONE'
 
 
@@ -416,17 +423,14 @@ motd:
 ## +------------------------------------------------------+ #
 #############################################################
 
-# Auto broadcaster CANNOT be updated with /chat reload.
-# You must restart the server or use a plugin like plugman.
-
 auto-broadcast-enabled: true
 auto-broadcast-delay: 30
 # True = random message, false = in order
 auto-broadcast-random: true
 
-# Separate lines with \n
+# Separate lines with %newline%
 auto-broadcast-messages:
-  - '&8&m                                                                                \n\n&d&l                 Announcement\n\n&e    Insiding is a bannable offense!\n\n&8&m                                                                                '
+  - '&8&m                                                                                %newline%%newline%&d&l                 Announcement%newline%%newline%&e    Insiding is a bannable offense!%newline%%newline%&8&m                                                                                '
   - '&eHelp&f: Use &e/auction &fto access the auction house!'
   - '&eHelp&f: Visit our website for updates at &ewebsite.com'
 
@@ -469,7 +473,7 @@ logger-format: '[%time%] %player%: %message% '
 #############################################################
 
 # This disables all characters with an ASCII code >= 128 (pretty much anything not on the standard keyboard)
-# Recommended to stop bypassing swear and anti-advertising filter
+# This is recommended to stop bypassing swear and anti-advertising filter
 disable-ascii: true
 ascii-cancel: true          # If true, cancels the message. If false, replaces the ASCII symbol with the replace character
 ascii-cancel-msg: '&cYou cannot use ASCII characters.'

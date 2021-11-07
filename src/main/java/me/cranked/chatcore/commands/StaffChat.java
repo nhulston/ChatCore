@@ -75,9 +75,6 @@ public class StaffChat implements CommandExecutor {
         if (sender instanceof Player) {
             msg = ConfigManager.placeholderize(msg, (Player) sender);
         }
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission("chatcore.staffchat.see"))
-                onlinePlayer.sendMessage(msg);
-        }
+        Bukkit.broadcast(msg, "chatcore.staff.chat.see");
     }
 }

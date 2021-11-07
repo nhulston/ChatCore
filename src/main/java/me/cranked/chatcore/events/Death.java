@@ -19,8 +19,6 @@ import static me.cranked.chatcore.VersionManager.*;
 import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
 
 public class Death implements Listener {
-    // TODO killed with named item, hover to see
-
     /**
      * Helper method for onDeath that picks a random death message
      * @param path The location in deathmessages.yml we want to get from

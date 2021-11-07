@@ -21,7 +21,7 @@ public class AntiAd implements Listener {
         if (player.hasPermission("chatcore.antiad.bypass"))
             return;
 
-        // Check if contains whitelist (TODO this could be improved)
+        // Check if contains whitelist
         for (String allowed : ConfigManager.getList("anti-ad-whitelist")) {
             if (e.getMessage().toLowerCase().contains(allowed.toLowerCase()))
                 return;
@@ -47,10 +47,8 @@ public class AntiAd implements Listener {
             player.sendMessage(ConfigManager.get("anti-ad"));
 
             // Broadcast to staff
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (onlinePlayer.hasPermission("chatcore.antiad.alert"))
-                    onlinePlayer.sendMessage(ConfigManager.colorize(ConfigManager.get("anti-ad-inform").replace("%player%", player.getName()).replace("%message%", e.getMessage())));
-            }
+            String warningMsg = ConfigManager.colorize(ConfigManager.get("anti-ad-inform").replace("%player%", player.getName()).replace("%message%", e.getMessage()));
+            Bukkit.broadcast(warningMsg, "chatcore.antiad.alert");
         }
     }
 }

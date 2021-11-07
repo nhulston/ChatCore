@@ -63,11 +63,10 @@ public class BlockedCommands implements Listener {
                 player.sendMessage(ConfigManager.get("blocked-commands"));
 
                 // Warn staff
-                if (ConfigManager.getEnabled("blocked-commands-warn-staff"))
-                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                        if (onlinePlayer.hasPermission("chatcore.blockedcommands.warn"))
-                            onlinePlayer.sendMessage(ConfigManager.colorize(ConfigManager.get("blocked-commands-warn-staff-msg").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage())));
-                    }
+                if (ConfigManager.getEnabled("blocked-commands-warn-staff")) {
+                    String warningMsg = ConfigManager.colorize(ConfigManager.get("blocked-commands-warn-staff-msg").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage()));
+                    Bukkit.broadcast(warningMsg, "chatcore.blockedcommands.warn");
+                }
                 return;
             }
         }

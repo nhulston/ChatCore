@@ -2,6 +2,8 @@ package me.cranked.chatcore;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import me.cranked.chatcore.events.*;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
@@ -16,18 +18,24 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class ChatCore extends JavaPlugin {
 
-    // TODO Bukkit.broadcast(msg, permission); - staffAnnounce, staffChat, etc.
-    // TODO sounds for more things
-    // TODO bring silent messages to clear chat, etc.
-    // TODO config tips section. Like how to change unknown command message
-    // TODO better plugin hiding see https://www.spigotmc.org/resources/pluginhider-pluginhiderplus-hide-your-plugins-anti-tab-complete-all-message-replace.51583/
-    // TODO auto respawn
-    // TODO console filtering
+    /**
+     * TODO
+     * Configurable shortcuts
+     * sounds for more things
+     * bring silent messages to clear chat, etc.
+     * config tips section. Like how to change unknown command message
+     * better plugin hiding see https://www.spigotmc.org/resources/pluginhider-pluginhiderplus-hide-your-plugins-anti-tab-complete-all-message-replace.51583/
+     * console filtering
+     * [item]
+     * hover item on kill
+     */
 
     private static int delay = 0;
+    public static int broadcastDelay;
+    public static int taskId;
     private static boolean isChatLocked = false;
     public static Chat vaultChat = null;
-    public static ChatCore plugin; // TODO temp
+    public static ChatCore plugin;
 
     /**
      * First method ran for the entire plugin.
@@ -48,6 +56,7 @@ public final class ChatCore extends JavaPlugin {
         getConfig().options().copyDefaults();
         saveDefaultConfig();
         ConfigManager.initMaps();
+        broadcastDelay = ConfigManager.getInt("auto-broadcast-delay");
 
         // Setup deathmessages.yml
         DeathMessagesConfigManager.setupDeathmessages();
@@ -120,10 +129,36 @@ public final class ChatCore extends JavaPlugin {
         if (ConfigManager.getEnabled("disable-ascii"))
             getServer().getPluginManager().registerEvents(new AntiAscii(), this);
         List<String> messages = ConfigManager.getList("auto-broadcast-messages");
-        if (ConfigManager.getEnabled("auto-broadcast") && messages.size() != 0)
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-                // TODO auto broadcasting
-            }, 0L, (ConfigManager.getInt("auto-broadcast-delay") * 20L));
+        if (ConfigManager.getEnabled("auto-broadcast") && messages.size() != 0) {
+            startAutoBroadcaster();
+        }
+    }
+
+    /**
+     * Start the auto broadcaster
+     * If 'auto-broadcast-random' is true, picks a random message
+     * If false, picks the next message in the list
+     */
+    public static void startAutoBroadcaster() {
+        List<String> messages = ConfigManager.getList("auto-broadcast-messages");
+        AtomicInteger last = new AtomicInteger();
+        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+            String message;
+            if (ConfigManager.getEnabled("auto-broadcast-random")) {
+                message = messages.get((new Random()).nextInt(messages.size()));
+            } else {
+                last.getAndIncrement();
+                if (last.get() == messages.size()) {
+                    last.set(0);
+                }
+                message = messages.get(last.get());
+            }
+
+            String[] lines = ConfigManager.colorize(message).split("%newline%");
+            for (String s : lines) {
+                Bukkit.broadcastMessage(s);
+            }
+        }, 0L, broadcastDelay * 20L);
     }
 
     /**

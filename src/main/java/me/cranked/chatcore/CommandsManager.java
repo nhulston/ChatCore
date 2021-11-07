@@ -1,7 +1,10 @@
 package me.cranked.chatcore;
 
 import java.util.List;
+
 import me.cranked.chatcore.commands.*;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -81,8 +84,9 @@ public class CommandsManager implements CommandExecutor {
             for (String msg : messages)
                 sender.sendMessage(ConfigManager.colorize(msg));
         } else {
-            // TODO click to open mcm link
-            sender.sendMessage(ConfigManager.colorize("&aServer is running &bChatCore&a " + ChatCore.plugin.getDescription().getVersion() + "."));
+            TextComponent formatComponent = new TextComponent(ConfigManager.colorize("&aServer is running &b&nChatCore " + ChatCore.plugin.getDescription().getVersion() + "&a."));
+            formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.mc-market.org/resources/13998/"));
+            sender.spigot().sendMessage(formatComponent);
         }
     }
 }

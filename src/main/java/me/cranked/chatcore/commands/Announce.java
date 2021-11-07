@@ -15,7 +15,6 @@ public class Announce implements CommandExecutor {
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return false;
-        //return command(sender, args); TODO shortcuts
     }
 
     // Type: warning, announce, staff-announce

@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+import static org.bukkit.Bukkit.getServer;
+
 /**
  * Manages config.yml
  * @author Nick
@@ -93,7 +95,6 @@ public class ConfigManager {
         messages.put("blocked-words-replace-char", getHelper("blocked-words-replace-char"));
         multiLineMessages.put("blocked-words", getListHelper("blocked-words"));
         multiLineMessages.put("blocked-words-ignore-in-bigger-words", getListHelper("blocked-words-ignore-in-bigger-words"));
-        // TODO blocked-words-punishments
 
         // Blocked commands
         enabled.put("blocked-commands-warn-staff", getEnabledHelper("blocked-commands-warn-staff"));
@@ -102,7 +103,6 @@ public class ConfigManager {
         messages.put("blocked-commands-warn-staff", getHelper("blocked-commands-warn-staff-msg"));
         messages.put("block-all-commands-containing-colon", getHelper("block-all-commands-containing-colon-msg"));
         multiLineMessages.put("blocked-commands", getListHelper("blocked-commands"));
-        // TODO blocked-commands-punishments
 
         // Command spy
         enabled.put("command-spy", getEnabledHelper("command-spy-enabled"));
@@ -161,7 +161,6 @@ public class ConfigManager {
         enabled.put("custom-chat-format", getEnabledHelper("custom-chat-format-enabled"));
         enabled.put("name-hover", getEnabledHelper("name-hover-enabled"));
         messages.put("default-format", getHelper("default-format"));
-        // TODO rank-formats
         multiLineMessages.put("hover-format", getListHelper("hover-format"));
         messages.put("click-action-mode", getHelper("click-action-mode"));
         messages.put("click-action", getHelper("click-action"));
@@ -203,6 +202,11 @@ public class ConfigManager {
         plugin.reloadConfig();
         initMaps();
         DeathMessagesConfigManager.initMap();
+        ChatCore.broadcastDelay = ConfigManager.getInt("auto-broadcast-delay");
+        if (getEnabled("auto-broadcast")) {
+            getServer().getScheduler().cancelTask(ChatCore.taskId);
+            ChatCore.startAutoBroadcaster();
+        }
     }
 
     /**
