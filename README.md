@@ -4,6 +4,7 @@ This plugin is an administrative tool for servers to control and manage their ch
 
 Links:
 https://www.mc-market.org/resources/13998/
+
 https://www.spigotmc.org/resources/chat-core-manage-control-format-your-chat-everything-youll-ever-need.97447/
 
 Donate:
