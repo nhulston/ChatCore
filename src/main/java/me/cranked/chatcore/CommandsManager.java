@@ -1,8 +1,12 @@
 package me.cranked.chatcore;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import me.cranked.chatcore.commands.*;
+import me.cranked.chatcore.commands.api.ChatCommand;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
@@ -17,14 +21,47 @@ import org.jetbrains.annotations.NotNull;
  * @since 1.0
  */
 public class CommandsManager implements CommandExecutor {
+
+
+    private ArrayList<ChatCommand> subCommands = new ArrayList<>();
+
+    public CommandsManager() {
+        addSubCommands(
+
+        );
+    }
+
     /**
      * Manages all commands that start with "chat"
      */
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length == 0) {
+        if (args.length == 0 || subCommands.isEmpty()) {
             sendHelpMessage(sender);
             return true;
         }
+
+        // Gets argument 0
+        String arg = args[0];
+        // Removes argument 0
+        String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
+
+        Optional<ChatCommand> cmd = subCommands.stream().filter(chatCommand -> {
+            if (chatCommand.getName().equalsIgnoreCase(arg))
+                return true;
+
+            List<String> aliases = chatCommand.getAliases();
+            if (aliases == null || aliases.isEmpty())
+                return false;
+
+            return aliases.contains(arg.toLowerCase());
+        }).findFirst();
+
+        if (cmd.isPresent())
+            runSubCommand(cmd.get(), sender, newArgs);
+        else
+            sendHelpMessage(sender);
+        return true;
+
 
         switch (args[0].toLowerCase()) {
             case "help":
@@ -73,6 +110,29 @@ public class CommandsManager implements CommandExecutor {
         return true;
     }
 
+    private void runSubCommand(ChatCommand chatCommand, CommandSender sender, String[] args) {
+        Optional<String> permission = Optional.ofNullable(chatCommand.getPermission());
+        if (permission.isPresent() && !(sender.hasPermission(permission.get()))) {
+            sender.sendMessage(ConfigManager.get("no-permission"));
+            return;
+        }
+
+        boolean playerOnly = chatCommand.isPlayerOnly();
+        boolean consoleOnly = chatCommand.isConsoleOnly();
+
+        if (playerOnly && !(sender instanceof Player)) {
+            // Send the player a "You cannot use this as a player" message, or something.
+            return;
+        }
+
+        if (consoleOnly && sender instanceof Player) {
+            // Send the console a "You cannot use this as the Console" message, or something.
+            return;
+        }
+
+        chatCommand.onCommand(sender, args);
+    }
+
     /**
      * Helper method for onCommand
      * Called when user runs "/chat" or "/chat help"
@@ -89,4 +149,10 @@ public class CommandsManager implements CommandExecutor {
             sender.spigot().sendMessage(formatComponent);
         }
     }
+
+    public void addSubCommands(ChatCommand... commands) {
+        this.subCommands.addAll(Arrays.asList(commands));
+    }
+
+
 }

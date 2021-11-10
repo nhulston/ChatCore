@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class StaffChat implements CommandExecutor {
     public static Set<Player> staffChatList = new HashSet<>();
 
