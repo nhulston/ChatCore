@@ -1,11 +1,15 @@
 package me.cranked.chatcore.commands.api;
 
 import me.cranked.chatcore.commands.api.exception.InvalidCommandInfoException;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class ChatCommand {
 
@@ -14,6 +18,7 @@ public abstract class ChatCommand {
     private String permission;
     private boolean playerOnly;
     private boolean consoleOnly;
+    private boolean enabled;
 
     public ChatCommand() {
         if (!getClass().isAnnotationPresent(CommandInfo.class)) {
@@ -61,5 +66,22 @@ public abstract class ChatCommand {
 
     public boolean isConsoleOnly() {
         return consoleOnly;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    // Utility Methods
+    public Optional<Player> getPlayer(String name) {
+        return Optional.ofNullable(Bukkit.getPlayer(name));
+    }
+
+    public void broadcast(String message) {
+        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 }

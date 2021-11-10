@@ -23,11 +23,19 @@ import org.jetbrains.annotations.NotNull;
 public class CommandsManager implements CommandExecutor {
 
 
-    private ArrayList<ChatCommand> subCommands = new ArrayList<>();
+    private final ArrayList<ChatCommand> subCommands = new ArrayList<>();
 
     public CommandsManager() {
         addSubCommands(
-
+            new CommandAnnounce(),
+            new CommandClear(),
+            new CommandCommandSpy(),
+            new CommandMute(),
+            new CommandReload(),
+            new CommandSlow(),
+            new CommandStaffAnnounce(),
+            new CommandStaffChat(),
+            new CommandWarn()
         );
     }
 
@@ -46,6 +54,9 @@ public class CommandsManager implements CommandExecutor {
         String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
 
         Optional<ChatCommand> cmd = subCommands.stream().filter(chatCommand -> {
+            if (!chatCommand.isEnabled())
+                return false;
+
             if (chatCommand.getName().equalsIgnoreCase(arg))
                 return true;
 
@@ -63,51 +74,51 @@ public class CommandsManager implements CommandExecutor {
         return true;
 
 
-        switch (args[0].toLowerCase()) {
-            case "help":
-                sendHelpMessage(sender);
-                break;
-            case "reload":
-                if (sender.hasPermission("chatcore.reload") || !(sender instanceof Player)) {
-                    ConfigManager.reload();
-                    DeathMessagesConfigManager.reload();
-                    sender.sendMessage(ConfigManager.get("reload"));
-                } else {
-                    sender.sendMessage(ConfigManager.get("no-permission"));
-                }
-                break;
-            case "clear":
-                Clear.command(sender, args);
-                break;
-            case "slow":
-                Slow.command(sender, args);
-                break;
-            case "lock":
-            case "mute":
-                Lock.command(sender, args);
-                break;
-            case "staff-chat":
-            case "staff":
-                StaffChat.command(sender, args);
-                break;
-            case "spy":
-                CommandSpy.command(sender);
-                break;
-            case "announce":
-            case "shout":
-            case "broadcast":
-                Announce.command(sender, args, "announce");
-                break;
-            case "warning":
-            case "warn":
-                Announce.command(sender, args, "warning");
-                break;
-            case "staffannounce":
-                Announce.command(sender, args, "staff-announce");
-                break;
-        }
-
-        return true;
+//        switch (args[0].toLowerCase()) {
+//            case "help":
+//                sendHelpMessage(sender);
+//                break;
+//            case "reload":
+//                if (sender.hasPermission("chatcore.reload") || !(sender instanceof Player)) {
+//                    ConfigManager.reload();
+//                    DeathMessagesConfigManager.reload();
+//                    sender.sendMessage(ConfigManager.get("reload"));
+//                } else {
+//                    sender.sendMessage(ConfigManager.get("no-permission"));
+//                }
+//                break;
+//            case "clear":
+//                Clear.command(sender, args);
+//                break;
+//            case "slow":
+//                Slow.command(sender, args);
+//                break;
+//            case "lock":
+//            case "mute":
+//                Lock.command(sender, args);
+//                break;
+//            case "staff-chat":
+//            case "staff":
+//                StaffChat.command(sender, args);
+//                break;
+//            case "spy":
+//                CommandSpy.command(sender);
+//                break;
+//            case "announce":
+//            case "shout":
+//            case "broadcast":
+//                Announce.command(sender, args, "announce");
+//                break;
+//            case "warning":
+//            case "warn":
+//                Announce.command(sender, args, "warning");
+//                break;
+//            case "staffannounce":
+//                Announce.command(sender, args, "staff-announce");
+//                break;
+//        }
+//
+//        return true;
     }
 
     private void runSubCommand(ChatCommand chatCommand, CommandSender sender, String[] args) {

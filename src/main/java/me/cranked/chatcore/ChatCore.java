@@ -84,9 +84,9 @@ public final class ChatCore extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new AddPeriod(), this);
         if (ConfigManager.getList("blocked-words").size() != 0)
             getServer().getPluginManager().registerEvents(new BlockedWords(), this);
-        getServer().getPluginManager().registerEvents(new me.cranked.chatcore.events.CommandSpy(), this);
+        getServer().getPluginManager().registerEvents(new CommandSpyListener(), this);
         if (ConfigManager.getEnabled("staff-chat"))
-            getServer().getPluginManager().registerEvents(new me.cranked.chatcore.events.StaffChat(), this);
+            getServer().getPluginManager().registerEvents(new StaffChatListener(), this);
         if (ConfigManager.getList("blocked-commands").size() != 0)
             getServer().getPluginManager().registerEvents(new BlockedCommands(), this);
         if (ConfigManager.getEnabled("auto-caps"))
