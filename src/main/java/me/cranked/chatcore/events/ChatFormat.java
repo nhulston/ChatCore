@@ -64,6 +64,9 @@ public class ChatFormat implements Listener {
                     onlinePlayer.spigot().sendMessage(formatComponent, new TextComponent(format.substring(format.length() - 2) + e.getMessage()));
                 }
                 e.setCancelled(true);
+                //Send message to Console
+                String msgToConsole = "[CHAT] " + player.getName() + " >> " + e.getMessage();
+                ChatCore.plugin.getServer().getConsoleSender().sendMessage(msgToConsole);
             } else {
                 e.setFormat(format + e.getMessage());
             }
