@@ -64,7 +64,7 @@ public class BlockedCommands implements Listener {
 
                 // Warn staff
                 if (ConfigManager.getEnabled("blocked-commands-warn-staff")) {
-                    String warningMsg = ConfigManager.colorize(ConfigManager.get("blocked-commands-warn-staff-msg").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage()));
+                    String warningMsg = ConfigManager.colorize(ConfigManager.get("blocked-commands-warn-staff").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage()));
                     Bukkit.broadcast(warningMsg, "chatcore.blockedcommands.warn");
                 }
                 return;

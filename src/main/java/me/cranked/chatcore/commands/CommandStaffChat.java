@@ -1,11 +1,11 @@
 package me.cranked.chatcore.commands;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.cranked.chatcore.ChatCore;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.commands.api.ChatCommand;
 import me.cranked.chatcore.commands.api.CommandInfo;
 import me.cranked.chatcore.events.Log;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,10 +26,10 @@ public class CommandStaffChat extends ChatCommand {
     @Override
     public void onCommand(CommandSender sender, String[] args) {
         // Toggle staff chat
-        if (args.length <= 1) {
+        if (args.length == 0) {
             // Console usage
             if (!(sender instanceof Player)) {
-                Bukkit.getLogger().warning("[ChatCore] Usage: /chat staff [message]]");
+                ChatCore.plugin.getLogger().warning("Usage: /chat staff [message]]");
                 return;
             }
 
@@ -67,6 +67,7 @@ public class CommandStaffChat extends ChatCommand {
         if (sender instanceof Player) {
             msg = ConfigManager.placeholderize(msg, (Player) sender);
         }
-        Bukkit.broadcast(msg, "chatcore.staff.chat.see");
+        ChatCore.plugin.getServer().broadcast(msg, "chatcore.staff.chat.see");
+        ChatCore.plugin.getLogger().info(msg); //Send to Console
     }
 }

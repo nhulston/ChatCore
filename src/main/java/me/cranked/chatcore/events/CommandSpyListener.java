@@ -6,7 +6,6 @@ import java.util.UUID;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.commands.CommandCommandSpy;
-import me.cranked.chatcore.commands.CommandSpy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

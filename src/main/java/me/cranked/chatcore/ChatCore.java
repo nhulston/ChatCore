@@ -130,7 +130,7 @@ public final class ChatCore extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new AntiAscii(), this);
         List<String> messages = ConfigManager.getList("auto-broadcast-messages");
         if (ConfigManager.getEnabled("auto-broadcast") && messages.size() != 0) {
-            startAutoBroadcaster();
+            startAutoBroadcaster(messages);
         }
     }
 
@@ -139,8 +139,8 @@ public final class ChatCore extends JavaPlugin {
      * If 'auto-broadcast-random' is true, picks a random message
      * If false, picks the next message in the list
      */
-    public static void startAutoBroadcaster() {
-        List<String> messages = ConfigManager.getList("auto-broadcast-messages");
+    public static void startAutoBroadcaster(List<String> mes) {
+        List<String> messages = mes;
         AtomicInteger last = new AtomicInteger();
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             String message;

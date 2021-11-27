@@ -6,12 +6,16 @@ import me.cranked.chatcore.commands.api.CommandInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
 @CommandInfo(name = "warn", aliases = {"warning"}, permission = "chatcore.announce.warning")
 public class CommandWarn extends ChatCommand {
+
+    public CommandWarn() {
+        setEnabled(ConfigManager.getEnabled("warning"));
+    }
+
     @Override
     public void onCommand(CommandSender sender, String[] args) {
         // Return if incorrect usage

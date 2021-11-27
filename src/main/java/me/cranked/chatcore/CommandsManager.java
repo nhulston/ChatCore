@@ -1,9 +1,6 @@
 package me.cranked.chatcore;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import me.cranked.chatcore.commands.*;
 import me.cranked.chatcore.commands.api.ChatCommand;
@@ -12,15 +9,17 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Manages all commands that start with "chat"
  * @author Nick
  * @since 1.0
  */
-public class CommandsManager implements CommandExecutor {
+public class CommandsManager implements CommandExecutor, TabCompleter {
 
 
     private final ArrayList<ChatCommand> subCommands = new ArrayList<>();
@@ -166,4 +165,29 @@ public class CommandsManager implements CommandExecutor {
     }
 
 
+    @Nullable
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        List<String> list = new ArrayList<>();
+
+
+        if (args.length == 1) {
+            for (ChatCommand cc : subCommands) {
+                if (sender.hasPermission(cc.getPermission())) {
+                    list.add(cc.getName());
+                }
+            }
+        }
+
+        String finalArg = args[args.length - 1];
+        Iterator<String> it = list.iterator();
+
+        while (it.hasNext()) {
+            if (!it.next().startsWith(finalArg)) {
+                it.remove();
+            }
+        }
+
+        return list;
+    }
 }

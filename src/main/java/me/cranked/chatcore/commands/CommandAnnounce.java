@@ -11,6 +11,11 @@ import java.util.Arrays;
 
 @CommandInfo(name = "announce", aliases = {"shout", "broadcast"}, permission = "chatcore.announce")
 public class CommandAnnounce extends ChatCommand {
+
+    public CommandAnnounce() {
+        setEnabled(ConfigManager.getEnabled("announce"));
+    }
+
     @Override
     public void onCommand(CommandSender sender, String[] args) {
 

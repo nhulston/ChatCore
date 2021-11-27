@@ -6,8 +6,6 @@ import me.cranked.chatcore.commands.api.CommandInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 @CommandInfo(name = "clear", permission = "chatcore.clear")
