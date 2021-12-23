@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@CommandInfo(name = "staffchat", aliases = {"staff", "staff-chat", "sc"}, permission = "chatcore.staffchat.send")
+@CommandInfo(name = "staff", aliases = {"staffchat", "staff-chat", "sc"}, permission = "chatcore.staffchat.send")
 public class CommandStaffChat extends ChatCommand {
     public static Set<UUID> staffChatList = new HashSet<>();
     public CommandStaffChat() {
