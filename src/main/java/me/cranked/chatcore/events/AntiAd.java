@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+//TODO: Check if work
 public class AntiAd implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {

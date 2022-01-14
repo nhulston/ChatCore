@@ -205,7 +205,8 @@ public class ConfigManager {
         ChatCore.broadcastDelay = ConfigManager.getInt("auto-broadcast-delay");
         if (getEnabled("auto-broadcast")) {
             getServer().getScheduler().cancelTask(ChatCore.taskId);
-            ChatCore.startAutoBroadcaster();
+            List<String> messages = ConfigManager.getList("auto-broadcast-messages");
+            ChatCore.startAutoBroadcaster(messages);
         }
     }
 

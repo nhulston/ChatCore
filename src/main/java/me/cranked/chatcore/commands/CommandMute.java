@@ -1,29 +1,23 @@
 package me.cranked.chatcore.commands;
 
-import java.util.Set;
-import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
+import me.cranked.chatcore.ConfigManager;
+import me.cranked.chatcore.commands.api.ChatCommand;
+import me.cranked.chatcore.commands.api.CommandInfo;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
-public class Lock implements CommandExecutor {
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        return command(sender, args);
+import java.util.Set;
+
+@CommandInfo(name = "mute", aliases = {"lock"}, permission = "chatcore.lock")
+public class CommandMute extends ChatCommand {
+
+    public CommandMute() {
+        setEnabled(ConfigManager.getEnabled("lock-chat"));
     }
 
-    public static boolean command(CommandSender sender, String[] args) {
-        // Config check
-        if (!ConfigManager.getEnabled("lock-chat"))
-            return false;
-
-        // Permission check
-        if (ChatCore.noPermission("chatcore.lock", sender)) {
-            return false;
-        }
-        
+    @Override
+    public void onCommand(CommandSender sender, String[] args) {
         // Lock chat
         ChatCore.toggleChatLocked();
 
@@ -44,7 +38,5 @@ public class Lock implements CommandExecutor {
         } else {
             Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get("unlock").replace("%player%", sender.getName())));
         }
-
-        return true;
     }
 }

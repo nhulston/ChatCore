@@ -1,62 +1,56 @@
 package me.cranked.chatcore.commands;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.*;
-
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
+import me.cranked.chatcore.ConfigManager;
+import me.cranked.chatcore.commands.api.ChatCommand;
+import me.cranked.chatcore.commands.api.CommandInfo;
 import me.cranked.chatcore.events.Log;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class StaffChat implements CommandExecutor {
-    public static Set<Player> staffChatList = new HashSet<>();
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        return command(sender, args);
+@CommandInfo(name = "staff", aliases = {"staffchat", "staff-chat", "sc"}, permission = "chatcore.staffchat.send")
+public class CommandStaffChat extends ChatCommand {
+    public static Set<UUID> staffChatList = new HashSet<>();
+    public CommandStaffChat() {
+        setEnabled(ConfigManager.getEnabled("staff-chat"));
     }
 
-    public static boolean command(CommandSender sender, String[] args) {
-        // Config check
-        if (!ConfigManager.getEnabled("staff-chat"))
-            return false;
-
-        // Permission check
-        if (ChatCore.noPermission("chatcore.staffchat.send", sender)) {
-            return false;
-        }
-
+    @Override
+    public void onCommand(CommandSender sender, String[] args) {
         // Toggle staff chat
-        if (args.length <= 1) {
+        if (args.length == 0) {
             // Console usage
             if (!(sender instanceof Player)) {
-                Bukkit.getLogger().warning("[ChatCore] Usage: /chat staff [message]]");
-                return false;
+                ChatCore.plugin.getLogger().warning("Usage: /chat staff [message]]");
+                return;
             }
 
             // Player usage
             Player player = (Player) sender;
-            if (staffChatList.contains(player)) {
-                staffChatList.remove(player);
+            UUID uuid = player.getUniqueId();
+            if (staffChatList.contains(uuid)) {
+                staffChatList.remove(uuid);
                 sender.sendMessage(ConfigManager.get("staff-chat-off"));
             } else {
-                staffChatList.add(player);
+                staffChatList.add(uuid);
                 sender.sendMessage(ConfigManager.get("staff-chat-on"));
             }
         } else {
             // Calculate message
-            args = Arrays.copyOfRange(args, 1, args.length);
+            args = Arrays.copyOfRange(args, 0, args.length);
             String msg = String.join(" ", args);
-            
+
             // Send
             sendMessage(msg, sender);
-            
+
             // Log in chat logger
             if (ConfigManager.getEnabled("chat-logger") && ConfigManager.getEnabled("chat-logger-staff-chat")) {
                 String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", sender.getName()).replace("%message%", msg));
@@ -66,8 +60,6 @@ public class StaffChat implements CommandExecutor {
                 Log.log(formattedMessage, LocalDate.now().toString(), "Chat Logs");
             }
         }
-
-        return true;
     }
 
     public static void sendMessage(String msg, CommandSender sender) {
@@ -75,6 +67,7 @@ public class StaffChat implements CommandExecutor {
         if (sender instanceof Player) {
             msg = ConfigManager.placeholderize(msg, (Player) sender);
         }
-        Bukkit.broadcast(msg, "chatcore.staff.chat.see");
+        ChatCore.plugin.getServer().broadcast(msg, "chatcore.staff.chat.see");
+        ChatCore.plugin.getLogger().info(msg); //Send to Console
     }
 }

@@ -1,33 +1,27 @@
 package me.cranked.chatcore.commands;
 
-import java.util.Set;
-import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
+import me.cranked.chatcore.ConfigManager;
+import me.cranked.chatcore.commands.api.ChatCommand;
+import me.cranked.chatcore.commands.api.CommandInfo;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
-public class Slow implements CommandExecutor {
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        return command(sender, args);
+import java.util.Set;
+
+@CommandInfo(name = "slow", permission = "chatcore.slow")
+public class CommandSlow extends ChatCommand {
+
+    public CommandSlow() {
+        setEnabled(ConfigManager.getEnabled("slow-chat"));
     }
 
-    public static boolean command(CommandSender sender, String[] args) {
-        // Config check
-        if (!ConfigManager.getEnabled("slow-chat"))
-            return false;
-
-        // Permission check
-        if (ChatCore.noPermission("chatcore.slow", sender)) {
-            return false;
-        }
-
+    @Override
+    public void onCommand(CommandSender sender, String[] args) {
         // Usage check
         if (args.length <= 1) {
             sender.sendMessage(ConfigManager.get("slow-usage"));
-            return false;
+            return;
         }
 
         // Parse delay
@@ -36,7 +30,7 @@ public class Slow implements CommandExecutor {
             delay = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
             sender.sendMessage(ConfigManager.get("slow-usage"));
-            return false;
+            return;
         }
 
         // Set the delay
@@ -58,6 +52,5 @@ public class Slow implements CommandExecutor {
             Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get("slow").replace("%time%", Integer.toString(delay)).replace("%player%", sender.getName())));
         }
 
-        return true;
     }
 }
