@@ -1,7 +1,7 @@
 name: ChatCore
 version: '${project.version}'
 main: me.cranked.chatcore.ChatCore
-api-version: 1.17
+api-version: 1.13
 authors: [ Cranked ]
 description: Everything you'll ever need in a chat plugin
 website: https://www.mc-market.org/resources/13998/
