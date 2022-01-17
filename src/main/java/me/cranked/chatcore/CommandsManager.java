@@ -1,10 +1,14 @@
 package me.cranked.chatcore;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import me.cranked.chatcore.commands.*;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +21,38 @@ import org.jetbrains.annotations.NotNull;
  * @since 1.0
  */
 public class CommandsManager implements CommandExecutor {
+
+    private static final Map<String, CustomRunnable<CommandSender, String[]>> map = new HashMap<>();
+
+    private interface CustomRunnable<CommandSender, T> {
+        void run(CommandSender sender, T args);
+    }
+
+    public CommandsManager() {
+        map.put("reload", (sender, args) -> {
+            if (sender.hasPermission("chatcore.reload") || !(sender instanceof Player)) {
+                ConfigManager.reload();
+                DeathMessagesConfigManager.reload();
+                sender.sendMessage(ConfigManager.get("reload"));
+            } else {
+                sender.sendMessage(ConfigManager.get("no-permission"));
+            }
+        });
+        map.put("clear", Clear::command);
+        map.put("slow", Slow::command);
+        map.put("lock", Lock::command);
+        map.put("mute", Lock::command);
+        map.put("staff", StaffChat::command);
+        map.put("staff-chat", StaffChat::command);
+        map.put("spy", (sender, args) -> CommandSpy.command(sender));
+        map.put("announce", (sender, args) -> Announce.command(sender, args, "announce"));
+        map.put("shout", (sender, args) -> Announce.command(sender, args, "announce"));
+        map.put("broadcast", (sender, args) -> Announce.command(sender, args, "announce"));
+        map.put("warn", (sender, args) -> Announce.command(sender, args, "warning"));
+        map.put("warning", (sender, args) -> Announce.command(sender, args, "warning"));
+        map.put("staffannounce", (sender, args) -> Announce.command(sender, args, "staff-announce"));
+    }
+
     /**
      * Manages all commands that start with "chat"
      */
@@ -26,48 +62,11 @@ public class CommandsManager implements CommandExecutor {
             return true;
         }
 
-        switch (args[0].toLowerCase()) {
-            case "help":
-                sendHelpMessage(sender);
-                break;
-            case "reload":
-                if (sender.hasPermission("chatcore.reload") || !(sender instanceof Player)) {
-                    ConfigManager.reload();
-                    DeathMessagesConfigManager.reload();
-                    sender.sendMessage(ConfigManager.get("reload"));
-                } else {
-                    sender.sendMessage(ConfigManager.get("no-permission"));
-                }
-                break;
-            case "clear":
-                Clear.command(sender, args);
-                break;
-            case "slow":
-                Slow.command(sender, args);
-                break;
-            case "lock":
-            case "mute":
-                Lock.command(sender, args);
-                break;
-            case "staff-chat":
-            case "staff":
-                StaffChat.command(sender, args);
-                break;
-            case "spy":
-                CommandSpy.command(sender);
-                break;
-            case "announce":
-            case "shout":
-            case "broadcast":
-                Announce.command(sender, args, "announce");
-                break;
-            case "warning":
-            case "warn":
-                Announce.command(sender, args, "warning");
-                break;
-            case "staffannounce":
-                Announce.command(sender, args, "staff-announce");
-                break;
+        Optional<CustomRunnable<CommandSender, String[]>> runnable = Optional.ofNullable(map.getOrDefault(args[0].toLowerCase(), null));
+        if (runnable.isPresent()) {
+            runnable.get().run(sender, args);
+        } else {
+            sendHelpMessage(sender);
         }
 
         return true;
