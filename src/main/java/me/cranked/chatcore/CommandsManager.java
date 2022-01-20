@@ -3,12 +3,10 @@ package me.cranked.chatcore;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import me.cranked.chatcore.commands.*;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -62,11 +60,11 @@ public class CommandsManager implements CommandExecutor {
             return true;
         }
 
-        Optional<CustomRunnable<CommandSender, String[]>> runnable = Optional.ofNullable(map.getOrDefault(args[0].toLowerCase(), null));
-        if (runnable.isPresent()) {
-            runnable.get().run(sender, args);
-        } else {
+        CustomRunnable<CommandSender, String[]> runnable = map.getOrDefault(args[0].toLowerCase(), null);
+        if (runnable == null) {
             sendHelpMessage(sender);
+        } else {
+            runnable.run(sender, args);
         }
 
         return true;
