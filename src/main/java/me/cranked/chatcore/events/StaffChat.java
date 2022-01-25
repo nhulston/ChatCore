@@ -17,7 +17,7 @@ public class StaffChat implements Listener {
             Player player = e.getPlayer();
             String msg = e.getMessage();
             e.setCancelled(true);
-            Bukkit.getLogger().info("[ChatCore] " + ConfigManager.colorize(ConfigManager.get("staff-chat-format").replace("%message%", msg).replace("%player%", player.getDisplayName())));
+            Bukkit.getLogger().info("[ChatCore] " + ConfigManager.get("staff-chat-format").replace("%message%", msg).replace("%player%", player.getDisplayName()));
             me.cranked.chatcore.commands.StaffChat.sendMessage(msg, player);
         }
     }

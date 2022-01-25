@@ -22,7 +22,7 @@ public class Log implements Listener {
         // Config check
         if (!ConfigManager.getEnabled("chat-logger"))
             return;
-        String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString().substring(0, 8)).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage()));
+        String formattedMessage = ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString().substring(0, 8)).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage());
         formattedMessage = PlaceholderAPI.setPlaceholders(e.getPlayer(), formattedMessage);
         log(formattedMessage, LocalDate.now().toString(), "Chat Logs");
     }
@@ -31,7 +31,7 @@ public class Log implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent e) {
         if (!ConfigManager.getEnabled("command-logger"))
             return;
-        String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString().substring(0, 8)).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage()));
+        String formattedMessage = ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString().substring(0, 8)).replace("%player%", e.getPlayer().getName()).replace("%message%", e.getMessage());
         formattedMessage = PlaceholderAPI.setPlaceholders(e.getPlayer(), formattedMessage);
         String command = e.getMessage();
         if (ConfigManager.getEnabled("chat-logger")) {

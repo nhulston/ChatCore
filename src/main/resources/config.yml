@@ -8,13 +8,15 @@
 #
 #   A plugin created by Cranked
 #   Mc-Market: https://www.mc-market.org/resources/13998/
-#   Spigot:
+#   Spigot: https://www.spigotmc.org/resources/chat-core-manage-control-format-your-chat-everything-youll-ever-need.97447/
 
 #############################################################
 ## +------------------------------------------------------+ #
 ## |                  General Settings                    | #
 ## +------------------------------------------------------+ #
 #############################################################
+
+# Versions 1.16+: You can use color codes. Ex: #000000
 
 reload-msg: '&aChatCore has been reloaded.'
 no-permission-msg: '&cNo permission.'

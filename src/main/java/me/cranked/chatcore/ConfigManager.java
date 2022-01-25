@@ -1,9 +1,12 @@
 package me.cranked.chatcore;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -18,6 +21,8 @@ public class ConfigManager {
     private static Map<String, List<String>> multiLineMessages;
     private static Map<String, Boolean> enabled;
     private static Map<String, Integer> ints;
+
+    private static final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
 
     /**
      * Setter method for plugin
@@ -215,7 +220,15 @@ public class ConfigManager {
      * @return A colorized String
      */
     public static String colorize(String s) {
-        return s.replaceAll("&", "§");
+        if (VersionManager.isV16()) {
+            Matcher matcher = pattern.matcher(s);
+            while (matcher.find()) {
+                String color = s.substring(matcher.start(), matcher.end());
+                s = s.substring(0, matcher.start()) + ChatColor.of(color) + s.substring(matcher.end());
+                matcher = pattern.matcher(s);
+            }
+        }
+        return ChatColor.translateAlternateColorCodes('&', s);
     }
 
     /**
