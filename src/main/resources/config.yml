@@ -273,6 +273,8 @@ announce-usage: '&cUsage: /chat announce <message>'
 # 1.15: https://pastebin.com/BZeQSYMN
 # 1.16: https://pastebin.com/KeaGT8Gi
 # 1.17: https://pastebin.com/X0US4f7D
+# 1.18: https://pastebin.com/VuAUTguK
+# 1.19: https://pastebin.com/smFzazEu
 announce-sound: 'NONE'
 
 warning-enabled: true
