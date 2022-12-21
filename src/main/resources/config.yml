@@ -16,7 +16,7 @@
 ## +------------------------------------------------------+ #
 #############################################################
 
-# Versions 1.16+: You can use color codes. Ex: #000000
+# Versions 1.16+: You can use color codes. Ex: &#000000Hello!
 
 reload-msg: '&aChatCore has been reloaded.'
 no-permission-msg: '&cNo permission.'
