@@ -5,10 +5,8 @@ import java.util.Objects;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
-import me.cranked.chatcore.VersionManager;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,24 +39,20 @@ public class ChatFormat implements Listener {
         if (ConfigManager.getEnabled("name-hover")) {
             for (Player onlinePlayer : e.getRecipients()) {
                 // Setup message
-                format = PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, format);
-                BaseComponent[] component = TextComponent.fromLegacyText(format + e.getMessage());
+                String newFormat = PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, format);
+                TextComponent textComponent = new TextComponent(ConfigManager.colorize(newFormat + e.getMessage()));
 
-                // Setup hovering
-                List<String> list = ChatCore.plugin.getConfig().getStringList("hover-format"); // for some reason ConfigManager doesn't work here?
+                // Setup hover
+                List<String> list = ChatCore.plugin.getConfig().getStringList("hover-format"); // For some reason ConfigManager doesn't work here
                 for (int i = 0; i < list.size(); i++) {
                     String line = list.get(i).replace("%name%", player.getDisplayName()).replace("%prefix%", ChatCore.vaultChat.getPlayerPrefix(player));
                     line = PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, line);
                     list.set(i, ConfigManager.placeholderize(line, player));
                 }
-                HoverEvent hoverEvent;
-                if (VersionManager.isV16()) {
-                    hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new Text(String.join("\n", list))));
-                } else {
-                    hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder(String.join("\n", list)).create()));
-                }
+                HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(String.join("\n", list)));
+                textComponent.setHoverEvent(hoverEvent);
 
-                // Setup click
+                // Setup click event
                 String clickActionMode = ConfigManager.get("click-action-mode");
                 assert clickActionMode != null;
                 String action = ConfigManager.colorize(ConfigManager.get("click-action").replace("%name%", player.getName()));
@@ -70,12 +64,8 @@ public class ChatFormat implements Listener {
                 } else {
                     clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, action);
                 }
-
-                BaseComponent[] component2 = new ComponentBuilder()
-                        .event(hoverEvent).event(clickEvent).
-                        append(component).create();
-
-                onlinePlayer.spigot().sendMessage(component2);
+                textComponent.setClickEvent(clickEvent);
+                onlinePlayer.spigot().sendMessage(textComponent);
             }
             e.getRecipients().clear();
         } else {

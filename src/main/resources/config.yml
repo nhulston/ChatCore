@@ -363,6 +363,8 @@ rank-formats:
   group1: '%prefix%%name%%suffix% &8>> &f%message%'
   group2: '%prefix%%name%%suffix% &8>> &b%message%'
 
+# Name hovering ONLY works on 1.6+ servers
+# Set to false if you're using an older version.
 name-hover-enabled: true
 
 # This example uses PlaceholderAPI placeholders. You may need to use /papi ecloud download (expansion name).
