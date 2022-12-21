@@ -23,7 +23,7 @@ public class ConfigManager {
     private static Map<String, Boolean> enabled;
     private static Map<String, Integer> ints;
 
-    private static final Pattern PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
+    private static final Pattern PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
     private static final char COLOR_CHAR = org.bukkit.ChatColor.COLOR_CHAR;
 
     /**
