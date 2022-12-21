@@ -8,6 +8,7 @@ import me.cranked.chatcore.DeathMessagesConfigManager;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -32,7 +33,7 @@ public class Death implements Listener {
 
     /**
      * Changes the death message to whatever is from deathmessages.yml
-     * Works on versions 1.7-1.17
+     * Works on versions 1.7-1.19
      * @param e PlayerDeathEvent, used to calculate what death message to use
      */
     @EventHandler
@@ -163,6 +164,10 @@ public class Death implements Listener {
                         msgPath = "piglin";
                     } else if (isV16() && killer instanceof PiglinBrute) {
                         msgPath = "piglin-brute";
+                    } else if (isV17() && killer instanceof Goat) {
+                        msgPath = "goat";
+                    } else if (isV19() && killer instanceof Warden) {
+                        msgPath = "warden";
                     } else {
                         msgPath = "melee-unknown";
                     }
@@ -283,7 +288,11 @@ public class Death implements Listener {
             } else if (lastCause == WITHER) {
                 msgPath = "wither-potion";
             } else if (lastCause == FALLING_BLOCK) {
-                msgPath = "anvil";
+                if (e.getDeathMessage().contains("stalactite")) {
+                    msgPath = "stalactite";
+                } else {
+                    msgPath = "anvil";
+                }
                 pvp = false;
             } else if (lastCause == THORNS) {
                 msgPath = "pvp-thorns";

@@ -4,16 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.cranked</groupId>
+    <groupId>me.teeditator</groupId>
     <artifactId>ChatCore</artifactId>
     <developers>
         <developer>
-            <id>Cranked</id>
-            <name>Nicholas Hulston</name>
-            <timezone>EST</timezone>
+            <id>teeditator</id>
         </developer>
     </developers>
-    <version>2.4</version>
+    <version>2.5</version>
     <packaging>jar</packaging>
 
     <name>ChatCore</name>
@@ -30,7 +28,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <outputDirectory>/Users/nhulston/Desktop/server/plugins</outputDirectory>
+                    <outputDirectory>C:\Users\nicho\Desktop\server\plugins</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -90,7 +88,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.19.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -102,7 +100,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.10.10</version>
+            <version>2.11.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

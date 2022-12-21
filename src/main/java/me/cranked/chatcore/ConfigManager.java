@@ -3,6 +3,7 @@ package me.cranked.chatcore;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
+import me.cranked.chatcore.util.CenterText;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -22,7 +23,8 @@ public class ConfigManager {
     private static Map<String, Boolean> enabled;
     private static Map<String, Integer> ints;
 
-    private static final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+    private static final Pattern PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
+    private static final char COLOR_CHAR = org.bukkit.ChatColor.COLOR_CHAR;
 
     /**
      * Setter method for plugin
@@ -216,19 +218,28 @@ public class ConfigManager {
 
     /**
      * Colorizes messages
-     * @param s The original message we want to colorize
+     * @param message The original message we want to colorize
      * @return A colorized String
      */
-    public static String colorize(String s) {
-        if (VersionManager.isV16()) {
-            Matcher matcher = pattern.matcher(s);
-            while (matcher.find()) {
-                String color = s.substring(matcher.start(), matcher.end());
-                s = s.substring(0, matcher.start()) + ChatColor.of(color) + s.substring(matcher.end());
-                matcher = pattern.matcher(s);
-            }
+    public static String colorize(String message) {
+        if (message.contains("{center}")) {
+            message = message.replace("{center}", "");
+            message = CenterText.centerText(message);
         }
-        return ChatColor.translateAlternateColorCodes('&', s);
+        if (VersionManager.isV16()) {
+            Matcher matcher = PATTERN.matcher(message);
+            StringBuilder sb = new StringBuilder(message.length() + 32);
+            while (matcher.find()) {
+                String group = matcher.group(1);
+                matcher.appendReplacement(sb, COLOR_CHAR + "x"
+                        + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
+                        + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
+                        + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
+                );
+            }
+            return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(sb).toString());
+        }
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     /**

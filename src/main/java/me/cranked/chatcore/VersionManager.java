@@ -3,7 +3,7 @@ package me.cranked.chatcore;
 import org.bukkit.Bukkit;
 
 public class VersionManager {
-    private static final boolean[] versions = new boolean[11];
+    private static final boolean[] versions = new boolean[13];
 
     /**
      * Initialize the all the versions in a boolean array
@@ -30,6 +30,10 @@ public class VersionManager {
             setVersion(9);
         } else if (version.contains("1.17")) {
             setVersion(10);
+        } else if (version.contains("1.18")) {
+            setVersion(11);
+        } else if (version.contains("1.19")) {
+            setVersion(12);
         }
     }
 
@@ -101,6 +105,20 @@ public class VersionManager {
      */
     public static boolean isV17() {
         return versions[10];
+    }
+
+    /**
+     * @return true if the version is at least 1.18
+     */
+    public static boolean isV18() {
+        return versions[11];
+    }
+
+    /**
+     * @return true if the version is at least 1.19
+     */
+    public static boolean isV19() {
+        return versions[12];
     }
 
     /**

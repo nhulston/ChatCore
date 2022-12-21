@@ -104,6 +104,7 @@ public class DeathMessagesConfigManager {
         customFile.addDefault("endermite", Collections.singletonList("&c%player%&7 was killed by an endermite."));
         customFile.addDefault("evoker", Collections.singletonList("&c%player%&7 was killed by an evoker."));
         customFile.addDefault("ghast", Collections.singletonList("&c%player%&7 was blown up by a ghast."));
+        customFile.addDefault("goat", Collections.singletonList("&c%player%&7 was rammed by a goat."));
         customFile.addDefault("guardian", Collections.singletonList("&c%player%&7 was killed by a guardian."));
         customFile.addDefault("illusioner", Collections.singletonList("&c%player%&7 was illusioned by an illusioner."));
         customFile.addDefault("irongolem", Collections.singletonList("&c%player%&7 was thrown by an iron golem."));
@@ -127,6 +128,7 @@ public class DeathMessagesConfigManager {
         customFile.addDefault("spider", Collections.singletonList("&c%player%&7 was bit by a spider."));
         customFile.addDefault("vex", Collections.singletonList("&c%player%&7 was killed by a vex."));
         customFile.addDefault("vindicator", Collections.singletonList("&c%player%&7 was killed by a vindicator."));
+        customFile.addDefault("warden", Collections.singletonList("&c%player%&7 was obliterated by a sonically-charged shriek."));
         customFile.addDefault("witch", Collections.singletonList("&c%player%&7 was killed by a witch."));
         customFile.addDefault("wither", Collections.singletonList("&c%player%&7 was killed by a wither."));
         customFile.addDefault("wither-explosion", Collections.singletonList("&c%player%&7 was exploded by a wither."));
@@ -161,6 +163,7 @@ public class DeathMessagesConfigManager {
         customFile.addDefault("named-endermite", Collections.singletonList("&c%player%&7 was killed by %mob%&7."));
         customFile.addDefault("named-evoker", Collections.singletonList("&c%player%&7 was killed by %mob%&7."));
         customFile.addDefault("named-ghast", Collections.singletonList("&c%player%&7 was blown up by %mob%&7."));
+        customFile.addDefault("named-goat", Collections.singletonList("&c%player%&7 was rammed by %mob%&7."));
         customFile.addDefault("named-guardian", Collections.singletonList("&c%player%&7 was killed by %mob%&7."));
         customFile.addDefault("named-illusioner", Collections.singletonList("&c%player%&7 was illusioned by %mob%&7."));
         customFile.addDefault("named-irongolem", Collections.singletonList("&c%player%&7 was thrown by %mob%&7."));
@@ -185,6 +188,7 @@ public class DeathMessagesConfigManager {
         customFile.addDefault("named-spider", Collections.singletonList("&c%player%&7 was bit by %mob%&7."));
         customFile.addDefault("named-vex", Collections.singletonList("&c%player%&7 was killed by %mob%&7."));
         customFile.addDefault("named-vindicator", Collections.singletonList("&c%player%&7 was killed by %mob%&7."));
+        customFile.addDefault("named-warden", Collections.singletonList("&c%player%&7 was obliterated by a sonically-charged shriek from %mob%&7."));
         customFile.addDefault("named-witch", Collections.singletonList("&c%player%&7 was killed by %mob%&7."));
         customFile.addDefault("named-wither", Collections.singletonList("&c%player%&7 was killed by %mob%&7."));
         customFile.addDefault("named-wither-explosion", Collections.singletonList("&c%player%&7 was exploded by %mob%&7."));
@@ -216,6 +220,7 @@ public class DeathMessagesConfigManager {
         customFile.addDefault("suicide-magic", Collections.singletonList("&c%player%&7 killed themselves using magic."));
         customFile.addDefault("block-explosion", Collections.singletonList("&c%player%&7 set their spawn point in the wrong world."));
         customFile.addDefault("suicide", Collections.singletonList("&c%player%&7 committed suicide."));
+        customFile.addDefault("stalactite", Collections.singletonList("&c%player%&7 was impaled by a pointed dripstone."));
 
         customFile.options().copyDefaults(true);
         try {
@@ -289,6 +294,7 @@ public class DeathMessagesConfigManager {
         getListHelper("endermite");
         getListHelper("evoker");
         getListHelper("ghast");
+        getListHelper("goat");
         getListHelper("guardian");
         getListHelper("illusioner");
         getListHelper("irongolem");
@@ -312,6 +318,7 @@ public class DeathMessagesConfigManager {
         getListHelper("spider");
         getListHelper("vex");
         getListHelper("vindicator");
+        getListHelper("warden");
         getListHelper("witch");
         getListHelper("wither");
         getListHelper("wither-explosion");
@@ -346,6 +353,7 @@ public class DeathMessagesConfigManager {
         getListHelper("named-endermite");
         getListHelper("named-evoker");
         getListHelper("named-ghast");
+        getListHelper("named-goat");
         getListHelper("named-guardian");
         getListHelper("named-illusioner");
         getListHelper("named-irongolem");
@@ -370,6 +378,7 @@ public class DeathMessagesConfigManager {
         getListHelper("named-spider");
         getListHelper("named-vex");
         getListHelper("named-vindicator");
+        getListHelper("named-warden");
         getListHelper("named-witch");
         getListHelper("named-wither");
         getListHelper("named-wither-explosion");
@@ -401,15 +410,16 @@ public class DeathMessagesConfigManager {
         getListHelper("suicide-magic");
         getListHelper("block-explosion");
         getListHelper("suicide");
+        getListHelper("stalactite");
     }
 
     /**
      * Helper method for initMap()
+     *
      * @param s The name of the entry in deathmessages.yml we want to get from
-     * @return A list of Strings, the value of that entry in deathmessages.yml
      */
-    private static List<String> getListHelper(String s) {
-        return deathMessages.put(s, DeathMessagesConfigManager.get().getStringList(s));
+    private static void getListHelper(String s) {
+        deathMessages.put(s, DeathMessagesConfigManager.get().getStringList(s));
     }
 
     /**

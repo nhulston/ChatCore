@@ -24,10 +24,12 @@ no-permission-msg: '&cNo permission.'
 # to download a plugin to do this for you. Simply go to spigot.yml, change the
 # field 'unknown-command', and use § for color codes instead of &
 # Example: unknown-command: §8[§bServer§8] §7Unknown command.
+
+# You can center ANY message in this whole config file by putting {center} in the message.
 help-msg:
   - '&8&m                                                                                '
   - ''
-  - '&d&l                 CHAT CORE'
+  - '{center}&d&lCHAT CORE'
   - ''
   - '&d        MC-Market Page &8>> &fhttps://www.mc-market.org/resources/13998/'
   - ''
@@ -40,6 +42,7 @@ help-msg:
   - '&d/chat announce &f- Announce a message to the server'
   - '&d/chat warn &f- Warn a message to the server'
   - '&d/chat staffannounce &f- Announce a message to the online staff'
+  - '&d/chat reload &f- Reload configuration files'
   - ''
   - '&8&m                                                                                '
 
@@ -349,7 +352,7 @@ vip-quit-msg: '&8[&c&l-&8] &b%player%'
 
 custom-chat-format-enabled: true
 
-# If name-hover-enabled is true and you have factions, use the following format instead:
+# If name-hover-enabled is true, and you have factions, use the following format instead:
 #default-format: '%rel_factionsuuid_relation_color%%factionsuuid_player_role%%factionsuuid_faction_name% %prefix%%name%%suffix% &8>> &f%message%'
 default-format: '%prefix%%name%%suffix% &8>> &f%message%'
 
@@ -397,6 +400,8 @@ mention-color: '&a&l'
 # 1.15: https://pastebin.com/BZeQSYMN
 # 1.16: https://pastebin.com/KeaGT8Gi
 # 1.17: https://pastebin.com/X0US4f7D
+# 1.18: https://pastebin.com/VuAUTguK
+# 1.19: https://pastebin.com/smFzazEu
 mention-sound: 'NONE'
 
 
@@ -410,11 +415,11 @@ motd-enabled: true
 motd:
   - '&8&m                                                                                '
   - ''
-  - '&d&l                 SERVER NAME'
+  - '&d&l{center}SERVER NAME'
   - ''
-  - '&d&l        HELP &8>> &7Type &d/help &7for a list of commands.'
-  - '&d&l        WEBSITE &8>> &fwebsite.com'
-  - '&d&l        STORE &8>> &fshop.website.com'
+  - '&d&l{center}HELP &8>> &7Type &d/help &7for a list of commands.'
+  - '&d&l{center}WEBSITE &8>> &fwebsite.com'
+  - '&d&l{center}STORE &8>> &fshop.website.com'
   - ''
   - '&8&m                                                                                '
 
@@ -432,7 +437,7 @@ auto-broadcast-random: true
 
 # Separate lines with %newline%
 auto-broadcast-messages:
-  - '&8&m                                                                                %newline%%newline%&d&l                 Announcement%newline%%newline%&e    Insiding is a bannable offense!%newline%%newline%&8&m                                                                                '
+  - '&8&m                                                                                %newline%%newline%&d&l{center}Announcement%newline%%newline%&e{center}Insiding is a bannable offense!%newline%%newline%&8&m                                                                                '
   - '&eHelp&f: Use &e/auction &fto access the auction house!'
   - '&eHelp&f: Visit our website for updates at &ewebsite.com'
 

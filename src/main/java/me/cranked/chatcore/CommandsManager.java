@@ -81,9 +81,10 @@ public class CommandsManager implements CommandExecutor {
             for (String msg : messages)
                 sender.sendMessage(ConfigManager.colorize(msg));
         } else {
-            TextComponent formatComponent = new TextComponent(ConfigManager.colorize("&aServer is running &b&nChatCore " + ChatCore.plugin.getDescription().getVersion() + "&a."));
-            formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.mc-market.org/resources/13998/"));
-            sender.spigot().sendMessage(formatComponent);
+            // TextComponent formatComponent = new TextComponent(ConfigManager.colorize("&aServer is running &b&nChatCore " + ChatCore.plugin.getDescription().getVersion() + "&a."));
+            // formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.mc-market.org/resources/13998/"));
+            // sender.spigot().sendMessage(formatComponent);
+            sender.sendMessage(ConfigManager.get("no-permission"));
         }
     }
 }

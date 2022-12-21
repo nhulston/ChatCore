@@ -23,7 +23,6 @@ public final class ChatCore extends JavaPlugin {
      * Configurable shortcuts
      * sounds for more things
      * bring silent messages to clear chat, etc.
-     * config tips section. Like how to change unknown command message
      * better plugin hiding see https://www.spigotmc.org/resources/pluginhider-pluginhiderplus-hide-your-plugins-anti-tab-complete-all-message-replace.51583/
      * console filtering
      * [item]
