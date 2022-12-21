@@ -152,9 +152,9 @@ public final class ChatCore extends JavaPlugin {
                 message = messages.get(last.get());
             }
 
-            String[] lines = ConfigManager.colorize(message).split("%newline%");
+            String[] lines = message.split("%newline%");
             for (String s : lines) {
-                Bukkit.broadcastMessage(s);
+                Bukkit.broadcastMessage(ConfigManager.colorize(s));
             }
         }, 0L, broadcastDelay * 20L);
     }
