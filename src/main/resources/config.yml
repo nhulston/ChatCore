@@ -407,6 +407,7 @@ mention-color: '&a&l'
 # 1.18: https://pastebin.com/VuAUTguK
 # 1.19: https://pastebin.com/smFzazEu
 mention-sound: 'NONE'
+# Example: mention-sound: 'ENTITY_CHICKEN_EGG'
 
 
 #############################################################

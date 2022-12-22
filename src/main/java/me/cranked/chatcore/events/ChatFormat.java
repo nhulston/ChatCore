@@ -30,9 +30,9 @@ public class ChatFormat implements Listener {
         Player player = e.getPlayer();
         String format;
         try {
-            format = Objects.requireNonNull(ChatCore.plugin.getConfig().getString("rank-formats." + ChatCore.vaultChat.getPrimaryGroup(player))).replace("%prefix%", ChatCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", ChatCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
+            format = Objects.requireNonNull(ChatCore.plugin.getConfig().getString("rank-formats." + ChatCore.vaultChat.getPrimaryGroup(player))).replace("%prefix%", ChatCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", ChatCore.vaultChat.getPlayerSuffix(player)).replace("%message%", e.getMessage());
         } catch (NullPointerException e2) {
-            format = Objects.requireNonNull(ChatCore.plugin.getConfig().getString("default-format")).replace("%prefix%", ChatCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", ChatCore.vaultChat.getPlayerSuffix(player)).replace("%message%", "");
+            format = Objects.requireNonNull(ChatCore.plugin.getConfig().getString("default-format")).replace("%prefix%", ChatCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", ChatCore.vaultChat.getPlayerSuffix(player)).replace("%message%", e.getMessage());
         }
         format = ConfigManager.placeholderize(format, player);
         // Hover
@@ -40,7 +40,7 @@ public class ChatFormat implements Listener {
             for (Player onlinePlayer : e.getRecipients()) {
                 // Setup message
                 String newFormat = PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, format);
-                TextComponent textComponent = new TextComponent(ConfigManager.colorize(newFormat + e.getMessage()));
+                TextComponent textComponent = new TextComponent(ConfigManager.colorize(newFormat));
 
                 // Setup hover
                 List<String> list = ChatCore.plugin.getConfig().getStringList("hover-format"); // For some reason ConfigManager doesn't work here
@@ -69,7 +69,7 @@ public class ChatFormat implements Listener {
             }
             e.getRecipients().clear();
         } else {
-            e.setFormat(format + e.getMessage());
+            e.setFormat(format);
         }
     }
 }

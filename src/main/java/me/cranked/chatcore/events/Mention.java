@@ -22,14 +22,16 @@ public class Mention implements Listener {
         if (!e.getPlayer().hasPermission("chatcore.mention"))
             return;
 
+        String senderNameLower = e.getPlayer().getName().toLowerCase();
         String message = e.getMessage();
         String messageLower = message.toLowerCase();
         String sound = ConfigManager.get("mention-sound");
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             String playerName = onlinePlayer.getName();
             String playerNameLower = playerName.toLowerCase();
-            int loc = messageLower.indexOf(playerNameLower);
-            if ((loc != -1 && (loc + playerName.length() == message.length() || (loc == 0 && messageLower.contains(playerNameLower + " ")) || messageLower.contains(" " + playerNameLower + " ") || messageLower.contains(" " + playerNameLower + ".") || messageLower.contains(" " + playerNameLower + "?") || messageLower.contains(" " + playerNameLower + "!"))) || (message.length() == playerName.length() + 1 && (messageLower.contains(playerNameLower + ".") || messageLower.contains(playerNameLower + "!") || messageLower.contains(playerNameLower + "?")))) {
+            // Write regex that checks if message contains the word playerName
+            if (!senderNameLower.equals(playerNameLower) && messageLower.matches(".*\\b" + playerNameLower + "\\b.*")) {
+                int loc = messageLower.indexOf(playerNameLower);
                 e.setMessage(ConfigManager.colorize(message.substring(0, loc) + ConfigManager.get("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
                 if (!sound.equalsIgnoreCase("none"))
                     onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
