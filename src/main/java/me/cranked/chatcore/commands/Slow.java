@@ -1,5 +1,7 @@
 package me.cranked.chatcore.commands;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
@@ -43,7 +45,7 @@ public class Slow implements CommandExecutor {
         ChatCore.setDelay(delay);
 
         // Args
-        Set<String> arguments = Set.of(args);
+        Set<String> arguments = new HashSet<>(Arrays.asList(args));
         if (delay == 0) {
             if (arguments.contains("-s") && sender.hasPermission("chatcore.slow.silent")) {
                 sender.sendMessage(ConfigManager.colorize(ConfigManager.get("unslow-silent").replace("%time%", Integer.toString(delay))));

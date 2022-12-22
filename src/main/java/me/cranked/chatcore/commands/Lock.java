@@ -1,5 +1,7 @@
 package me.cranked.chatcore.commands;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
@@ -28,7 +30,7 @@ public class Lock implements CommandExecutor {
         ChatCore.toggleChatLocked();
 
         // Broadcasting
-        Set<String> arguments = Set.of(args);
+        Set<String> arguments = new HashSet<>(Arrays.asList(args));
         if (ChatCore.getChatLocked()) {
             if (arguments.contains("-s") && sender.hasPermission("chatcore.lock.silent")) {
                 sender.sendMessage(ConfigManager.get("lock-silent"));

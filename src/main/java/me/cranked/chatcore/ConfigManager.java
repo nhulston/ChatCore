@@ -228,7 +228,7 @@ public class ConfigManager {
         }
         if (VersionManager.isV16()) {
             Matcher matcher = PATTERN.matcher(message);
-            StringBuilder sb = new StringBuilder(message.length() + 32);
+            StringBuffer sb = new StringBuffer(message.length() + 32);
             while (matcher.find()) {
                 String group = matcher.group(1);
                 matcher.appendReplacement(sb, COLOR_CHAR + "x"

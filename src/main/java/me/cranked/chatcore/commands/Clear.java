@@ -1,5 +1,7 @@
 package me.cranked.chatcore.commands;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
@@ -35,7 +37,7 @@ public class Clear implements CommandExecutor {
             }
         }
 
-        Set<String> arguments = Set.of(args);
+        Set<String> arguments = new HashSet<>(Arrays.asList(args));
         // Announce anonymous message
         if ((!arguments.contains("-s") || !sender.hasPermission("chatcore.clear.silent")) && arguments.contains("-a") && sender.hasPermission("chatcore.clear.anonymous")) {
             Bukkit.broadcastMessage(ConfigManager.get("clear-anon"));
