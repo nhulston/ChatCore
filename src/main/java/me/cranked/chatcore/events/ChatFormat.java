@@ -5,6 +5,7 @@ import java.util.Objects;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
+import me.cranked.chatcore.VersionManager;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.entity.Player;
@@ -49,7 +50,12 @@ public class ChatFormat implements Listener {
                     line = PlaceholderAPI.setRelationalPlaceholders(player, onlinePlayer, line);
                     list.set(i, ConfigManager.placeholderize(line, player));
                 }
-                HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(String.join("\n", list)));
+                HoverEvent hoverEvent;
+                if (VersionManager.isV16()) {
+                    hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(String.join("\n", list)));
+                } else {
+                    hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, (new ComponentBuilder(String.join("\n", list)).create()));
+                }
                 textComponent.setHoverEvent(hoverEvent);
 
                 // Setup click event
@@ -64,6 +70,8 @@ public class ChatFormat implements Listener {
                 } else {
                     clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, action);
                 }
+
+                // Send message
                 textComponent.setClickEvent(clickEvent);
                 onlinePlayer.spigot().sendMessage(textComponent);
             }
