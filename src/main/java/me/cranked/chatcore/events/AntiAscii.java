@@ -34,8 +34,9 @@ public class AntiAscii implements Listener {
 
     public static boolean containsAscii(char[] msg) {
         for (char ch : msg) {
-            if (ch >= 128)
-            return true;
+            if (ch != '§' && ch >= 128) {
+                return true;
+            }
         }
         return false;
     }
