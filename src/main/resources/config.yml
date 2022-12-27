@@ -117,6 +117,14 @@ command-delay-msg: '&cYou cannot run a command for another %time% seconds.'
 ## +------------------------------------------------------+ #
 #############################################################
 
+# If you want to add a command shortcut such as /sc, then you can use commands.yml,
+# which is found in your base server folder (the same folder as the jar)
+# Example:
+# sc:
+#   - chat staff $1-
+# I'm not doing this by default because I don't want to overwrite any existing commands
+# and I want to give you the freedom to choose what shortcut you want to use.
+
 staff-chat-enabled: true
 staff-chat-format: '&8[&b&lSTAFF&8] &c%player%&f: %message%'
 staff-chat-on-msg: '&aStaff chat has been enabled.'
@@ -128,6 +136,12 @@ staff-chat-off-msg: '&cStaff chat has been disabled.'
 ## |                  Donator Chat Settings               | #
 ## +------------------------------------------------------+ #
 #############################################################
+
+# If you want to add a command shortcut such as /dc, then you can use commands.yml,
+# which is found in your base server folder (the same folder as the jar)
+# Example:
+# sc:
+#   - chat donator $1-
 
 donator-chat-enabled: true
 donator-chat-format: '&8[&e&lDONATORS&8] &e%player%&f: %message%'
