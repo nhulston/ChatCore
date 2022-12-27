@@ -42,6 +42,8 @@ public class CommandsManager implements CommandExecutor {
         map.put("mute", Lock::command);
         map.put("staff", StaffChat::command);
         map.put("staff-chat", StaffChat::command);
+        map.put("donator", DonatorChat::command);
+        map.put("donator-chat", DonatorChat::command);
         map.put("spy", (sender, args) -> CommandSpy.command(sender));
         map.put("announce", (sender, args) -> Announce.command(sender, args, "announce"));
         map.put("shout", (sender, args) -> Announce.command(sender, args, "announce"));

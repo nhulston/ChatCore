@@ -88,6 +88,12 @@ public class ConfigManager {
         messages.put("staff-chat-on", getHelper("staff-chat-on-msg"));
         messages.put("staff-chat-off", getHelper("staff-chat-off-msg"));
 
+        // Donator chat
+        enabled.put("donator-chat", getEnabledHelper("donator-chat-enabled"));
+        messages.put("donator-chat-format", getHelper("donator-chat-format"));
+        messages.put("donator-chat-on", getHelper("donator-chat-on-msg"));
+        messages.put("donator-chat-off", getHelper("donator-chat-off-msg"));
+
         // Anti caps
         ints.put("anti-caps-percentage", getIntHelper("anti-caps-percentage"));
         ints.put("anti-caps-min-length", getIntHelper("anti-caps-min-length"));
@@ -190,6 +196,7 @@ public class ConfigManager {
         // Log
         enabled.put("chat-logger", getEnabledHelper("chat-logger-enabled"));
         enabled.put("chat-logger-staff-chat", getEnabledHelper("chat-logger-staff-chat-enabled"));
+        enabled.put("chat-logger-donator-chat", getEnabledHelper("chat-logger-donator-chat-enabled"));
         enabled.put("command-logger", getEnabledHelper("command-logger-enabled"));
         multiLineMessages.put("chat-logger-included-commands", getListHelper("chat-logger-included-commands"));
         multiLineMessages.put("command-logger-ignored-commands", getListHelper("command-logger-ignored-commands"));

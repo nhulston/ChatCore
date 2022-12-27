@@ -22,8 +22,6 @@ public final class ChatCore extends JavaPlugin {
      * TODO
      * Configurable shortcuts
      * sounds for more things
-     * bring silent messages to clear chat, etc.
-     * better plugin hiding see https://www.spigotmc.org/resources/pluginhider-pluginhiderplus-hide-your-plugins-anti-tab-complete-all-message-replace.51583/
      * console filtering
      * [item]
      * hover item on kill
@@ -86,6 +84,8 @@ public final class ChatCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new me.cranked.chatcore.events.CommandSpy(), this);
         if (ConfigManager.getEnabled("staff-chat"))
             getServer().getPluginManager().registerEvents(new me.cranked.chatcore.events.StaffChat(), this);
+        if (ConfigManager.getEnabled("donator-chat"))
+            getServer().getPluginManager().registerEvents(new me.cranked.chatcore.events.DonatorChat(), this);
         if (ConfigManager.getList("blocked-commands").size() != 0)
             getServer().getPluginManager().registerEvents(new BlockedCommands(), this);
         if (ConfigManager.getEnabled("auto-caps"))

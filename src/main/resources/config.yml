@@ -125,6 +125,18 @@ staff-chat-off-msg: '&cStaff chat has been disabled.'
 
 #############################################################
 ## +------------------------------------------------------+ #
+## |                  Donator Chat Settings               | #
+## +------------------------------------------------------+ #
+#############################################################
+
+donator-chat-enabled: true
+donator-chat-format: '&8[&e&lDONATORS&8] &e%player%&f: %message%'
+donator-chat-on-msg: '&aDonator chat has been enabled.'
+donator-chat-off-msg: '&cDonator chat has been disabled.'
+
+
+#############################################################
+## +------------------------------------------------------+ #
 ## |                  Anti Caps Settings                  | #
 ## +------------------------------------------------------+ #
 #############################################################
@@ -387,6 +399,7 @@ click-action: '/msg %name% '
 ## +------------------------------------------------------+ #
 #############################################################
 
+# players need permission chatcore.mention to mention other players
 mention-enabled: true
 mention-color: '&a&l'
 
@@ -453,6 +466,7 @@ auto-broadcast-messages:
 
 chat-logger-enabled: true
 chat-logger-staff-chat-enabled: true
+chat-logger-donator-chat-enabled: true
 chat-logger-included-commands:
   - '/m'
   - '/em'
@@ -485,6 +499,6 @@ logger-format: '[%time%] %player%: %message% '
 # This disables all characters with an ASCII code >= 128 (pretty much anything not on the standard keyboard)
 # This is recommended to stop bypassing swear and anti-advertising filter
 disable-ascii: true
-ascii-cancel: true          # If true, cancels the message. If false, replaces the ASCII symbol with the replace character
+ascii-cancel: true          # If true, cancels the message. If false, replaces the ASCII symbol with the replacement character
 ascii-cancel-msg: '&cYou cannot use ASCII characters.'
 ascii-replace-character: '*'
