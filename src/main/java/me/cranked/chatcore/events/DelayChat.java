@@ -16,6 +16,7 @@ public class DelayChat implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
+        if (e.isCancelled()) return;
         // Delay check
         if (ConfigManager.getInt("delay-in-millis") <= 0)
             return;

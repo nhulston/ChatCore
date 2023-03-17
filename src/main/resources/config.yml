@@ -516,3 +516,14 @@ disable-ascii: true
 ascii-cancel: true          # If true, cancels the message. If false, replaces the ASCII symbol with the replacement character
 ascii-cancel-msg: '&cYou cannot use ASCII characters.'
 ascii-replace-character: '*'
+
+
+#############################################################
+## +------------------------------------------------------+ #
+## |                 Custom Death Messages                | #
+## +------------------------------------------------------+ #
+#############################################################
+
+custom-death-messages-enabled: true
+death-messages-color: '&7'
+death-messages-player-color: '&c'

@@ -1,5 +1,6 @@
 package me.cranked.chatcore.events;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class BlockedWords implements Listener {
     @EventHandler
     public void onChat(final AsyncPlayerChatEvent e) {
+        if (e.isCancelled()) return;
         // Config check
         if (ConfigManager.getList("blocked-words").size() == 0)
             return;
@@ -26,7 +28,7 @@ public class BlockedWords implements Listener {
         String msg = e.getMessage();
         final String originalMsg = msg;
         List<String> blockedWordsNotIgnore = ConfigManager.getList("blocked-words");
-        List<String> blockedWords = ConfigManager.getList("blocked-words-ignore-in-bigger-words");
+        List<String> blockedWords = new ArrayList<>(ConfigManager.getList("blocked-words-ignore-in-bigger-words")); // make a copy so not modifying original list
         blockedWords.addAll(blockedWordsNotIgnore);
         for (String word : blockedWords) {
             // Calculate word based on punishment or not

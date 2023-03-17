@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class Log implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e) {
+        if (e.isCancelled()) return;
         // Config check
         if (!ConfigManager.getEnabled("chat-logger"))
             return;

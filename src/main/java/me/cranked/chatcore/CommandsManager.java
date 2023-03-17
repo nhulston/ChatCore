@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import me.cranked.chatcore.commands.*;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,7 +28,6 @@ public class CommandsManager implements CommandExecutor {
         map.put("reload", (sender, args) -> {
             if (sender.hasPermission("chatcore.reload") || !(sender instanceof Player)) {
                 ConfigManager.reload();
-                DeathMessagesConfigManager.reload();
                 sender.sendMessage(ConfigManager.get("reload"));
             } else {
                 sender.sendMessage(ConfigManager.get("no-permission"));

@@ -207,6 +207,12 @@ public class ConfigManager {
         enabled.put("ascii-cancel", getEnabledHelper("ascii-cancel"));
         messages.put("ascii-cancel", getHelper("ascii-cancel-msg"));
         messages.put("ascii-replace-character", getHelper("ascii-replace-character"));
+
+        // Death messages
+        enabled.put("custom-death-messages", getEnabledHelper("custom-death-messages-enabled"));
+        messages.put("death-messages-color", getHelper("death-messages-color"));
+        messages.put("death-messages-player-color", getHelper("death-messages-player-color"));
+        enabled.put("use-prefixes-in-death-messages", getEnabledHelper("use-prefixes-in-death-messages"));
     }
 
     /**
@@ -215,7 +221,6 @@ public class ConfigManager {
     public static void reload() {
         plugin.reloadConfig();
         initMaps();
-        DeathMessagesConfigManager.initMap();
         ChatCore.broadcastDelay = ConfigManager.getInt("auto-broadcast-delay");
         if (getEnabled("auto-broadcast")) {
             getServer().getScheduler().cancelTask(ChatCore.taskId);

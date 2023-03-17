@@ -36,7 +36,7 @@ public final class ChatCore extends JavaPlugin {
 
     /**
      * First method ran for the entire plugin.
-     * Initializes config.yml and deathmessages.yml
+     * Initializes config.yml
      * Integrates with PlaceholderAPI and VaultAPI
      * Registers commands
      * Registers events
@@ -54,10 +54,6 @@ public final class ChatCore extends JavaPlugin {
         saveDefaultConfig();
         ConfigManager.initMaps();
         broadcastDelay = ConfigManager.getInt("auto-broadcast-delay");
-
-        // Setup deathmessages.yml
-        DeathMessagesConfigManager.setupDeathmessages();
-        DeathMessagesConfigManager.initMap();
 
         // Log PlaceHolderAPI integration
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
@@ -98,7 +94,7 @@ public final class ChatCore extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new AntiAd(), this);
         if (ConfigManager.getEnabled("custom-join-quit-messages"))
             getServer().getPluginManager().registerEvents(new JoinQuit(), this);
-        if (DeathMessagesConfigManager.get().getBoolean("enable-custom-death-messages"))
+        if (ConfigManager.getEnabled("custom-death-messages"))
             getServer().getPluginManager().registerEvents(new Death(), this);
         if (ConfigManager.getEnabled("custom-chat-format"))
             if (getServer().getPluginManager().getPlugin("Vault") != null) {

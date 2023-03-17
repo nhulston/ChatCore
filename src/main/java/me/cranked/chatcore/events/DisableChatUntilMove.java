@@ -37,6 +37,7 @@ public class DisableChatUntilMove implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
+        if (e.isCancelled()) return;
         if (!ConfigManager.getEnabled("disable-chat-until-move"))
             return;
         Player player = e.getPlayer();

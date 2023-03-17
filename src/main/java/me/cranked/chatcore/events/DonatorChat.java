@@ -10,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class DonatorChat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
+        if (e.isCancelled()) return;
         if (!ConfigManager.getEnabled("donator-chat"))
             return;
 

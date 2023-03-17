@@ -10,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class StaffChat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
+        if (e.isCancelled()) return;
         if (!ConfigManager.getEnabled("staff-chat"))
             return;
 

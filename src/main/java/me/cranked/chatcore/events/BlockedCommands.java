@@ -23,7 +23,7 @@ public class BlockedCommands implements Listener {
             return;
 
         // Colon check
-        if (ConfigManager.getEnabled("block-all-commands-containing-colon") && e.getMessage().contains(":")) {
+        if (ConfigManager.getEnabled("block-all-commands-containing-colon") && e.getMessage().split(" ")[0].contains(":")) {
             e.setCancelled(true);
             player.sendMessage(ConfigManager.get("block-all-commands-containing-colon"));
         }

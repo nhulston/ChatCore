@@ -35,7 +35,7 @@ public class ChatFormat implements Listener {
         } catch (NullPointerException e2) {
             format = Objects.requireNonNull(ChatCore.plugin.getConfig().getString("default-format")).replace("%prefix%", ChatCore.vaultChat.getPlayerPrefix(player)).replace("%name%", player.getDisplayName()).replace("%suffix%", ChatCore.vaultChat.getPlayerSuffix(player)).replace("%message%", e.getMessage());
         }
-        format = ConfigManager.placeholderize(format, player);
+        format = ConfigManager.placeholderize(format.replace("&k", ""), player);
         // Hover
         if (ConfigManager.getEnabled("name-hover")) {
             for (Player onlinePlayer : e.getRecipients()) {

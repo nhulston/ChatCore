@@ -9,6 +9,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class AntiAscii implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onChat(AsyncPlayerChatEvent e) {
+        if (e.isCancelled()) return;
         // Config check
         if (!ConfigManager.getEnabled("disable-ascii"))
             return;

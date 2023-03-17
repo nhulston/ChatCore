@@ -8,6 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class AddPeriod implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
+        if (e.isCancelled()) return;
         if (!ConfigManager.getEnabled("add-period"))
             return;
         char lastChar = e.getMessage().charAt(e.getMessage().length() - 1);

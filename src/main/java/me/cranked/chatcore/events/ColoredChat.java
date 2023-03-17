@@ -8,6 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class ColoredChat implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
+        if (e.isCancelled()) return;
         // Config check
         if (!ConfigManager.getEnabled("colored-chat"))
             return;
