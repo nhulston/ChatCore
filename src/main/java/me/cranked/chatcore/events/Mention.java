@@ -33,7 +33,9 @@ public class Mention implements Listener {
             // Write regex that checks if message contains the word playerName
             if (!senderNameLower.equals(playerNameLower) && messageLower.matches(".*\\b" + playerNameLower + "\\b.*")) {
                 int loc = messageLower.indexOf(playerNameLower);
-                e.setMessage(ConfigManager.colorize(message.substring(0, loc) + ConfigManager.get("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
+                if (loc != -1) {
+                    e.setMessage(ConfigManager.colorize(message.substring(0, loc) + ConfigManager.get("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
+                }
                 if (!sound.equalsIgnoreCase("none"))
                     onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
             }
