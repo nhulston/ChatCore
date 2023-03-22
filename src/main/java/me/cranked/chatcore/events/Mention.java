@@ -28,6 +28,7 @@ public class Mention implements Listener {
         String messageLower = message.toLowerCase();
         String sound = ConfigManager.get("mention-sound");
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (onlinePlayer.isInvisible()) continue;
             String playerName = onlinePlayer.getName();
             String playerNameLower = playerName.toLowerCase();
             // Write regex that checks if message contains the word playerName
