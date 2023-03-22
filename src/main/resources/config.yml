@@ -443,15 +443,16 @@ mention-sound: 'NONE'
 
 motd-enabled: true
 motd:
-  - '&8&m                                                                                '
   - ''
-  - '&d&l{center}SERVER NAME'
   - ''
-  - '&d&l{center}HELP &8>> &7Type &d/help &7for a list of commands.'
-  - '&d&l{center}WEBSITE &8>> &fwebsite.com'
-  - '&d&l{center}STORE &8>> &fshop.website.com'
   - ''
-  - '&8&m                                                                                '
+  - '{center}&5★ &d&l&nSERVER NAME&r &5★'
+  - ''
+  - '&d&l{center}SERVER IP &8» &fplay.serverip.com'
+  - '&d&l{center}STORE &8» &fshop.serverip.com'
+  - '&d&l{center}DISCORD &8» &fdiscord.serverip.com'
+  - ''
+  - ''
 
 
 #############################################################
