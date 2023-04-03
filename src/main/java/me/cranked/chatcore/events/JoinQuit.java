@@ -14,7 +14,7 @@ public class JoinQuit implements Listener {
             return;
         Player player = e.getPlayer();
         if (player.isOp()) {
-            e.setJoinMessage("");
+            e.setJoinMessage(null);
         } else if (player.hasPermission("chatcore.vipjoin")) {
             e.setJoinMessage(ConfigManager.colorize(ConfigManager.get("vip-join").replace("%player%", player.getDisplayName())));
         } else {

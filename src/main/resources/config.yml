@@ -326,21 +326,6 @@ colored-chat-enabled: true
 
 #############################################################
 ## +------------------------------------------------------+ #
-## |           Disable Chat Until Move Settings           | #
-## +------------------------------------------------------+ #
-#############################################################
-
-disable-chat-until-move: true
-disable-chat-until-move-msg: '&cYou cannot talk in chat until you move.'
-disable-command-until-move-msg: '&cYou cannot use that command until you move.'
-
-# to disable, do:   disable-commands-until-move: []
-disable-commands-until-move:
-  - '/me'
-
-
-#############################################################
-## +------------------------------------------------------+ #
 ## |             Anti Advertisement Settings              | #
 ## +------------------------------------------------------+ #
 #############################################################

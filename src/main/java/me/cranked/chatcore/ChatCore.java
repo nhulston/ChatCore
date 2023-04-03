@@ -88,8 +88,6 @@ public final class ChatCore extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new AutoCaps(), this);
         if (ConfigManager.getEnabled("colored-chat"))
             getServer().getPluginManager().registerEvents(new ColoredChat(), this);
-        if (ConfigManager.getEnabled("disable-chat-until-move"))
-            getServer().getPluginManager().registerEvents(new DisableChatUntilMove(), this);
         if (ConfigManager.getEnabled("anti-ad"))
             getServer().getPluginManager().registerEvents(new AntiAd(), this);
         if (ConfigManager.getEnabled("custom-join-quit-messages"))
