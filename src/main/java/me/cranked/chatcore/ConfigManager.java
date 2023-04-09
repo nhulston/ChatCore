@@ -150,12 +150,6 @@ public class ConfigManager {
         // Colored chat
         enabled.put("colored-chat", getEnabledHelper("colored-chat-enabled"));
 
-        // Disable until move
-        enabled.put("disable-chat-until-move", getEnabledHelper("disable-chat-until-move"));
-        messages.put("disable-chat-until-move", getHelper("disable-chat-until-move-msg"));
-        messages.put("disable-command-until-move", getHelper("disable-command-until-move-msg"));
-        multiLineMessages.put("disable-commands-until-move", getListHelper("disable-commands-until-move"));
-
         // Anti ad
         ints.put("anti-ad-setting", getIntHelper("anti-ad-setting"));
         enabled.put("anti-ad", getEnabledHelper("anti-ad-enabled"));
@@ -212,7 +206,6 @@ public class ConfigManager {
         enabled.put("custom-death-messages", getEnabledHelper("custom-death-messages-enabled"));
         messages.put("death-messages-color", getHelper("death-messages-color"));
         messages.put("death-messages-player-color", getHelper("death-messages-player-color"));
-        enabled.put("use-prefixes-in-death-messages", getEnabledHelper("use-prefixes-in-death-messages"));
     }
 
     /**
