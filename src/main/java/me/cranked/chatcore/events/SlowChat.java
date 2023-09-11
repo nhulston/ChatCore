@@ -29,7 +29,7 @@ public class SlowChat implements Listener {
         if (this.cooldown.containsKey(player.getUniqueId()) && this.cooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
             e.setCancelled(true);
             double remainingTime = Math.round((this.cooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000.0D * 10.0D) / 10.0D;
-            player.sendMessage(ConfigManager.colorize(ConfigManager.get("slow-delay").replace("%time%", Double.toString(remainingTime))));
+            player.sendMessage(ConfigManager.get("slow-delay").replace("%time%", Double.toString(remainingTime)));
         }
         // Set cooldown
         else {

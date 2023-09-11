@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -87,12 +88,12 @@ public class BlockedWords implements Listener {
             if (e.isAsynchronous()) {
                 (new BukkitRunnable() {
                     public void run() {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ConfigManager.placeholderize(punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%word%", blockedWord).replaceAll("%message%", originalMsg), e.getPlayer()));
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), FormatText.placeholderize(punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%word%", blockedWord).replaceAll("%message%", originalMsg), e.getPlayer()));
                     }
                 }).runTask(ChatCore.plugin);
                 continue;
             }
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ConfigManager.placeholderize(punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%word%", blockedWord).replaceAll("%message%", originalMsg), e.getPlayer()));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), FormatText.placeholderize(punishment.replaceAll("%player%", e.getPlayer().getName()).replaceAll("%word%", blockedWord).replaceAll("%message%", originalMsg), e.getPlayer()));
         }
     }
 }

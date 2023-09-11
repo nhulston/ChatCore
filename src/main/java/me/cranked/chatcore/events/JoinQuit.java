@@ -1,6 +1,7 @@
 package me.cranked.chatcore.events;
 
 import me.cranked.chatcore.ConfigManager;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,12 +14,10 @@ public class JoinQuit implements Listener {
         if (!ConfigManager.getEnabled("custom-join-quit-messages"))
             return;
         Player player = e.getPlayer();
-        if (player.isOp()) {
-            e.setJoinMessage(null);
-        } else if (player.hasPermission("chatcore.vipjoin")) {
-            e.setJoinMessage(ConfigManager.colorize(ConfigManager.get("vip-join").replace("%player%", player.getDisplayName())));
+        if (player.hasPermission("chatcore.vipjoin")) {
+            e.setJoinMessage(ConfigManager.get("vip-join").replace("%player%", player.getDisplayName()));
         } else {
-            e.setJoinMessage(ConfigManager.colorize(ConfigManager.get("join").replace("%player%", player.getDisplayName())));
+            e.setJoinMessage(ConfigManager.get("join").replace("%player%", player.getDisplayName()));
         }
     }
 
@@ -28,9 +27,9 @@ public class JoinQuit implements Listener {
             return;
         Player player = e.getPlayer();
         if (player.hasPermission("chatcore.vipquit")) {
-            e.setQuitMessage(ConfigManager.colorize(ConfigManager.get("vip-quit").replace("%player%", player.getDisplayName())));
+            e.setQuitMessage(FormatText.formatText(ConfigManager.get("vip-quit").replace("%player%", player.getDisplayName())));
         } else {
-            e.setQuitMessage(ConfigManager.colorize(ConfigManager.get("quit").replace("%player%", player.getDisplayName())));
+            e.setQuitMessage(FormatText.formatText(ConfigManager.get("quit").replace("%player%", player.getDisplayName())));
         }
     }
 }

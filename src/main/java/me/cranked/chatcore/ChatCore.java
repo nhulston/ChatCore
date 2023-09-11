@@ -29,7 +29,7 @@ public final class ChatCore extends JavaPlugin {
 
     private static int delay = 0;
     public static int broadcastDelay;
-    public static int taskId;
+    public static int autoBroadcasterTaskID;
     private static boolean isChatLocked = false;
     public static Chat vaultChat = null;
     public static ChatCore plugin;
@@ -134,7 +134,7 @@ public final class ChatCore extends JavaPlugin {
      */
     public static void startAutoBroadcaster(List<String> messages) {
         AtomicInteger last = new AtomicInteger();
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+        autoBroadcasterTaskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             String message;
             if (ConfigManager.getEnabled("auto-broadcast-random")) {
                 message = messages.get((new Random()).nextInt(messages.size()));
@@ -146,10 +146,7 @@ public final class ChatCore extends JavaPlugin {
                 message = messages.get(last.get());
             }
 
-            String[] lines = message.split("%newline%");
-            for (String s : lines) {
-                Bukkit.broadcastMessage(ConfigManager.colorize(s));
-            }
+            Bukkit.broadcastMessage(message);
         }, 0L, broadcastDelay * 20L);
     }
 

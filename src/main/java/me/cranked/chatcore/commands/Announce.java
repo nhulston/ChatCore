@@ -3,6 +3,7 @@ package me.cranked.chatcore.commands;
 import java.util.Arrays;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -18,30 +19,30 @@ public class Announce implements CommandExecutor {
     }
 
     // Type: warning, announce, staff-announce
-    public static boolean command(CommandSender sender, String[] args, String type) {
+    public static void command(CommandSender sender, String[] args, String type) {
         // Return if announcing isn't enabled
         if (!ConfigManager.getEnabled(type))
-            return false;
+            return;
 
         // Permission check
         if (type.equals("warning")) {
             if (ChatCore.noPermission("chatcore.announce.warning", sender)) {
-                return false;
+                return;
             }
         } else if (type.equals("announce")) {
             if (ChatCore.noPermission("chatcore.announce", sender)) {
-                return false;
+                return;
             }
         } else {
             if (ChatCore.noPermission("chatcore.staffannounce", sender)) {
-                return false;
+                return;
             }
         }
 
         // Return if incorrect usage
         if (args.length <= 1) {
             sender.sendMessage(ConfigManager.get(type + "-usage"));
-            return false;
+            return;
         }
 
         // Calculate message of announcement
@@ -51,7 +52,7 @@ public class Announce implements CommandExecutor {
         // Broadcast message
         if (type.equals("staff-announce")) {
             String sound = ConfigManager.get("staff-announce-sound");
-            String parsedMsg = ConfigManager.colorize(ConfigManager.get("staff-announce-format").replace("%message%", msg));
+            String parsedMsg = FormatText.formatText(ConfigManager.get("staff-announce-format").replace("%message%", msg));
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (onlinePlayer.hasPermission("chatcore.staffannounce.see")) {
                     onlinePlayer.sendMessage(parsedMsg);
@@ -60,7 +61,7 @@ public class Announce implements CommandExecutor {
                 }
             }
         } else {
-            Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get(type + "-format").replace("%message%", msg)));
+            Bukkit.broadcastMessage(FormatText.formatText(ConfigManager.get(type + "-format").replace("%message%", msg)));
 
             String sound = ConfigManager.get(type + "-sound");
             if (!sound.equalsIgnoreCase("none")) {
@@ -69,6 +70,5 @@ public class Announce implements CommandExecutor {
                 }
             }
         }
-        return true;
     }
 }

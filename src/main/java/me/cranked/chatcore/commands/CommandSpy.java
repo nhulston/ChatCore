@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandSpy implements CommandExecutor {
-    public static Set<Player> commandSpyList = new HashSet<>();
+    public static final Set<Player> commandSpyList = new HashSet<>();
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender);

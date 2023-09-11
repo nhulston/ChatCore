@@ -8,6 +8,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
 import me.cranked.chatcore.events.Log;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,7 +17,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class StaffChat implements CommandExecutor {
-    public static Set<Player> staffChatList = new HashSet<>();
+    public static final Set<Player> staffChatList = new HashSet<>();
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
@@ -59,7 +60,7 @@ public class StaffChat implements CommandExecutor {
             
             // Log in chat logger
             if (ConfigManager.getEnabled("chat-logger") && ConfigManager.getEnabled("chat-logger-staff-chat")) {
-                String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", sender.getName()).replace("%message%", msg));
+                String formattedMessage = FormatText.formatText(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", sender.getName()).replace("%message%", msg));
                 if (sender instanceof Player) {
                     formattedMessage = PlaceholderAPI.setPlaceholders((Player) sender, formattedMessage);
                 }
@@ -73,8 +74,12 @@ public class StaffChat implements CommandExecutor {
     public static void sendMessage(String msg, CommandSender sender) {
         msg = ConfigManager.get("staff-chat-format").replace("%message%", msg).replace("%player%", sender.getName());
         if (sender instanceof Player) {
-            msg = ConfigManager.placeholderize(msg, (Player) sender);
+            msg = FormatText.placeholderize(msg, (Player) sender);
         }
-        Bukkit.broadcast(msg, "chatcore.staffchat.see");
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPermission("chatcore.staffchat.see")) {
+                player.sendMessage(msg);
+            }
+        }
     }
 }
