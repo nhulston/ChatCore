@@ -14,6 +14,12 @@ public class FormatText {
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
     public static final Pattern GRADIENT_PATTERN = Pattern.compile("<#([A-Fa-f0-9]{6})>(.*?)</#([A-Fa-f0-9]{6})>");
     private static final char COLOR_CHAR = org.bukkit.ChatColor.COLOR_CHAR;
+
+    /**
+     * Centers text. Make sure color codes, placeholders, etc. have already been processed to centering works as expected
+     * @param message The message the center
+     * @return The centered message
+     */
     private static String centerText(String message) {
         message = ChatColor.translateAlternateColorCodes('&', message);
 
