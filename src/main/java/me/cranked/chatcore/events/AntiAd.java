@@ -3,6 +3,7 @@ package me.cranked.chatcore.events;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.cranked.chatcore.ConfigManager;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,8 +49,12 @@ public class AntiAd implements Listener {
             player.sendMessage(ConfigManager.get("anti-ad"));
 
             // Broadcast to staff
-            String warningMsg = ConfigManager.colorize(ConfigManager.get("anti-ad-inform").replace("%player%", player.getName()).replace("%message%", e.getMessage()));
-            Bukkit.broadcast(warningMsg, "chatcore.antiad.alert");
+            String warningMsg = FormatText.formatText(ConfigManager.get("anti-ad-inform").replace("%player%", player.getName()).replace("%message%", e.getMessage()));
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (p.hasPermission("chatcore.antiad.alert")) {
+                    p.sendMessage(warningMsg);
+                }
+            }
         }
     }
 }

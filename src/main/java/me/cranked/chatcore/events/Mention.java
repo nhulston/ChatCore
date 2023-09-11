@@ -4,6 +4,7 @@ import java.util.Objects;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
 import me.cranked.chatcore.VersionManager;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -36,7 +37,7 @@ public class Mention implements Listener {
             if (!senderNameLower.equals(playerNameLower) && messageLower.matches(".*\\b" + playerNameLower + "\\b.*")) {
                 int loc = messageLower.indexOf(playerNameLower);
                 if (loc != -1) {
-                    e.setMessage(ConfigManager.colorize(message.substring(0, loc) + ConfigManager.get("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
+                    e.setMessage(FormatText.formatText(message.substring(0, loc) + ConfigManager.get("mention-color") + playerName + getChatColor(e.getPlayer()) + message.substring(loc + playerName.length())));
                 }
                 if (!sound.equalsIgnoreCase("none"))
                     onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);

@@ -4,6 +4,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.cranked.chatcore.ChatCore;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.events.Log;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -61,7 +62,7 @@ public class DonatorChat implements CommandExecutor {
             
             // Log in chat logger
             if (ConfigManager.getEnabled("chat-logger") && ConfigManager.getEnabled("chat-logger-donator-chat")) {
-                String formattedMessage = ConfigManager.colorize(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", sender.getName()).replace("%message%", msg));
+                String formattedMessage = FormatText.formatText(ConfigManager.get("logger-format").replace("%time%", LocalTime.now().toString()).replace("%player%", sender.getName()).replace("%message%", msg));
                 if (sender instanceof Player) {
                     formattedMessage = PlaceholderAPI.setPlaceholders((Player) sender, formattedMessage);
                 }
@@ -75,8 +76,12 @@ public class DonatorChat implements CommandExecutor {
     public static void sendMessage(String msg, CommandSender sender) {
         msg = ConfigManager.get("donator-chat-format").replace("%message%", msg).replace("%player%", sender.getName());
         if (sender instanceof Player) {
-            msg = ConfigManager.placeholderize(msg, (Player) sender);
+            msg = FormatText.placeholderize(msg, (Player) sender);
         }
-        Bukkit.broadcast(msg, "chatcore.donatorchat.see");
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPermission("chatcore.donatorchat.see")) {
+                player.sendMessage(msg);
+            }
+        }
     }
 }

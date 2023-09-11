@@ -3,6 +3,7 @@ package me.cranked.chatcore.events;
 import java.util.List;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.cranked.chatcore.ConfigManager;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +33,7 @@ public class CommandSpy implements Listener {
         // Broadcast to staff with enabled
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (me.cranked.chatcore.commands.CommandSpy.commandSpyList.contains(onlinePlayer))
-                onlinePlayer.sendMessage(PlaceholderAPI.setPlaceholders(player, ConfigManager.colorize(ConfigManager.get("command-spy-format").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage()))));
+                onlinePlayer.sendMessage(PlaceholderAPI.setPlaceholders(player, FormatText.formatText(ConfigManager.get("command-spy-format").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage()))));
         }
     }
 

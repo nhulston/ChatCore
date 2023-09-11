@@ -3,6 +3,7 @@ package me.cranked.chatcore.events;
 import java.util.List;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,8 +65,12 @@ public class BlockedCommands implements Listener {
 
                 // Warn staff
                 if (ConfigManager.getEnabled("blocked-commands-warn-staff")) {
-                    String warningMsg = ConfigManager.colorize(ConfigManager.get("blocked-commands-warn-staff").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage()));
-                    Bukkit.broadcast(warningMsg, "chatcore.blockedcommands.warn");
+                    String warningMsg = FormatText.formatText(ConfigManager.get("blocked-commands-warn-staff").replace("%player%", player.getDisplayName()).replace("%command%", e.getMessage()));
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        if (p.hasPermission("chatcore.blockedcommands.warn")) {
+                            p.sendMessage(warningMsg);
+                        }
+                    }
                 }
                 return;
             }

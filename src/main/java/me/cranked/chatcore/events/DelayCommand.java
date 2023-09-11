@@ -3,6 +3,7 @@ package me.cranked.chatcore.events;
 import java.util.HashMap;
 import java.util.UUID;
 import me.cranked.chatcore.ConfigManager;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +27,7 @@ public class DelayCommand implements Listener {
         if (this.cooldown.containsKey(player.getUniqueId()) && this.cooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
             e.setCancelled(true);
             double remainingTime = Math.round((this.cooldown.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000.0D * 10.0D) / 10.0D;
-            player.sendMessage(ConfigManager.colorize(ConfigManager.get("command-delay").replace("%time%", Double.toString(remainingTime))));
+            player.sendMessage(FormatText.formatText(ConfigManager.get("command-delay").replace("%time%", Double.toString(remainingTime))));
         }
 
         // Set cooldown

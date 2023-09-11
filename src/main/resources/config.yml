@@ -18,20 +18,23 @@
 
 # Versions 1.16+: You can use color codes. Ex: &#000000Hello!
 
-reload-msg: '&aChatCore has been reloaded.'
+reload-msg: '<#A6FF00>ChatCore has been reloaded.</#00FF59>'
 no-permission-msg: '&cNo permission.'
 # Useful tip: If you want to change the unknown command message, there is no need
 # to download a plugin to do this for you. Simply go to spigot.yml, change the
 # field 'unknown-command', and use § for color codes instead of &
 # Example: unknown-command: §8[§bServer§8] §7Unknown command.
 
-# You can center ANY message in this whole config file by putting {center} in the message.
+# You can CENTER any message in this whole config file by putting {center} in the message.
+# You can SEPARATE any message in this whole config with %newline%. Note that this resets color codes.
+# You can use HEX codes in any message like so: '&#FF5733test message'
+# You can GRADIENT any message like so:  '<#B500FF>&lANNOUNCEMENT&r: This is a cool plugin!</#FF008E>'
 help-msg:
   - '&8&m                                                                                '
   - ''
   - '{center}&d&lCHAT CORE'
   - ''
-  - '&d        Spigot Page &8>> &fhttps://www.mc-market.org/resources/13998/'
+  - '&d        Spigot Page &8>> &fhttps://www.spigotmc.org/resources/chat-core-manage-control-format-your-chat-chat-hovering-click-events-and-more.97447/'
   - ''
   - '&d/chat &f- Bring up this help page'
   - '&d/chat clear &7<-s/-a> &f- Clears the chat'
@@ -284,7 +287,7 @@ auto-caps-min-length: 3
 #############################################################
 
 announce-enabled: true
-announce-format: '&a&lAnnouncement&f: %message%'
+announce-format: '&8&m                                                                                %newline%%newline%{center}<#B500FF>&lANNOUNCEMENT</#FF008E>%newline%%newline%&e{center}%message%%newline%%newline%&8&m                                                                                '
 announce-usage: '&cUsage: /chat announce <message>'
 
 # set to NONE or something from this list:
@@ -301,6 +304,7 @@ announce-usage: '&cUsage: /chat announce <message>'
 # 1.17: https://pastebin.com/X0US4f7D
 # 1.18: https://pastebin.com/VuAUTguK
 # 1.19: https://pastebin.com/smFzazEu
+# 1.20: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 announce-sound: 'NONE'
 
 warning-enabled: true
@@ -373,6 +377,7 @@ default-format: '%prefix%%name%%suffix% &8>> &f%message%'
 rank-formats:
   group1: '%prefix%%name%%suffix% &8>> &f%message%'
   group2: '%prefix%%name%%suffix% &8>> &b%message%'
+  owner: '<#18FF00>&l[Owner]&r %name% >> %message%</#00E7FF>'
 
 name-hover-enabled: true
 
@@ -416,6 +421,7 @@ mention-color: '&a&l'
 # 1.17: https://pastebin.com/X0US4f7D
 # 1.18: https://pastebin.com/VuAUTguK
 # 1.19: https://pastebin.com/smFzazEu
+# 1.20: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 mention-sound: 'NONE'
 # Example: mention-sound: 'ENTITY_CHICKEN_EGG'
 
@@ -453,9 +459,8 @@ auto-broadcast-random: true
 
 # Separate lines with %newline%
 auto-broadcast-messages:
-  - '&8&m                                                                                %newline%%newline%&d&l{center}Announcement%newline%%newline%&e{center}Insiding is a bannable offense!%newline%%newline%&8&m                                                                                '
-  - '&eHelp&f: Use &e/auction &fto access the auction house!'
-  - '&eHelp&f: Visit our website for updates at &ewebsite.com'
+  - '&8&m                                                                                %newline%%newline%{center}<#7100FF>&lAnnouncement</#FF0056>%newline%%newline%&e{center}This is an example message.%newline%%newline%&8&m                                                                                '
+  - '&eHelp&f: This is an &eexample &fmessage. Change in the config.'
 
 
 #############################################################

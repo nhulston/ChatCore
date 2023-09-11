@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -48,16 +49,16 @@ public class Slow implements CommandExecutor {
         Set<String> arguments = new HashSet<>(Arrays.asList(args));
         if (delay == 0) {
             if (arguments.contains("-s") && sender.hasPermission("chatcore.slow.silent")) {
-                sender.sendMessage(ConfigManager.colorize(ConfigManager.get("unslow-silent").replace("%time%", Integer.toString(delay))));
+                sender.sendMessage(FormatText.formatText(ConfigManager.get("unslow-silent").replace("%time%", Integer.toString(delay))));
             } else {
-                Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get("unslow").replace("%time%", Integer.toString(delay)).replace("%player%", sender.getName())));
+                Bukkit.broadcastMessage(FormatText.formatText(ConfigManager.get("unslow").replace("%time%", Integer.toString(delay)).replace("%player%", sender.getName())));
             }
         } else if (arguments.contains("-s") && sender.hasPermission("chatcore.slow.silent")) {
-            sender.sendMessage(ConfigManager.colorize(ConfigManager.get("slow-silent").replace("%time%", Integer.toString(delay))));
+            sender.sendMessage(FormatText.formatText(ConfigManager.get("slow-silent").replace("%time%", Integer.toString(delay))));
         } else if (arguments.contains("-a") && sender.hasPermission("chatcore.slow.anonymous")) {
-            Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get("slow-anon").replace("%time%", Integer.toString(delay))));
+            Bukkit.broadcastMessage(FormatText.formatText(ConfigManager.get("slow-anon").replace("%time%", Integer.toString(delay))));
         } else {
-            Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get("slow").replace("%time%", Integer.toString(delay)).replace("%player%", sender.getName())));
+            Bukkit.broadcastMessage(FormatText.formatText(ConfigManager.get("slow").replace("%time%", Integer.toString(delay)).replace("%player%", sender.getName())));
         }
 
         return true;

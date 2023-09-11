@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import me.cranked.chatcore.commands.*;
+import me.cranked.chatcore.util.FormatText;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -75,15 +78,18 @@ public class CommandsManager implements CommandExecutor {
      * @param sender The user who is trying to get help
      */
     private void sendHelpMessage(CommandSender sender) {
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
         if (sender.hasPermission("chatcore.help")) {
             List<String> messages = ConfigManager.getList("help-msg");
             for (String msg : messages)
-                sender.sendMessage(ConfigManager.colorize(msg));
+                sender.sendMessage(msg);
         } else {
-            // TextComponent formatComponent = new TextComponent(ConfigManager.colorize("&aServer is running &b&nChatCore " + ChatCore.plugin.getDescription().getVersion() + "&a."));
-            // formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.mc-market.org/resources/13998/"));
-            // sender.spigot().sendMessage(formatComponent);
-            sender.sendMessage(ConfigManager.get("no-permission"));
+            TextComponent formatComponent = new TextComponent(FormatText.formatText("&aServer is running &b&nChatCore " + ChatCore.plugin.getDescription().getVersion() + "&a."));
+            formatComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/chat-core-manage-control-format-your-chat-chat-hovering-click-events-and-more.97447/"));
+            sender.spigot().sendMessage(formatComponent);
         }
     }
 }

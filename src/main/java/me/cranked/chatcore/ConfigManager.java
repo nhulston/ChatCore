@@ -1,14 +1,8 @@
 package me.cranked.chatcore;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.entity.Player;
-import me.cranked.chatcore.util.CenterText;
-
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import static me.cranked.chatcore.util.FormatText.formatText;
 import static org.bukkit.Bukkit.getServer;
 
 /**
@@ -22,9 +16,6 @@ public class ConfigManager {
     private static Map<String, List<String>> multiLineMessages;
     private static Map<String, Boolean> enabled;
     private static Map<String, Integer> ints;
-
-    private static final Pattern PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
-    private static final char COLOR_CHAR = org.bukkit.ChatColor.COLOR_CHAR;
 
     /**
      * Setter method for plugin
@@ -131,19 +122,19 @@ public class ConfigManager {
 
         // Announce
         enabled.put("announce", getEnabledHelper("announce-enabled"));
-        messages.put("announce-format", getHelper("announce-format"));
+        messages.put("announce-format", getHelperNoFormat("announce-format"));
         messages.put("announce-usage", getHelper("announce-usage"));
         messages.put("announce-sound", getHelper("announce-sound"));
 
         // Warning
         enabled.put("warning", getEnabledHelper("warning-enabled"));
-        messages.put("warning-format", getHelper("warning-format"));
+        messages.put("warning-format", getHelperNoFormat("warning-format"));
         messages.put("warning-usage", getHelper("warning-usage"));
         messages.put("warning-sound", getHelper("warning-sound"));
 
         // Staff Announce
         enabled.put("staff-announce", getEnabledHelper("staff-announce-enabled"));
-        messages.put("staff-announce-format", getHelper("staff-announce-format"));
+        messages.put("staff-announce-format", getHelperNoFormat("staff-announce-format"));
         messages.put("staff-announce-usage", getHelper("staff-announce-usage"));
         messages.put("staff-announce-sound", getHelper("staff-announce-sound"));
 
@@ -216,44 +207,9 @@ public class ConfigManager {
         initMaps();
         ChatCore.broadcastDelay = ConfigManager.getInt("auto-broadcast-delay");
         if (getEnabled("auto-broadcast")) {
-            getServer().getScheduler().cancelTask(ChatCore.taskId);
+            getServer().getScheduler().cancelTask(ChatCore.autoBroadcasterTaskID);
             ChatCore.startAutoBroadcaster(ConfigManager.getList("auto-broadcast-messages"));
         }
-    }
-
-    /**
-     * Colorizes messages
-     * @param message The original message we want to colorize
-     * @return A colorized String
-     */
-    public static String colorize(String message) {
-        if (message.contains("{center}")) {
-            message = message.replace("{center}", "");
-            message = CenterText.centerText(message);
-        }
-        if (VersionManager.isV16()) {
-            Matcher matcher = PATTERN.matcher(message);
-            StringBuffer sb = new StringBuffer(message.length() + 32);
-            while (matcher.find()) {
-                String group = matcher.group(1);
-                matcher.appendReplacement(sb, COLOR_CHAR + "x"
-                        + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
-                        + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
-                        + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
-                );
-            }
-            return ChatColor.translateAlternateColorCodes('&', matcher.appendTail(sb).toString());
-        }
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-
-    /**
-     * Colorizes messages and replaces placeholders
-     * @param s The original message we want to update
-     * @return A colorizes String with placeholders replaced
-     */
-    public static String placeholderize(String s, Player p) {
-        return PlaceholderAPI.setPlaceholders(p, colorize(s));
     }
 
     /**
@@ -298,7 +254,16 @@ public class ConfigManager {
      * @return The String, the value of that entry in config.yml
      */
     private static String getHelper(String s) {
-        return colorize(Objects.requireNonNull(plugin.getConfig().getString(s)));
+        return formatText(Objects.requireNonNull(plugin.getConfig().getString(s)));
+    }
+
+    /**
+     * Helper method for initMaps() but don't format the text.
+     * @param s The name of the entry in config.yml we want to get from
+     * @return The String, the value of that entry in config.yml
+     */
+    private static String getHelperNoFormat(String s) {
+        return Objects.requireNonNull(plugin.getConfig().getString(s));
     }
 
     /**
@@ -307,7 +272,12 @@ public class ConfigManager {
      * @return A list of Strings, the value of that entry in config.yml
      */
     private static List<String> getListHelper(String s) {
-        return plugin.getConfig().getStringList(s);
+        List<String> res = new ArrayList<>();
+        List<String> originalList = plugin.getConfig().getStringList(s);
+        for (String string : originalList) {
+            res.add(formatText(string));
+        }
+        return res;
     }
 
     /**

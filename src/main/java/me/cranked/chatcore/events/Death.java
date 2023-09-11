@@ -1,6 +1,7 @@
 package me.cranked.chatcore.events;
 
 import me.cranked.chatcore.ConfigManager;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,7 +18,7 @@ public class Death implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDeath(PlayerDeathEvent e) {
         String playerColor = ConfigManager.get("death-messages-player-color");
-        String color = ConfigManager.colorize(ConfigManager.get("death-messages-color"));
+        String color = FormatText.formatText(ConfigManager.get("death-messages-color"));
         String message = e.getDeathMessage();
         if (message == null) return;
         String player = e.getEntity().getName();

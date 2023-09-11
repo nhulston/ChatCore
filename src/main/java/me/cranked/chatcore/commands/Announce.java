@@ -3,6 +3,7 @@ package me.cranked.chatcore.commands;
 import java.util.Arrays;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.ChatCore;
+import me.cranked.chatcore.util.FormatText;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -51,7 +52,7 @@ public class Announce implements CommandExecutor {
         // Broadcast message
         if (type.equals("staff-announce")) {
             String sound = ConfigManager.get("staff-announce-sound");
-            String parsedMsg = ConfigManager.colorize(ConfigManager.get("staff-announce-format").replace("%message%", msg));
+            String parsedMsg = FormatText.formatText(ConfigManager.get("staff-announce-format").replace("%message%", msg));
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (onlinePlayer.hasPermission("chatcore.staffannounce.see")) {
                     onlinePlayer.sendMessage(parsedMsg);
@@ -60,7 +61,7 @@ public class Announce implements CommandExecutor {
                 }
             }
         } else {
-            Bukkit.broadcastMessage(ConfigManager.colorize(ConfigManager.get(type + "-format").replace("%message%", msg)));
+            Bukkit.broadcastMessage(FormatText.formatText(ConfigManager.get(type + "-format").replace("%message%", msg)));
 
             String sound = ConfigManager.get(type + "-sound");
             if (!sound.equalsIgnoreCase("none")) {
