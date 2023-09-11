@@ -1,7 +1,6 @@
 package me.cranked.chatcore.events;
 
 import java.util.List;
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.cranked.chatcore.ConfigManager;
 import me.cranked.chatcore.util.FormatText;
 import org.bukkit.entity.Player;

@@ -9,7 +9,6 @@ import me.cranked.chatcore.VersionManager;
 import me.cranked.chatcore.util.FormatText;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

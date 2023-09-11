@@ -78,10 +78,6 @@ public class CommandsManager implements CommandExecutor {
      * @param sender The user who is trying to get help
      */
     private void sendHelpMessage(CommandSender sender) {
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
         if (sender.hasPermission("chatcore.help")) {
             List<String> messages = ConfigManager.getList("help-msg");
             for (String msg : messages)

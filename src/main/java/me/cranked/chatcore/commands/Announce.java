@@ -19,30 +19,30 @@ public class Announce implements CommandExecutor {
     }
 
     // Type: warning, announce, staff-announce
-    public static boolean command(CommandSender sender, String[] args, String type) {
+    public static void command(CommandSender sender, String[] args, String type) {
         // Return if announcing isn't enabled
         if (!ConfigManager.getEnabled(type))
-            return false;
+            return;
 
         // Permission check
         if (type.equals("warning")) {
             if (ChatCore.noPermission("chatcore.announce.warning", sender)) {
-                return false;
+                return;
             }
         } else if (type.equals("announce")) {
             if (ChatCore.noPermission("chatcore.announce", sender)) {
-                return false;
+                return;
             }
         } else {
             if (ChatCore.noPermission("chatcore.staffannounce", sender)) {
-                return false;
+                return;
             }
         }
 
         // Return if incorrect usage
         if (args.length <= 1) {
             sender.sendMessage(ConfigManager.get(type + "-usage"));
-            return false;
+            return;
         }
 
         // Calculate message of announcement
@@ -70,6 +70,5 @@ public class Announce implements CommandExecutor {
                 }
             }
         }
-        return true;
     }
 }

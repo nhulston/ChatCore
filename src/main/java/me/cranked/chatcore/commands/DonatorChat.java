@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DonatorChat implements CommandExecutor {
-    public static Set<Player> donatorChatList = new HashSet<>();
+    public static final Set<Player> donatorChatList = new HashSet<>();
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         return command(sender, args);
